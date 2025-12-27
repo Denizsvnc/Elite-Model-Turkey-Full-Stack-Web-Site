@@ -1,0 +1,263 @@
+{
+    "_comment" : "genel terimler",
+    "common" : {
+        "share" : "Paylaş",
+        "back" : "Geri",
+        "Apply" : "Başvuru Yap",
+        "Discover" : "Keşfet",
+        "DiscoverButtonLink" : "/basarililar",
+        "ContactUs" : "İletişime Geçin",
+        "LatestNews" : "Son Haberler",
+        "ReadFullStory" : "Hikayenin Tamamını Okuyun",
+        "ApplyNow" : "Şimdi Başvur",
+        "ApplyNowlink" : "/basvuru",
+        "LatestHighlights" : "Son Öne Çıkanlar",
+        "ReadFullNew" : "Haberin Tamamını Oku"
+    }, 
+    "Filigran": {
+        "title1" : "SON ÖNE ÇIKANLAR",
+        "title2" : "YENİ YÜZLER",
+        "title3" : "EDİTORYAL",
+        "title4" : "PODYUM",
+        "title5" : "TİCARİ"
+    },
+    "bolumlerimiz" : {
+        "OurDivisions" : "Bölümlerimiz",
+        "Representing " : "Mükemmelliği Temsil Etmek",
+        "About" : "Ajans Hakkında",
+        "Women" : "Kadın",
+        "Men" : "Erkek",
+        "NewFaces" : "Yeni Yüzler"
+    },
+    "Slogan" : {
+        "title" : "Biz sadece trendleri takip etmiyoruz. Gelecek nesil süpermodeller için standartları belirliyoruz.",
+        "content" : "İstanbul merkezli ve küresel bir ağa sahip olan Elite Model Türkiye, benzersiz yerel yetenekleri dünyanın en prestijli moda evleriyle buluşturuyor."
+    },
+    "Discovered" : {
+        "slogan" : "Keşfedilecek",
+        "title" : "Dünya sizi bekliyor. Yolculuğunuza bugün Elite Model Türkiye ile başlayın."
+    },
+    "Model" : {
+        "Campaigns":"Kampanyalar",
+        "CampaignsNumber" : "200+",
+        "GlobalPartners" : "Küresel Ortaklar",
+        "GlobalPartnersNumber" : "15",
+        "AwardsWon" : "Kazandığı Ödüller",
+        "AwardsWonNumber" : "4",
+        "Referance" : "Sektör Liderleri Tarafından Güvenilen",
+        "Referance1" : "VAKKO",
+        "Referance2" : "BEYMEN",
+        "Referance3" : "ELLE",
+        "Referance4" : "ROLEX",
+        "SpotLight" : "Model İncelemesi"
+    },
+    "NewsSidebar" : {
+        "Models" : "Modeller",
+        "About" : "Hakkımızda",
+        "News" : "Haberler",
+        "Contact" : "İletişim"
+    },
+    "AboutPage" : {
+        "AboutUs" : "Hakkımızda",
+        "Principles" : "Temel İlkelerimiz",
+        "Integrity" : "Bütünlük",
+        "Global" : "Küresel Erişim",
+        "Excellence" : "Mükemmellik",
+        "Join" : "Elite Model'e Katılın",
+        "title" : "İster model adayı olun ister benzersiz yetenek arayan bir marka, sizinle birlikte yeni bir sayfa yazmaya hazırız.",
+        "BecomeModel" : "Model Olun"
+    },
+    "ContactPage" : {
+        "ContactMe" : "İletişim",
+        "title" : "Sorularınız, iş birlikleri veya modellik başvuruları için bize ulaşın. Ekibimiz en kısa sürede sizinle iletişime geçecektir.",
+        "Visit" : "Ziyaret Edin",
+        "WriteUs" : "Bize Yazın",
+        "Name" : "AD SOYAD",
+        "EMail" : "E-POSTA",
+        "Subject" : "KONU",
+        "Message" : "MESAJINIZ",
+
+        "Name1" : "Adınız Soyadınız",
+        "EMail1" : "ornek@email.com",
+        "Subject1" : "Mesajınızın Konusu",
+        "Send" : "Gönder",
+        "OpenInMap" : "HARİTADA AÇ"
+    },
+    "FAQ" : {
+        "HeroTitle" : "Sıkça Sorulan Sorular",
+        "Content" : "Seçkinler arasına katılmak. Sürecimiz, standartlarımız ve kariyer yollarımız hakkında bilmeniz gereken her şey.",
+        "Questions" : "Hala sorularınız mı var?",
+        "Content1" : "Ekibimiz size yardımcı olmaktan mutluluk duyacaktır."
+    },
+    "NavLink" : {
+        "Title" : "The Elite Model Turkey",
+        "Home" : "ANASAYFA",
+        "Succes" : "BAŞARIMIZ",
+        "News" : "Haberler",
+        "AboutUs" : "Hakkımızda",
+        "Contact" : "İletişim",
+        "FAQ" : "SSS",
+        "Application" : "BAŞVURU"
+    },
+    "Footer" : {
+        "Name" : "THE ELİTE MODEL TURKEY",
+        "title" : "Küresel podyuma açılan seçkin yetenekler.",
+        "Content" : "İstanbul merkezli, uluslararası sahnede konumlandırılan modeller için stratejik temsil ve sürdürülebilir kariyer yönetimi.",
+        "Travel" : "Gezin",
+        "Contact" : "İletişim",
+        "CopyRight" : "© 2024 The Elite Model Turkey. Tüm hakları saklıdır.",
+        "KVKK" : "KVKK",
+        "Security" : "Gizlilik"
+    },
+
+
+
+
+    "MenPage" : {
+        "HeroTitle" : "ERKEK MODEL",
+        "HeroContent" : "Güçlü, karizmatik ve profesyonel erkek modellerimiz, global moda sahnesinde fark yaratmaktadır.",
+        "MenAreaImg" : "https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=800&auto=format&fit=crop",
+        "MenArea" : "Erkek Modeller",
+        "MenAreaContent1" : "Elite Model Agency erkek model bölümü, moda endüstrisinin en güçlü ve karizmatik yüzlerini temsil etmektedir. Portföyümüzdeki erkek modeller, uluslararası podyumlarda, prestijli kampanyalarda ve editoryal çekimlerde profesyonellikleriyle öne çıkmaktadır.",
+        "MenAreaContent2" : "Armani, Hugo Boss, Dolce & Gabbana gibi dünya çapında tanınan markaların kampanyalarında yer alan modellerimiz, GQ, Esquire, Men's Health gibi prestijli erkek dergilerinin kapaklarını süslemektedir.",
+        "Categories1" : "Yüksek Moda Anlayışı",
+        "Categories2" : "Sports & Fitness",
+        "Categories3" : "Karakter",
+        "Cat1Content" : "Lüks marka kampanyaları",
+        "Cat2Content" : "Spor ve lifestyle çekimleri",
+        "Cat3Content" : "Güçlü karakter ve duruş",
+        "StartCareer" : "Kariyerinizi Başlatın",
+        "Content1" : "50+",
+        "Content2" : "200+",
+        "Content3" : "100+",
+        "Content4" : "15+",
+        "Content1Text" : "Aktif Model",
+        "Content2Text" : "Podyum Şovu",
+        "Content3Text" : "Marka İşbirliği",
+        "Content4Text" : "Yıllık Deneyim",
+        "StartContent" : "Erkek modellik dünyasında yerinizi almak ve uluslararası kariyerinizi şekillendirmek için hemen başvurun.",
+        "Button" : "Başvuru Yap",
+        "ButtonLink" : "/basvuru"
+
+    },
+    "WomenPage" : {
+        "HeroTitle" : "KADIN MODEL",
+        "HeroContent" : "Güçlü, karizmatik ve profesyonel erkek modellerimiz, global moda sahnesinde fark yaratmaktadır.",
+        "WomenAreaImg" : "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop",
+        "WomenArea" : "Kadın Modeller",
+        "WomenAreaContent1" : "Elite Model Agency olarak, kadın model portföyümüz moda endüstrisinin en parlak yıldızlarını barındırmaktadır. Uluslararası podyumlarda, prestijli dergilerde ve global kampanyalarda yer alan modellerimiz, sektörün zirvesini temsil etmektedir.",
+        "WomenAreaContent2" : "Paris, Milano, New York ve Londra Fashion Week'lerde düzenli olarak yer alan modellerimiz, Vogue, Harper's Bazaar, Elle gibi önde gelen moda dergilerinin kapaklarını süslemektedir.",
+        "Categories1" : "Pist",
+        "Categories2" : "Editoryal",
+        "Categories3" : "Reklam",
+        "Cat1Content" : "Dünya çapında podyum deneyimi",
+        "Cat2Content" : "Uluslararası dergi çekimleri",
+        "Cat3Content" : "Global marka kampanyaları",
+        "JoinUs" : "Siz de Aramıza Katılın",
+        "JoinUsContent" : "Moda endüstrisinde kariyerinizi başlatmak ve dünya sahnesinde yerinizi almak için başvurunuzu yapın.",
+        "Button" : "Başvuru Yap",
+        "ButtonLink" : "/basvuru"
+    },
+    "NewFacesPage" : {
+        "HeroTitle" : "YENİ YÜZLER",
+        "HeroContent" : "Yarının süpermodellerini bugün keşfediyoruz. Geleceğin ikonlarına hoş geldiniz.",
+        "NewFacesAreaImg" : "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=800&auto=format&fit=crop",
+        "NewFacesArea" : "Yeni Yüzler",
+        "NewFacesAreaContent1" : "Elite Model Agency'nin New Faces bölümü, moda endüstrisinin gelecekteki yıldızlarını keşfetmek ve yetiştirmek için özel olarak tasarlanmıştır. Genç yetenekleri bulup, profesyonel eğitim ve rehberlikle onları dünya sahnesine hazırlıyoruz.",
+        "NewFacesAreaContent2" : "18 - 29  yaş arasındaki yetenekli adaylar için özel gelişim programları, profesyonel fotoğraf çekimleri, podyum eğitimleri ve kişisel gelişim workshopları sunuyoruz.",
+        "Program" : "Gelişim Programımız",
+        "ProgramCard1" : "Portfolio Geliştirme",
+        "ProgramCard2" : "Podyum Eğitimi",
+        "ProgramCard3" : "Kişisel Gelişim",
+        "ProgramCard4" : "Endüstri Bilgisi",
+
+        "ProgramCardContent1" : "Profesyonel fotoğraf çekimleri ve portfolio hazırlığı",
+        "ProgramCardContent2" : "Profesyonel yürüyüş ve sahne duruşu eğitimleri",
+        "ProgramCardContent3" : "Özgüven, duruş ve iletişim becerileri",
+        "ProgramCardContent4" : "Moda endüstrisi ve profesyonel iş hayatı eğitimi",
+       
+        "SuccesStories" : "Başarı Hikayeleri",
+        "HeroImg1" : "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop",
+        "HeroImg2" : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
+        "HeroImg3" : "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop",
+
+        "Name1" : "Ayşe K.",
+        "Name2" : "Mehmet Y.",
+        "Name3" : "Zeynep S.",
+
+        "Name1Age" : "19",
+        "Name2Age" : "20",
+        "Name3Age" : "18",
+
+        "Name1Achievement" : "Paris Moda Haftası 2024",
+        "Name2Achievement" :"Vogue İtalya Kapağı",
+        "Name3Achievement" : "Dior Kampanyası",
+
+        "Criteria" : "Başvuru Kriterleri",
+        "Womens" : "Kadınlar",
+        "Mens" : "Erkekler",
+
+        "WomenCriteria1" : "• Yaş: 18 - 29 (18 yaş altındaki yarışmacılar noter onaylı aile izin belgesi ile katılım sağlayabilirler.)",
+        "WomenCriteria2" : "• Boy: Minimum 168 cm",
+        "WomenCriteria3" : "• Beden: 34-36",
+        "WomenCriteria4" : "• Fotojenik Yüz Yapısı",
+        "WomenCriteria5" : "• Profesyonel tutum",
+        "WomenCriteria6" : "• Adli sicil kaydı olmamak.",
+
+
+        "MenCriteria1" : "• Yaş: 18 - 29 (18 yaş altındaki yarışmacılar noter onaylı aile izin belgesi ile katılım sağlayabilirler.)",
+        "MenCriteria2" : "• Boy: Minimum 178 cm",
+        "MenCriteria3" : "• Beden: 46-48",
+        "MenCriteria4" : "• Atletik veya fit yapı",
+        "MenCriteria5" : "• Kendine güven",
+        "MenCriteria6" : "• Adli sicil kaydı olmamak.",
+
+        "Slogan" : "Hayalleriniz Burada Başlıyor",
+        "SloganContent" : "Moda endüstrisinin parlayan yeni yıldızlarından biri olmak için bugün başvurunuzu yapın. Profesyonel ekibimiz, potansiyelinizi keşfetmek için sizinle iletişime geçecek.",
+        "Button1" : "HEMEN BAŞVUR",
+        "Button1Link" :"/basvuru",
+        "Button2" : "SIKÇA SORULAN SORULAR",
+        "Button2Link" : "/sss"
+    },
+    "ApplicationPage" : {
+        "HeroTitle" : "Başvuru Formu",
+        "HeroContent" : "Elite Model Turkey'e katılın. Lütfen aşağıdaki formu doğru ölçülerinizle ve doğal ışıkta çekilmiş polaroid fotoğraflarınızla doldurun.",
+        "PersonalDetails" : "Kişisel Detaylar",
+        "NameSurname" : "Ad Soyad (Tam İsim)",
+        "DateOfBorn" : "Doğum Tarihi",
+        "Gender" : "Cinsiyet",
+        "Contact" : "İletişim Bilgileri",
+        "email" : "E-Posta",
+        "Phone" : "Telefon",
+        "Nationality" : "Ülke",
+        "City" : "Şehir",
+        "Measurements" : "Ölçüler",
+        "Height" : "Boy",
+        "Bust" : "Göğüs",
+        "Waist" : "Bel",
+        "Hips" : "Basen",
+        "Shoe" : "Ayak",
+        "Eyes" : "Göz",
+        "Photos" : "Fotoğraflar",
+        "PhotosText" : "Lütfen son zamanlarda çekilmiş polaroid fotoğraflarınızı yükleyin. Sade kıyafetler giyin (örneğin düz tişört ve kot pantolon), makyaj yapmayın ve doğal ışıkta çekim yapın.",
+        "Portre" : "Portre",
+        "Profile" : "Profil",
+        "FullBody" : "Tüm Vücut",
+        "Shot1" : "Yüzün yakın çekimi, nötr ifade",
+        "Shot2" : "Yan görünüm, belirgin çene hattı",
+        "Shot3" : "Baştan ayağa, vücuda oturan kıyafetler",
+        "ButtonApp" : "Başvuru Yap",
+        "Situation" : "Gönderiliyor",
+
+        "ToInform" : "Bu formu göndererek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz.",
+        "Brown" : "Kahverengi" ,
+        "Green" : "Yeşil",
+        "Hazel" : "Ela",
+        "Blue" : "Mavi",
+        "Black" : "Siyah",
+        "Female" : "Kadın",
+        "Male" : "Erkek",
+        "DoNot" : "Belirtmek İstemiyorum",
+        "Select" : "Seç"
+    }
+}

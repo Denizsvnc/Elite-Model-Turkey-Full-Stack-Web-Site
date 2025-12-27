@@ -1,0 +1,374 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Admin Kullanıcisi olustur
+enum AdminRole {
+  SUPERADMIN
+  ADMIN
+  MODERATOR
+  SUPPORT
+}
+
+model AdminUser {
+  id               String     @id @default(cuid())
+  email            String     @unique
+  passwordHash     String
+  name             String?
+  phone            String?
+  role             AdminRole  @default(ADMIN)
+  isActive         Boolean    @default(true)
+}
+
+// Anasayfa Slider Tablosu
+model HomeSlider {
+  id      Int        @id @default(autoincrement())
+  key     String     @unique
+  name    String      // admin panelinde gorunecek isim
+  isActive Boolean   @default(true) 
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  items   HomeSliderItem[]
+}
+// Anasayfa slider içindeki her bir slide
+model HomeSliderItem {
+  id           Int      @id @default(autoincrement())
+  homeSliderId Int      
+
+  // Çoklu dil destekli metinler
+  title_tr     String?
+  title_en     String?
+  title_de     String?
+  title_ru     String?
+
+  description_tr String?
+  description_en String?
+  description_de String?
+  description_ru String?
+
+  // Görsel & yönlendirme
+  imageUrl     String?
+  linkUrl      String?
+
+  // UI kontrol alanları
+  order        Int       @default(1)       // slide sırası (1,2,3...)
+  isActive     Boolean   @default(true)
+
+  // Yayın zamanlaması
+  startDate    DateTime?
+  endDate      DateTime?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  homeSlider   HomeSlider @relation(fields: [homeSliderId], references: [id], onDelete: Cascade)
+
+  @@index([homeSliderId])
+
+  @@unique([homeSliderId, order])
+}
+
+// Bolumlerimiz Alani Gorselleri
+
+enum CoverType {
+  WOMEN
+  MEN
+  NEW_FACES
+}
+
+model CoverImage {
+  id      String      @id @default(cuid())
+  type    CoverType
+  imageUrl String
+  isActive Boolean  @default(true)
+  order   Int       @default(1)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([type])  
+} 
+
+
+// Basarimiz Sayfasi Tablolari
+
+// Hero alani Tablosu
+model SuccessHero {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  isActive  Boolean  @default(true)
+
+  title_tr String
+  title_en String
+  title_de String
+  title_ru String
+
+  text_tr  String
+  text_en  String
+  text_de  String
+  text_ru  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Basarili Model Alani
+model SuccessModelReview {
+  id        String   @id @default(cuid())
+
+  imageUrl  String
+  isActive  Boolean  @default(true)
+
+  title_tr  String
+  title_en  String
+  title_de  String
+  title_ru  String
+
+  text_tr   String
+  text_en   String
+  text_de   String
+  text_ru   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Son One Cikanlar Alani
+model FeaturedItem {
+  id        String   @id @default(cuid())
+
+  imageUrl  String
+
+  title_tr  String
+  title_en  String
+  title_de  String
+  title_ru  String
+
+  content_tr String
+  content_en String
+  content_de String
+  content_ru String
+
+  order     Int
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Haberler Sayfasi Tablolari
+model News {
+  id        String   @id @default(cuid())
+
+  imageUrl String
+  category String?  // Haber kategorisi (örn: "Editorial", "Runway", "Campaign")
+
+  // Çok dilli kategori
+  category_tr String?
+  category_en String?
+  category_de String?
+  category_ru String?
+
+  // Birden fazla görsel desteği (detay sayfasında slider)
+  galleryUrls String[] @default([])
+
+  title_tr String
+  title_en String
+  title_de String
+  title_ru String
+
+  content_tr String  @db.Text  // Uzun metin için Text tipine çevirdik
+  content_en String  @db.Text
+  content_de String  @db.Text
+  content_ru String  @db.Text
+
+  // Kısa açıklama/özet alanı
+  description_tr String?  @db.Text
+  description_en String?  @db.Text
+  description_de String?  @db.Text
+  description_ru String?  @db.Text
+
+  publishedAt DateTime
+  isActive    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Hakkimizda Sayfasi Tablolari
+model AboutPage {
+  id String @id @default(cuid())
+
+  // hero alani
+  intro_title_tr String
+  intro_title_en String
+  intro_title_de String
+  intro_title_ru String
+
+  intro_text_tr String
+  intro_text_en String
+  intro_text_de String
+  intro_text_ru String
+
+  // vizyon alani
+  vision_imageUrl String
+
+  vision_title_tr String
+  vision_title_en String
+  vision_title_de String
+  vision_title_ru String
+
+  vision_slogan_tr String
+  vision_slogan_en String
+  vision_slogan_de String
+  vision_slogan_ru String
+
+  vision_text_tr String
+  vision_text_en String
+  vision_text_de String
+  vision_text_ru String
+
+  // misyon alani
+  mission_imageUrl String
+
+  mission_title_tr String
+  mission_title_en String
+  mission_title_de String
+  mission_title_ru String
+
+  mission_slogan_tr String
+  mission_slogan_en String
+  mission_slogan_de String
+  mission_slogan_ru String
+
+  mission_text_tr String
+  mission_text_en String
+  mission_text_de String
+  mission_text_ru String
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// iletisim sayfasi Tablolari
+model ContactInfo {
+  id String @id @default(cuid())
+
+  // adres coklu dil destekli
+  address_tr String
+  address_en String
+  address_de String
+  address_ru String
+
+  // iletisim bilgileri 
+  phone String
+  email String
+
+  // map baglantisi
+  locationUrl String
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// SSS Sorulari Tablolari
+model FAQ {
+  id String @id @default(cuid())
+
+  question_tr String
+  question_en String
+  question_de String
+  question_ru String
+
+  answer_tr String
+  answer_en String
+  answer_de String
+  answer_ru String
+
+  order Int @default(1)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Gelen Basvurular Tablolari
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ApplicationStatus {
+  NEW
+  REVIEW
+  REJECTED
+  ACCEPTED
+}
+
+model Application {
+  id        String   @id @default(cuid())
+
+  // ===== Kişi Bilgileri =====
+  fullName   String
+  birthDate  DateTime
+  gender     Gender
+  nationality String
+
+  // ===== İletişim =====
+  email      String
+  phone      String
+  city       String
+
+  // ===== Fiziksel Detaylar =====
+  heightCm  Int
+  chestCm   Int
+  hipsCm    Int
+  footCm    Int
+  waistCm   Int
+  eyeColor  String
+
+  // ===== Görseller =====
+  selfieUrl     String
+  profilePhoto  String
+  fullBodyPhoto String
+
+  // ===== Ek Alanlar =====
+  status      ApplicationStatus @default(NEW)
+  adminNotes  String?
+  submittedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+// Gelen Mesajlar Tablolari
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+
+  fullName  String
+  email     String
+  subject   String
+  message   String
+
+  isRead    Boolean  @default(false)  // admin okudu mu
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
