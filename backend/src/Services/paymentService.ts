@@ -14,8 +14,9 @@ const imapConfig = {
         host: 'imap.gmail.com',
         port: 993,
         tls: true,
-        authTimeout: 10000,
-        tlsOptions: { rejectUnauthorized: false }
+        authTimeout: 30000, 
+        connTimeout: 30000,
+        tlsOptions: { rejectUnauthorized: false, servername: 'imap.gmail.com', minVersion: 'TLSv1.2' as 'TLSv1.2' }
     }
 };
 
