@@ -15,6 +15,7 @@ const Iban: React.FC<IbanSectionProps> = ({ price, loading, onSubmit, NameSurnam
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [paymentKey, setPaymentKey] = useState<string>("");
     const [refreshKey, setRefreshKey] = useState<number>(0);
+    const [copied, setCopied] = useState<boolean>(false);
 
     const handleCopy = (text: string, label: string) => {
         navigator.clipboard.writeText(text);
@@ -24,12 +25,18 @@ const Iban: React.FC<IbanSectionProps> = ({ price, loading, onSubmit, NameSurnam
 
     const handleCodeGenerated = (code: string) => {
         setPaymentKey(code);
+        setCopied(false); // yeni kod gelince kopyalanmadı olarak başla
     };
 
     // Başvuru gönderildikten sonra paymentKey yenile
     const handleSubmitAndRefresh = (paymentKey: string) => {
         if (onSubmit) onSubmit(paymentKey);
         setTimeout(() => setRefreshKey(prev => prev + 1), 500); // kısa gecikme ile tetikle
+    };
+
+    // PaymentCodeBox'ın kopyalama fonksiyonunu yakalamak için
+    const handleCopied = () => {
+        setCopied(true);
     };
 
     return (
@@ -55,9 +62,15 @@ const Iban: React.FC<IbanSectionProps> = ({ price, loading, onSubmit, NameSurnam
                  </Box>
             </Box>
             
-            <Typography variant="body2" sx={{mt: 3}}>
-                Not: Aşağıdaki kutuya tıklayarak açıklama kısmına yazmanız gereken <strong>tam metni</strong> kopyalayabilirsiniz:
-            </Typography>
+                        <Typography variant="body2" sx={{mt: 3}}>
+                                <span style={{fontWeight:'bold', color:'#1976d2'}}>Başvuru ve ödeme adımları:</span><br/>
+                                <ol style={{marginLeft:'1.2em', marginTop:'0.5em', marginBottom:'0.5em'}}>
+                                    <li><span style={{color:'red', fontWeight:'bold'}}>1. Açıklama metnini aşağıdaki kutudan kopyalayın.</span></li>
+                                    <li>2. <span style={{color:'#1976d2'}}>Başvuru gönderme butonuna tıklayın.</span></li>
+                                    <li>3. <span style={{color:'#1976d2'}}>IBAN'a ödeme yaparken açıklama kısmına kopyaladığınız metni eksiksiz olarak yapıştırın.</span></li>
+                                </ol>
+                                <span style={{color:'red', fontWeight:'bold'}}>Açıklama metni kopyalanmadan başvuru gönderilemez. Ödeme açıklamasında bu metni kullanmak zorunludur.</span>
+                        </Typography>
 
             {/* GÜNCELLENMİŞ KULLANIM: NameSurname Gönderiyoruz */}
             <PaymentCodeBox 
@@ -65,6 +78,7 @@ const Iban: React.FC<IbanSectionProps> = ({ price, loading, onSubmit, NameSurnam
                 NameSurname={NameSurname + " - "} 
                 ApplicationName="Elite Model Başvuru Ücreti -" 
                 refreshTrigger={refreshKey}
+                onCopied={handleCopied}
             />
 
             <Typography variant="body2" color="text.secondary" sx={{mt: 1, mb: 3}}>
@@ -74,11 +88,11 @@ const Iban: React.FC<IbanSectionProps> = ({ price, loading, onSubmit, NameSurnam
             <Button  
                 variant="contained" 
                 fullWidth
-                disabled={loading || !paymentKey}
+                disabled={loading || !paymentKey || !copied}
                 onClick={() => handleSubmitAndRefresh(paymentKey)}
                 sx={{ height:"4rem", fontSize:"1.2rem", fontWeight:"bold" }}
             >
-                {loading ? 'Gönderiliyor...' : 'Ödemeni Yaptıysan Tıkla ve Başvurunu Tamamla!'}     
+                {loading ? 'Gönderiliyor...' : !copied ? 'Önce açıklama metnini kopyalayın!' : 'Ödemeni Yaptıysan Tıkla ve Başvurunu Tamamla!'}     
             </Button>    
 
             <Snackbar

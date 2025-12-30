@@ -10,13 +10,15 @@ interface PaymentCodeBoxProps {
   NameSurname: string;
   ApplicationName?: string;
   refreshTrigger?: any; // dışarıdan tetikleme için
+  onCopied?: () => void;
 }
 
 const PaymentCodeBox: React.FC<PaymentCodeBoxProps> = ({ 
   onCodeGenerated, 
   NameSurname, 
   ApplicationName = "Elite Model Başvuru",
-  refreshTrigger
+  refreshTrigger,
+  onCopied
 }) => {
   const [code, setCode] = useState<string>("");
   const [copied, setCopied] = useState(false);
@@ -51,9 +53,10 @@ const PaymentCodeBox: React.FC<PaymentCodeBoxProps> = ({
   const fullTextToCopy = `${NameSurname} ${ApplicationName} ${code}`;
 
   const handleCopy = () => {
-    if (!code) return; // Kod yoksa kopyalama yapma
+    if (!code) return;
     navigator.clipboard.writeText(fullTextToCopy);
     setCopied(true);
+    if (typeof onCopied === 'function') onCopied();
     setTimeout(() => setCopied(false), 2000);
   };
 
