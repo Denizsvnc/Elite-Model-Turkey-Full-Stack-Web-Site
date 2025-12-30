@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { ApplicationStatus } from '../../generated/prisma'; // Enum'ı import etmeyi unutma
-import { MailService } from '../Services/MailGender';
+import { ApplicationStatus } from '../../generated/prisma'; // Enum importu
+import { NotificationService } from '../Services/NotificationService'; // Orkestra şefi importu
 
 // ==========================================
 // 1. Başvuru Oluştur (Public - Kullanıcı Formu)
@@ -15,14 +15,22 @@ export const createApplication = async (req: Request, res: Response) => {
         // Fiziksel
         heightCm, chestCm, hipsCm, footCm, waistCm, eyeColor,
         // Görseller
-        selfieUrl, profilePhoto, fullBodyPhoto
+        selfieUrl, profilePhoto, fullBodyPhoto,
+        // Statü (opsiyonel)
+        status,
+        paymentKey
     } = req.body;
 
-    // Görsel URL'lerini tam olarak oluştur
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    const selfieUrlFull = selfieUrl ? `${baseUrl}${selfieUrl.startsWith('/uploads') ? '' : '/uploads/Applications/selfie/'}${selfieUrl.replace(/^\/uploads\/Applications\/selfie\//, '')}` : '';
-    const profilePhotoFull = profilePhoto ? `${baseUrl}${profilePhoto.startsWith('/uploads') ? '' : '/uploads/Applications/profile/'}${profilePhoto.replace(/^\/uploads\/Applications\/profile\//, '')}` : '';
-    const fullBodyPhotoFull = fullBodyPhoto ? `${baseUrl}${fullBodyPhoto.startsWith('/uploads') ? '' : '/uploads/Applications/fullbody/'}${fullBodyPhoto.replace(/^\/uploads\/Applications\/fullbody\//, '')}` : '';
+    // Görsel URL'lerini optimize et: Her zaman sadece /uploads/... formatında sakla
+    const selfieUrlFull = selfieUrl
+        ? (selfieUrl.startsWith('/uploads') ? selfieUrl : `/uploads/Applications/selfie/${selfieUrl}`)
+        : '';
+    const profilePhotoFull = profilePhoto
+        ? (profilePhoto.startsWith('/uploads') ? profilePhoto : `/uploads/Applications/profile/${profilePhoto}`)
+        : '';
+    const fullBodyPhotoFull = fullBodyPhoto
+        ? (fullBodyPhoto.startsWith('/uploads') ? fullBodyPhoto : `/uploads/Applications/fullbody/${fullBodyPhoto}`)
+        : '';
 
     try {
         const newApplication = await prisma.application.create({
@@ -43,27 +51,21 @@ export const createApplication = async (req: Request, res: Response) => {
                 selfieUrl: selfieUrlFull,
                 profilePhoto: profilePhotoFull,
                 fullBodyPhoto: fullBodyPhotoFull,
-                status: 'NEW'
+                status: status && Object.values(ApplicationStatus).includes(status) ? status : 'NEW',
+                paymentKey: paymentKey || undefined
             },
         });
 
-        // Mail gönder (async olarak, hata olsa bile kullanıcıya başarılı döner)
-        try {
-            await MailService.sendApplicationNotification({
-                fullName,
-                email,
-                phone,
-                city,
-                gender,
-                heightCm: Number(heightCm),
-                selfieUrl: selfieUrlFull,
-                profilePhoto: profilePhotoFull,
-                fullBodyPhoto: fullBodyPhotoFull,
-            });
-            console.log('✅ Başvuru maili gönderildi');
-        } catch (err) {
-            console.error('❌ Başvuru mail gönderme hatası:', err);
-        }
+        // BİLDİRİM ORKESTRASYONU (Panel ayarlarına göre Mail, Telegram ve Whatsapp tetiklenir)
+        NotificationService.send('application_form', {
+            fullName,
+            email,
+            phone,
+            city,
+            gender,
+            heightCm: Number(heightCm),
+            selfieUrl: selfieUrlFull, // Telegram fotoğraflı mesaj için
+        }).catch(err => console.error('❌ Başvuru bildirim hatası:', err));
 
         res.status(201).json(newApplication);
     } catch (error) {
@@ -76,14 +78,72 @@ export const createApplication = async (req: Request, res: Response) => {
 // 2. Başvuruları Listele (Admin - Filtreleme Destekli)
 // ==========================================
 export const getApplications = async (req: Request, res: Response) => {
-    // Query parametresi ile filtreleme: /api/applications?status=NEW
-    const { status } = req.query;
+    const { status, gender, year, month, ageMin, ageMax } = req.query;
 
     try {
+        // Filtreleme için where objesi oluştur
+        const where: any = {};
+        if (status) {
+            where.status = status as ApplicationStatus;
+        } else {
+            // Eğer status parametresi yoksa sadece NEW ve ACCEPTED başvuruları getir
+            where.status = { in: ['NEW', 'ACCEPTED'] };
+        }
+        if (gender) where.gender = gender;
+
+        // Yıl ve ay ile doğum tarihi aralığı
+        if (year) {
+            const y = parseInt(year as string, 10);
+            if (!isNaN(y)) {
+                let start = new Date(y, 0, 1);
+                let end = new Date(y + 1, 0, 1);
+                if (month) {
+                    const m = parseInt(month as string, 10) - 1;
+                    if (!isNaN(m) && m >= 0 && m < 12) {
+                        start = new Date(y, m, 1);
+                        end = new Date(y, m + 1, 1);
+                    }
+                }
+                where.birthDate = { gte: start, lt: end };
+            }
+        }
+
+        // Yaş aralığı (ageMin, ageMax)
+        // Şu anki tarih - doğum tarihi = yaş
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        if (ageMin || ageMax) {
+            let minDate, maxDate;
+            if (ageMin) {
+                const min = parseInt(ageMin as string, 10);
+                if (!isNaN(min)) {
+                    // min yaşındaki en genç kişi: doğum tarihi <= bugün - min yıl
+                    maxDate = new Date(now);
+                    maxDate.setFullYear(currentYear - min);
+                }
+            }
+            if (ageMax) {
+                const max = parseInt(ageMax as string, 10);
+                if (!isNaN(max)) {
+                    // max yaşındaki en yaşlı kişi: doğum tarihi >= bugün - max yıl - 1
+                    minDate = new Date(now);
+                    minDate.setFullYear(currentYear - max - 1);
+                    minDate.setDate(minDate.getDate() + 1); // bir gün ileri
+                }
+            }
+            if (minDate && maxDate) {
+                where.birthDate = { gte: minDate, lte: maxDate };
+            } else if (minDate) {
+                where.birthDate = { gte: minDate };
+            } else if (maxDate) {
+                where.birthDate = { lte: maxDate };
+            }
+        }
+
         const applications = await prisma.application.findMany({
-            where: status ? { status: status as ApplicationStatus } : {}, // Eğer status varsa filtrele
+            where,
             orderBy: {
-                submittedAt: 'desc', // En yeni başvurular en üstte
+                submittedAt: 'desc',
             },
         });
         res.json(applications);
@@ -113,9 +173,8 @@ export const getApplicationById = async (req: Request, res: Response) => {
 // ==========================================
 export const updateApplicationStatus = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { status, adminNotes } = req.body; // Örn: { status: "ACCEPTED", adminNotes: "Arandı, uygun." }
+    const { status, adminNotes } = req.body;
 
-    // Enum kontrolü
     if (status && !Object.values(ApplicationStatus).includes(status)) {
         return res.status(400).json({ error: 'Geçersiz başvuru durumu.' });
     }
@@ -124,8 +183,8 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
         const updatedApp = await prisma.application.update({
             where: { id },
             data: {
-                status,     // Yeni durum
-                adminNotes, // Varsa notu güncelle
+                status,
+                adminNotes,
             },
         });
         res.json(updatedApp);

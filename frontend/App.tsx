@@ -35,7 +35,11 @@ import Applications from './src/admin/pages/ApplicationsPages/Applications';
 import Social from './src/admin/pages/SocialMedia/Social';
 import Heroimg from './src/admin/pages/SuccessPages/Heroimg';
 import NewsManagement from './src/admin/pages/NewsManagement';
-
+import Setting from './src/admin/pages/SettingsPage/Setting';
+import PendingApplications from './src/admin/pages/ApplicationsPages/PendingApplications';
+import ApplicationsRejected from './src/admin/pages/ApplicationsPages/ApplicationsRejected';
+import Kvkk from "./components/Kvkk";
+import PrivacyPolicy from './components/PrivacyPolicy';
 const App: React.FC = () => {
   return (
     <BrowserRouter>
@@ -53,32 +57,36 @@ const App: React.FC = () => {
         <Route path="/erkekler" element={<Layout><Men /></Layout>} />
         <Route path="/yeni-yuzler" element={<Layout><NewFaces /></Layout>} />
         <Route path="/news/:id" element={<Layout><NewsDetail /></Layout>} />
+        <Route path="/kvkk" element={<Layout><Kvkk /></Layout>} />
+        <Route path="/privacy-policy" element={<Layout><PrivacyPolicy /></Layout>} />
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="sliders" element={<Sliders />} /> {/* Placeholder */}
-          <Route path="featured-items" element={<Featured />} /> {/* Placeholder */}
-          <Route path="news" element={<NewsAdmin />} /> {/* Placeholder */}
-          <Route path="success-model" element={<SuccesModel />} /> {/* Placeholder */}
-          <Route path="latest" element={<Latest />} /> {/* Placeholder */}
-          <Route path="heroimg" element={<Heroimg />} /> {/* Placeholder */}
+          <Route path="sliders" element={<Sliders />} /> 
+          <Route path="featured-items" element={<Featured />} /> 
+          <Route path="news" element={<NewsAdmin />} /> 
+          <Route path="success-model" element={<SuccesModel />} /> 
+          <Route path="latest" element={<Latest />} /> 
+          <Route path="heroimg" element={<Heroimg />} /> 
 
-          <Route path="news-management" element={<NewsManagement />} /> {/* Placeholder */}
-          <Route path="about/hero" element={<Hero />} /> {/* Placeholder */}
-          <Route path="about/vision" element={<Vision />} /> {/* Placeholder */}
-          <Route path="about/mission" element={<Mission />} /> {/* Placeholder */}
-          <Route path="contact-info" element={<ContactManagement />} /> {/* Placeholder */}
-          <Route path="contact-messages" element={<Messages />} /> {/* Placeholder */}
-          <Route path="faqs" element={<FAQs />} /> {/* Placeholder */}
-          <Route path="applications" element={<Applications />} /> {/* Placeholder */}
-          <Route path="social-media" element={<Social />} /> {/* Placeholder */}
-          <Route path="cover-images" element={<Dashboard />} /> {/* Placeholder */}
+          <Route path="news-management" element={<NewsManagement />} /> 
+          <Route path="about/hero" element={<Hero />} /> 
+          <Route path="about/vision" element={<Vision />} /> 
+          <Route path="about/mission" element={<Mission />} /> 
+          <Route path="contact-info" element={<ContactManagement />} /> 
+          <Route path="contact-messages" element={<Messages />} /> 
+          <Route path="faqs" element={<FAQs />} /> 
+          <Route path="applications" element={<Applications />} /> 
+          <Route path="social-media" element={<Social />} /> 
+          <Route path="cover-images" element={<Dashboard />} /> 
+          <Route path="settings" element={<Setting />} /> 
+          <Route path="applications/pending" element={<PendingApplications />} /> 
+          <Route path="applications/rejected" element={<ApplicationsRejected />} /> 
         </Route>
       </Routes>
     </BrowserRouter>
   );
 };
-
 export default App;

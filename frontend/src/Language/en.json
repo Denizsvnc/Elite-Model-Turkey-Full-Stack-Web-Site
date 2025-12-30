@@ -249,6 +249,7 @@
     "Female" : "Female",
     "Male" : "Male",
     "DoNot" : "Prefer not to say",
-    "Select" : "Select"
+    "Select" : "Select",
+    "Warning": "* THE PARTICIPATION FEE IS {price}. APPLICATIONS WITHOUT VISIBLE BANK PAYMENT WILL BE CONSIDERED INVALID."
     }
 }

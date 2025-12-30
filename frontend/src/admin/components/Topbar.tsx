@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem , Link} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 interface TopbarProps {
@@ -97,12 +97,14 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
                             </span>
                             Profil
                         </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                            <span className="material-symbols-outlined" style={{ marginRight: '8px', fontSize: '20px' }}>
-                                settings
-                            </span>
-                            Ayarlar
-                        </MenuItem>
+                        <Link href="/admin/settings" underline="none" color="inherit">
+                            <MenuItem onClick={handleClose}>
+                                <span className="material-symbols-outlined" style={{ marginRight: '8px', fontSize: '20px' }}>
+                                    settings
+                                </span>
+                                Ayarlar
+                            </MenuItem>
+                        </Link>
                         <MenuItem onClick={handleLogout}>
                             <span className="material-symbols-outlined" style={{ marginRight: '8px', fontSize: '20px', color: '#f44336' }}>
                                 logout

@@ -317,6 +317,10 @@ enum ApplicationStatus {
   REJECTED
   ACCEPTED
 }
+enum PaymentMethod {
+  IBAN
+  CREDIT_CARD
+}
 
 model Application {
   id        String   @id @default(cuid())
@@ -344,7 +348,11 @@ model Application {
   selfieUrl     String
   profilePhoto  String
   fullBodyPhoto String
+  paymentAmount Decimal?  @db.Decimal(10, 2) 
 
+  // Ödeme Yöntemi
+  paymentKey    String?   @unique
+  paymentMethod PaymentMethod @default(IBAN)
   // ===== Ek Alanlar =====
   status      ApplicationStatus @default(NEW)
   adminNotes  String?
@@ -370,5 +378,51 @@ model ContactMessage {
   updatedAt DateTime @updatedAt
 }
 
+model ApplicationFee {
+  id        Int      @id @default(autoincrement())
+  amount    Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) 
+}
 
 
+
+
+model SystemSetting {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique  // Ayarın kod tarafındaki adı (Örn: telegram_bot_token)
+  value       String?           // Ayarın değeri (Örn: 12345:AAF...)
+  description String?           // Admin panelinde ne işe yaradığını açıklayan metin
+  group       String   @default("general") // Gruplama için: 'email', 'telegram', 'whatsapp'
+  isSecret    Boolean  @default(false)     // True ise admin panelinde şifreli (***) göster
+  isActive    Boolean  @default(true) 
+  createdAt   DateTime @default(now())
+}
+
+
+model NotificationRule {
+  id             Int     @id @default(autoincrement())
+  slug           String  @unique // Kod içinde kullanacağız: 'contact_form', 'application_form'
+  name           String?         // Panelde görünecek ad: 'İletişim Formu Bildirimleri'
+  
+  // Kanallar (Kombinasyonları buradaki True/False'lar belirleyecek)
+  emailEnabled    Boolean @default(true)
+  telegramEnabled Boolean @default(false)
+  whatsappEnabled Boolean @default(false)
+
+  // Bu kuralın kendisi aktif mi? (Tüm bildirimleri susturmak için)
+  isActive        Boolean @default(true)
+}
+
+// Sosyal Medya Hesapları
+model SocialMedia {
+  id        Int      @id @default(autoincrement())
+  platform  String   @unique 
+  name      String?          
+  url       String           
+  iconKey   String?          
+  
+  isActive  Boolean  @default(true) 
+  order     Int      @default(0)    
+  
+  createdAt DateTime @default(now())
+}

@@ -248,6 +248,7 @@
     "Female" : "Weiblich",
     "Male" : "Männlich",
     "DoNot" : "Keine Angabe",
-    "Select" : "Auswählen"
+    "Select" : "Auswählen",
+    "Warning": "* DIE TEILNAHMEGEBÜHR BETRÄGT {price}. BEWERBUNGEN OHNE ERSICHTLICHE BANKZAHLUNG WERDEN ALS UNGÜLTIG BETRACHTET."
     }
 }

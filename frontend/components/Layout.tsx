@@ -1,26 +1,87 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../src/contexts/LanguageContext';
+
+// --- 1. MUI İKONLARI VE MAPPING ---
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import EmailIcon from '@mui/icons-material/Email';
+// Veritabanından gelen string (iconKey) ile Component eşleşmesi
+const iconMap: { [key: string]: React.ReactNode } = {
+  'WhatsApp': <WhatsAppIcon fontSize="small" />,
+  'Facebook': <FacebookIcon fontSize="small" />,
+  'Instagram': <InstagramIcon fontSize="small" />,
+  'Twitter': <TwitterIcon fontSize="small" />,
+  'X': <TwitterIcon fontSize="small" />,
+  'LinkedIn': <LinkedInIcon fontSize="small" />,
+  'YouTube': <YouTubeIcon fontSize="small" />,
+  'Email': <EmailIcon fontSize="small" />,
+};
+
+// --- 2. TİP TANIMLARI ---
 interface LayoutProps {
   children: React.ReactNode;
 }
 
+interface ContactInfo {
+  address: string;
+  phone: string;
+  email: string;
+  locationUrl?: string;
+}
+
+interface SocialMedia {
+  id: number;
+  platform: string;
+  name: string;
+  url: string;
+  iconKey: string;
+  isActive: boolean;
+}
+
+import Kvkk from './Kvkk';
+import PrivacyPolicy from './PrivacyPolicy';
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarContent, setSidebarContent] = useState<'kvkk' | 'gizlilik' | null>(null);
+
   
-  // 1. Context'ten 'dict' (statik json) ve 't' (db çevirici) fonksiyonunu alıyoruz
+  // Context
   const { language, setLanguage, dict, t } = useLanguage();
 
-  // Dynamic contact info state
-  const [contactInfo, setContactInfo] = useState<any>(null);
+  // State
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [socialLinks, setSocialLinks] = useState<SocialMedia[]>([]);
   
-  React.useEffect(() => {
-    // Servis import yapını korudum
+  // --- 3. VERİ ÇEKME (Contact + Socials) ---
+  useEffect(() => {
+    // Dinamik import yapısını korudum
     import('../src/services/api').then(({ default: axiosInstance }) => {
-      axiosInstance.get('/api/contact-info').then(res => {
-        setContactInfo(res.data);
-      });
+      
+      // İki isteği paralel atıyoruz (Daha performanslı)
+      Promise.all([
+        axiosInstance.get('/api/contact-info'), // Backend endpointin bu olduğunu varsayıyoruz
+        axiosInstance.get('/api/socials')       // Yeni eklediğimiz endpoint
+      ]).then(([contactRes, socialRes]) => {
+        
+        // İletişim Bilgileri
+        if(contactRes.data) {
+             setContactInfo(contactRes.data);
+        }
+
+        // Sosyal Medya Linkleri (Sadece aktif olanları filtrele)
+        if (Array.isArray(socialRes.data)) {
+          const activeSocials = socialRes.data.filter((s: SocialMedia) => s.isActive);
+          setSocialLinks(activeSocials);
+        }
+      }).catch(err => console.error("Veri çekme hatası:", err));
     });
   }, []);
 
@@ -31,8 +92,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     ? 'bg-dark/80 border-slate-800 text-white'
     : 'bg-white/80 border-slate-200 text-slate-900';
 
-  // 2. Navigasyon öğelerini seçili dile (dict) göre oluşturuyoruz.
-  // dict?.NavLink?.Home gibi "optional chaining (?.)" kullanıyoruz ki veri henüz yüklenmediyse patlamasın.
+  // Navigasyon öğeleri
   const navItems = useMemo(() => [
     { path: '/', label: dict?.NavLink?.Home || 'ANASAYFA' },
     { path: '/basarililar', label: dict?.NavLink?.Succes || 'BAŞARIMIZ' },
@@ -40,18 +100,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/hakkimizda', label: dict?.NavLink?.AboutUs || 'HAKKIMIZDA' },
     { path: '/iletisim', label: dict?.NavLink?.Contact || 'İLETİŞİM' },
     { path: '/sss', label: dict?.NavLink?.FAQ || 'SSS' },
-  ], [dict]); // dict değişince menüyü yeniden hesapla
+  ], [dict]);
 
   return (
     <div className={`min-h-screen flex flex-col ${isDarkModePage ? 'bg-dark text-white' : 'bg-white text-slate-900'}`}>
+      
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 backdrop-blur-md border-b ${headerBgClass} transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-3 cursor-pointer group"
-          >
+          <Link to="/" className="flex items-center gap-3 cursor-pointer group">
             <div className="w-8 h-8 flex items-center justify-center">
               <span className="material-symbols-outlined text-3xl">diamond</span>
             </div>
@@ -101,7 +159,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Mobile: Language Selector + Menu Toggle */}
           <div className="md:hidden flex items-center gap-4">
-            {/* Language Selector - Mobile */}
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as 'tr' | 'en' | 'de' | 'ru')}
@@ -117,10 +174,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <option value="ru">RU</option>
             </select>
 
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               <span className="material-symbols-outlined">
                 {mobileMenuOpen ? 'close' : 'menu'}
               </span>
@@ -159,8 +213,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
 
       {/* Footer */}
+  
       <footer className={`${isDarkModePage ? 'bg-black border-slate-800' : 'bg-slate-50 border-slate-200'} border-t py-14 md:py-20`}>
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+          
           {/* Brand / CTA */}
           <div className="md:col-span-5 flex flex-col gap-4">
             <div>
@@ -198,7 +254,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
 
-          {/* Contact */}
+          {/* Contact & Socials */}
           <div className="md:col-span-4 flex flex-col gap-4">
             <h4 className={`${isDarkModePage ? 'text-slate-200' : 'text-slate-800'} text-sm font-semibold uppercase tracking-[0.2em]`}>
                 {dict?.Footer?.Contact || 'İletişim'}
@@ -206,7 +262,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className={`${isDarkModePage ? 'text-slate-400' : 'text-slate-600'} text-sm space-y-2`}>
               {contactInfo ? (
                 <>
-                  {/* 3. DB'den gelen veriyi 't' fonksiyonu ile çeviriyoruz */}
                   <p className="leading-relaxed">{t(contactInfo, 'address')}</p> 
                   <p className="leading-relaxed">
                     <a href={`tel:${contactInfo.phone}`} className={`${isDarkModePage ? 'hover:text-white' : 'hover:text-slate-900'} transition-colors`}>{contactInfo.phone}</a><br />
@@ -221,13 +276,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <span>{dict?.common?.loading || 'Yükleniyor...'}</span>
               )}
+              
+              {/* --- DİNAMİK SOSYAL MEDYA İKONLARI --- */}
               <div className="flex gap-3 pt-2">
-                {['instagram', 'facebook', 'linkedin'].map((social) => (
-                  <a key={social} href="#" className={`w-10 h-10 rounded-full flex items-center justify-center border ${isDarkModePage ? 'border-slate-700 text-slate-200 hover:border-slate-500 hover:text-white' : 'border-slate-300 text-slate-700 hover:border-slate-600 hover:text-slate-900'} transition-colors`}>
-                    <span className="material-symbols-outlined text-lg">share</span>
+                {socialLinks.map((social) => (
+                  <a 
+                    key={social.id} 
+                    href={social.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    title={social.name} // Hover yapınca ismi görünsün
+                    className={`w-10 h-10 rounded-full flex items-center justify-center border ${isDarkModePage ? 'border-slate-700 text-slate-200 hover:border-slate-500 hover:text-white' : 'border-slate-300 text-slate-700 hover:border-slate-600 hover:text-slate-900'} transition-colors`}
+                  >
+                    {/* Map'te varsa ikonu göster, yoksa baş harfi */}
+                    {iconMap[social.iconKey] || <span className="font-bold text-xs">{social.name.substring(0,1)}</span>}
                   </a>
                 ))}
               </div>
+
             </div>
           </div>
         </div>
@@ -237,15 +303,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {dict?.Footer?.CopyRight || '© 2024 The Elite Model Turkey. Tüm hakları saklıdır.'}
           </span>
           <div className="flex gap-6">
-            <a href="#" className={`${isDarkModePage ? 'text-slate-500 hover:text-white' : 'text-slate-500 hover:text-slate-900'} transition-colors`}>
-                {dict?.Footer?.KVKK || 'KVKK'}
-            </a>
-            <a href="#" className={`${isDarkModePage ? 'text-slate-500 hover:text-white' : 'text-slate-500 hover:text-slate-900'} transition-colors`}>
-                {dict?.Footer?.Security || 'Gizlilik'}
-            </a>
-          </div>
+  <button
+    className={`${isDarkModePage ? 'text-slate-500 hover:text-white' : 'text-slate-500 hover:text-slate-900'} transition-colors`}
+    onClick={() => { setSidebarOpen(true); setSidebarContent('kvkk'); }}
+  >
+    {dict?.Footer?.KVKK || 'KVKK'}
+  </button>
+  <button
+    className={`${isDarkModePage ? 'text-slate-500 hover:text-white' : 'text-slate-500 hover:text-slate-900'} transition-colors`}
+    onClick={() => { setSidebarOpen(true); setSidebarContent('gizlilik'); }}
+  >
+    {dict?.Footer?.Security || 'Gizlilik'}
+  </button>
+</div>
         </div>
+        
       </footer>
+
+      {/* Sidebar for KVKK and Privacy Policy */}
+      {sidebarOpen && (
+        <div className="fixed top-0 right-0 w-96 h-full bg-white shadow-lg z-50 p-8 overflow-y-auto">
+          <button className="absolute top-4 right-4" onClick={() => setSidebarOpen(false)}>Kapat</button>
+          {sidebarContent === 'kvkk' && <Kvkk />}
+          {sidebarContent === 'gizlilik' && <PrivacyPolicy />}
+        </div>
+      )}
     </div>
   );
 };

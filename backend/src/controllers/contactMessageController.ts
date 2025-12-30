@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { MailService } from '../Services/MailGender';
+import { NotificationService } from '../Services/NotificationService'; // Yolu klasör yapına göre kontrol et
 
 // ==========================================
 // 1. Yeni Mesaj Gönder (Public - İletişim Formu)
@@ -23,19 +23,14 @@ export const createContactMessage = async (req: Request, res: Response) => {
             },
         });
 
-        // Mail gönder (async olarak, hata olsa bile kullanıcıya başarılı döner)
-        try {
-            await MailService.sendContactNotification({
-                fullName,
-                email,
-                subject,
-                message,
-            });
-            console.log('✅ İletişim maili gönderildi');
-        } catch (err) {
-            console.error('❌ Mail gönderme hatası:', err);
-            // Hata olsa bile kullanıcıya başarılı döner
-        }
+        // BİLDİRİM ORKESTRASYONU (Mail, Telegram, Whatsapp - Panel ayarlarına göre)
+        // Arka planda çalışması ve kullanıcıyı bekletmemesi için await koymadan tetikliyoruz.
+        NotificationService.send('contact_form', {
+            fullName,
+            email,
+            subject,
+            message,
+        }).catch(err => console.error('❌ Bildirim gönderme hatası:', err));
 
         res.status(201).json(newMessage);
     } catch (error) {

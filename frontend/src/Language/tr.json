@@ -258,6 +258,7 @@
         "Female" : "Kadın",
         "Male" : "Erkek",
         "DoNot" : "Belirtmek İstemiyorum",
-        "Select" : "Seç"
+        "Select" : "Seç",
+        "Warning" : "*  KATILIM ÜCRETİ {price} OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR."
     }
 }

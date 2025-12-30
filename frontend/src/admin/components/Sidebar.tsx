@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Drawer,
@@ -91,8 +91,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         },
         {
             title: 'Başvurular',
-            path: '/admin/applications',
+            
             icon: 'people',
+            children:[
+                { title: 'Bekleyen Başvurular', path: '/admin/applications/pending', icon: 'hourglass_top' },
+                { title: 'Onaylanan Başvurular', path: '/admin/applications', icon: 'check_circle' },
+                { title: 'Reddedilen Başvurular', path: '/admin/applications/rejected', icon: 'cancel' },
+            ]
+
         },
         {
             title: 'Sosyal Medya',
@@ -100,9 +106,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             icon: 'share',
         },
         {
-            title: 'Kapak Görselleri',
-            path: '/admin/cover-images',
-            icon: 'image',
+            title: 'Ayarlar',
+            path: '/admin/settings',
+            icon: 'settings',
         },
     ];
 
