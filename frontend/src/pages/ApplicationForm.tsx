@@ -32,6 +32,18 @@ const ApplicationForm: React.FC = () => {
   const [price, setPrice] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("");
   const handleSubmit = async (paymentKeyParam?: string) => {
+    // Tüm alanlar dolu mu kontrolü
+    const requiredFields = [
+      'fullName', 'birthDate', 'gender', 'nationality', 'email', 'phone', 'city',
+      'heightCm', 'chestCm', 'hipsCm', 'footCm', 'waistCm', 'eyeColor',
+      'selfieUrl', 'profilePhoto', 'fullBodyPhoto'
+    ];
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        alert('Lütfen tüm alanları eksiksiz doldurun.');
+        return;
+      }
+    }
     setLoading(true);
     try {
       await api.post('/api/applications', {

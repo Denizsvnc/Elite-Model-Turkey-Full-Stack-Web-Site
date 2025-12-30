@@ -25,7 +25,7 @@ import systemSettingRoutes from './routes/systemSettingRoutes';
 import notificationRuleRoutes from './routes/notificationRuleRoutes';
 import socialMediaRoutes from './routes/socialMediaRoutes';
 import paymentRotes from './routes/paymentRoutes';
-
+import { processBankEmailsService } from "./Services/paymentService";
 dotenv.config();
 
 const app = express();
@@ -70,39 +70,30 @@ app.listen(PORT, () => {
     // ============================================================
     // 🤖 AKILLI ÖDEME KONTROL ROBOTU (CRON JOB)
     // ============================================================
-    console.log("🧠 Akıllı Robot Devrede: Her 5 dakikada bir bekleyen ödemeleri kontrol edecek.");
+    console.log("🧠 Odeme Kontrol Robot Devrede: Her 2 dakikada bir bekleyen ödemeleri kontrol edecek. not : daha sonra sureyi uzat");
 
     // Cron Zamanlaması: '*/5 * * * *' -> Her 5 dakikada bir çalışır
-    cron.schedule('*/5 * * * *', async () => {
+    cron.schedule('*/2 * * * *', async () => {
         try {
-            // 1. ADIM: Bekleyen (REVIEW) başvuru var mı?
+            // 1. Bekleyen kontrolü
             const pendingCount = await prisma.application.count({
-                where: {
-                    status: 'REVIEW'
-                }
+                where: { status: 'REVIEW' }
             });
 
-            // Eğer bekleyen yoksa Gmail'e bağlanma (Kaynak Tasarrufu)
-            if (pendingCount === 0) {
-                // Log kirliliği olmaması için burası boş bırakılabilir veya debug için açılabilir
-                // console.log("💤 Robot: Bekleyen ödeme yok, uyumaya devam.");
-                return; 
-            }
+            if (pendingCount === 0) return;
 
-            console.log(`🔔 DİKKAT: ${pendingCount} adet bekleyen ödeme var. Mail sunucusu taranıyor...`);
+            console.log(`🔔 DİKKAT: ${pendingCount} bekleyen ödeme. Servis başlatılıyor...`);
 
-            // 2. ADIM: Kendi API'mizi tetikle
-            // Localhost üzerinden check-emails endpoint'ine istek atıyoruz
-            const response = await axios.get(`http://localhost:${PORT}/api/payment/check-emails`);
+            // 2. API üzerinden mail kontrol endpoint'ini çağır
+            const result = await processBankEmailsService();
             
-            if (response.data.processed > 0) {
-                console.log(`✅ ROBOT RAPORU: ${response.data.processed} adet başvuru otomatik onaylandı!`);
+            if (result.processed > 0) {
+                console.log(`✅ ROBOT RAPORU: ${result.processed} adet başvuru onaylandı!`);
             } else {
-                console.log("👀 Mail kutusu kontrol edildi, henüz eşleşen ödeme yok.");
+                console.log("👀 Kontrol edildi, henüz ödeme yok.");
             }
 
         } catch (error: any) {
-            // Hata mesajını güvenli yazdırma
             console.error("❌ Robot Hatası:", error.message || error);
         }
     });
