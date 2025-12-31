@@ -59,7 +59,7 @@ const App: React.FC = () => {
         <Route path="/news/:id" element={<Layout><NewsDetail /></Layout>} />
         <Route path="/kvkk" element={<Layout><Kvkk /></Layout>} />
         <Route path="/privacy-policy" element={<Layout><PrivacyPolicy /></Layout>} />
-
+        
         {/* Admin Routes */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>

@@ -21,7 +21,7 @@ export const createApplication = async (req: Request, res: Response) => {
         paymentKey
     } = req.body;
 
-    // Görsel URL'lerini optimize et: Her zaman sadece /uploads/... formatında sakla
+    // --- 1. GÖRSEL URL OPTİMİZASYONU ---
     const selfieUrlFull = selfieUrl
         ? (selfieUrl.startsWith('/uploads') ? selfieUrl : `/uploads/Applications/selfie/${selfieUrl}`)
         : '';
@@ -33,10 +33,24 @@ export const createApplication = async (req: Request, res: Response) => {
         : '';
 
     try {
+        // --- 2. TARİH DOĞRULAMASI (KRİTİK DÜZELTME) ---
+        // Gelen tarihi işle
+        const parsedDate = new Date(birthDate);
+        const currentYear = new Date().getFullYear();
+
+        // Tarih geçersizse (Invalid Date) veya Yıl çok uçuksa (Örn: 2100'den büyük veya 1900'den küçük)
+        if (isNaN(parsedDate.getTime()) || parsedDate.getFullYear() > currentYear || parsedDate.getFullYear() < 1900) {
+            console.warn(`⚠️ Geçersiz Doğum Tarihi Engellendi: ${birthDate}`);
+            return res.status(400).json({ 
+                error: 'Geçersiz doğum tarihi. Lütfen girdiğiniz yılı kontrol edin.' 
+            });
+        }
+
+        // --- 3. VERİTABANI KAYDI ---
         const newApplication = await prisma.application.create({
             data: {
                 fullName,
-                birthDate: new Date(birthDate),
+                birthDate: parsedDate, // Doğrulanmış tarihi kullan
                 gender,
                 nationality,
                 email,
@@ -51,12 +65,14 @@ export const createApplication = async (req: Request, res: Response) => {
                 selfieUrl: selfieUrlFull,
                 profilePhoto: profilePhotoFull,
                 fullBodyPhoto: fullBodyPhotoFull,
+                // Status kontrolü: Eğer geçerli bir enum değeri ise onu kullan, değilse 'NEW' yap
                 status: status && Object.values(ApplicationStatus).includes(status) ? status : 'NEW',
                 paymentKey: paymentKey || undefined
             },
         });
 
-        // BİLDİRİM ORKESTRASYONU (Panel ayarlarına göre Mail, Telegram ve Whatsapp tetiklenir)
+        // --- 4. BİLDİRİM GÖNDERİMİ ---
+        // İşlem başarılı olduktan sonra arka planda bildirimi tetikle
         NotificationService.send('application_form', {
             fullName,
             email,
@@ -64,12 +80,15 @@ export const createApplication = async (req: Request, res: Response) => {
             city,
             gender,
             heightCm: Number(heightCm),
-            selfieUrl: selfieUrlFull, // Telegram fotoğraflı mesaj için
+            selfieUrl: selfieUrlFull,
         }).catch(err => console.error('❌ Başvuru bildirim hatası:', err));
 
+        // Başarılı yanıt
         res.status(201).json(newApplication);
+
     } catch (error) {
         console.error("Başvuru oluşturma hatası:", error);
+        // Hata detayını güvenli bir şekilde logla ama kullanıcıya genel mesaj dön
         res.status(500).json({ error: 'Başvuru alınamadı. Lütfen bilgileri kontrol edin.' });
     }
 };

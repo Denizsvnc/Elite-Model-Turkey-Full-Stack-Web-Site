@@ -4,7 +4,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import api from ".././src/services/api";
-
+import { useLanguage } from '@/src/contexts/LanguageContext';
 interface PaymentCodeBoxProps {
   onCodeGenerated: (code: string) => void;
   NameSurname: string;
@@ -24,7 +24,7 @@ const PaymentCodeBox: React.FC<PaymentCodeBoxProps> = ({
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // Hata yönetimi için
-
+  const { dict, t, language } = useLanguage();
   // Kod yenileme fonksiyonu dışarıdan da tetiklenebilir
   const fetchUniqueCode = async () => {
     try {
@@ -83,7 +83,7 @@ const PaymentCodeBox: React.FC<PaymentCodeBoxProps> = ({
           <CreditCardIcon />
         </Box>
         <Typography variant="subtitle1" fontWeight="bold">
-          Ödeme Açıklama Metni
+          {dict?.ApplicationPage?.contentText ||"Ödeme Açıklama Metni"}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Aşağıdaki kutuya tıklayarak <strong>hazır açıklama metnini</strong> kopyalayıp banka açıklama kısmına yapıştırınız.
