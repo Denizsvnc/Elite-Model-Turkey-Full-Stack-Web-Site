@@ -259,6 +259,30 @@
         "Male" : "Erkek",
         "DoNot" : "Belirtmek İstemiyorum",
         "Select" : "Seç",
-        "Warning" : "*  KATILIM ÜCRETİ {price} OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR."
+        "Warning" : "*  KATILIM ÜCRETİ {price} OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR.",
+
+        "PaymentMethod" : "Ödeme Yöntemi Seçiniz",
+        "PaymentMethodBox" : "Ödeme Yöntemi",
+        "PaymentBox1" : "Kredi Kartı",
+        "PaymentBox2" : "Havale & EFT ile Ödeme",
+        "paymentOk" : "Zaten Ödeme Yaptınız Mı?",
+        "paymentOkContent" : "Eğer zaten katılım ücretini ödediyseniz, lütfen bizimle iletişime geçin ve ödemenizi teyit edin. Başvurunuzun işleme alınabilmesi için ödemenizin kayıtlarda görünmesi gerekmektedir.",
+        "creditCard1" : "Katılım Ücreti:",
+        "creditCard2" : "Kredi Kartı İle Ödeme Yapmak İçin Butona Tıklayınız;",
+        "eft" : "Katılım Ücreti:",
+        "eft2" : "Hesap Adı: GVK REKLAM VE ORGANİZASYON TİCARET LİMİT",
+        "eft3" : "IBAN TR56 0001 0019 7997 8059 3850 01",
+        "steps" : "Başvuru ve ödeme adımları:",
+        "step1" : "1. Açıklama metnini aşağıdaki kutudan kopyalayın.",
+        "step2" : "2. Başvuru gönderme butonuna tıklayın.",
+        "step3" : "3. IBAN'a ödeme yaparken açıklama kısmına kopyaladığınız metni eksiksiz olarak yapıştırın.",
+        "warning" : "Açıklama metni kopyalanmadan başvuru gönderilemez. Ödeme açıklamasında bu metni kullanmak zorunludur.",
+        "contentText" : "Ödeme Açıklama Metni",
+        "contentText2" : "Aşağıdaki kutuya tıklayarak hazır açıklama metnini kopyalayıp banka açıklama kısmına yapıştırınız.",
+        "copyText" : "Kopyalanacak Metin:",
+        "Ok" : "Eğer ödeme yaptıysanız, lütfen aşağıdaki butona tıklayın. Size 30 dakika içerisinde SMS ile dönüş yapacağız.",
+        "ButtonText" : "METNİ KOPYALADISYAN BAŞVURUYU GÖNDER!",
+        "ButtonCreditText" : "ÖDEME YAP VE PROFESYONEL YOLCULUĞUNA BAŞLA",
+        "ApplicationSubmitted" : "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."
     }
 }
