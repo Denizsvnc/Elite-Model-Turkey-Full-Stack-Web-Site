@@ -72,7 +72,7 @@ const Mission: React.FC = () => {
       <Typography variant="h5" sx={{ mb: 2 }}>Hakkımızda - Misyon İçeriği</Typography>
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <ImageUploader
               files={files}
               setFiles={setFiles}
@@ -85,44 +85,49 @@ const Mission: React.FC = () => {
               </Box>
             )}
           </Grid>
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
                 <TextField label="Başlık (TR)" fullWidth value={form.mission_title_tr} onChange={(e) => handleChange('mission_title_tr', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
                 <TextField label="Başlık (EN)" fullWidth value={form.mission_title_en} onChange={(e) => handleChange('mission_title_en', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
+
                 <TextField label="Başlık (DE)" fullWidth value={form.mission_title_de} onChange={(e) => handleChange('mission_title_de', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
+
                 <TextField label="Başlık (RU)" fullWidth value={form.mission_title_ru} onChange={(e) => handleChange('mission_title_ru', e.target.value)} />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
+
                 <TextField label="Slogan (TR)" fullWidth value={form.mission_slogan_tr} onChange={(e) => handleChange('mission_slogan_tr', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
+
                 <TextField label="Slogan (EN)" fullWidth value={form.mission_slogan_en} onChange={(e) => handleChange('mission_slogan_en', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}}>
+
                 <TextField label="Slogan (DE)" fullWidth value={form.mission_slogan_de} onChange={(e) => handleChange('mission_slogan_de', e.target.value)} />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12, md:6}} >
                 <TextField label="Slogan (RU)" fullWidth value={form.mission_slogan_ru} onChange={(e) => handleChange('mission_slogan_ru', e.target.value)} />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField label="Metin (TR)" multiline minRows={3} fullWidth value={form.mission_text_tr} onChange={(e) => handleChange('mission_text_tr', e.target.value)} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField label="Metin (EN)" multiline minRows={3} fullWidth value={form.mission_text_en} onChange={(e) => handleChange('mission_text_en', e.target.value)} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField label="Metin (DE)" multiline minRows={3} fullWidth value={form.mission_text_de} onChange={(e) => handleChange('mission_text_de', e.target.value)} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField label="Metin (RU)" multiline minRows={3} fullWidth value={form.mission_text_ru} onChange={(e) => handleChange('mission_text_ru', e.target.value)} />
               </Grid>
             </Grid>

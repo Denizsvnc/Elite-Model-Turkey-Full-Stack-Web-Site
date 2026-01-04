@@ -131,15 +131,14 @@ const Faq: React.FC = () => {
         <DialogTitle>SSS Düzenle</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs:12, md:4}}>
               <TextField label="Sıra" type="number" fullWidth value={current.order} onChange={(e) => setCurrent((c) => ({ ...c, order: Number(e.target.value) }))} />
               <FormControlLabel sx={{ mt: 2 }} control={<Switch checked={current.isActive} onChange={(e) => setCurrent((c) => ({ ...c, isActive: e.target.checked }))} />} label="Aktif" />
             </Grid>
-            <Grid item xs={12} md={8}>
+            <Grid size={{xs:12, md:8}}>
               <MultiLangText label="Soru" values={{ tr: current.question_tr, en: current.question_en, de: current.question_de, ru: current.question_ru }} onChange={handleQuestionChange} />
             </Grid>
-            <Grid item xs={12}>
-              <MultiLangText label="Cevap" multiline rows={4} values={{ tr: current.answer_tr, en: current.answer_en, de: current.answer_de, ru: current.answer_ru }} onChange={handleAnswerChange} />
+           <Grid size={{xs:12, md:6}}>              <MultiLangText label="Cevap" multiline rows={4} values={{ tr: current.answer_tr, en: current.answer_en, de: current.answer_de, ru: current.answer_ru }} onChange={handleAnswerChange} />
             </Grid>
           </Grid>
         </DialogContent>
