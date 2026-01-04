@@ -368,7 +368,9 @@ const Home: React.FC = () => {
           </div>
           <div className="order-1 md:order-2 h-[500px] bg-slate-100 relative group overflow-hidden">
             <img
-              src={latestNews?.imageUrl || 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop'}
+              src={latestNews?.imageUrl
+                ? (latestNews.imageUrl.startsWith('/') ? `${API_BASE}${latestNews.imageUrl}` : latestNews.imageUrl)
+                : 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop'}
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
               alt={latestNews?.title_tr || 'News'}
             />

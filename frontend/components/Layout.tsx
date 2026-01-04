@@ -52,6 +52,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarContent, setSidebarContent] = useState<'kvkk' | 'gizlilik' | null>(null);
 
+  // Sidebar'ı dışarıdan kapatmak için event dinleyici
+  useEffect(() => {
+    const handleCloseSidebar = () => setSidebarOpen(false);
+    window.addEventListener('closeSidebar', handleCloseSidebar);
+    return () => {
+      window.removeEventListener('closeSidebar', handleCloseSidebar);
+    };
+  }, []);
+
   
   // Context
   const { language, setLanguage, dict, t } = useLanguage();
@@ -322,10 +331,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Sidebar for KVKK and Privacy Policy */}
       {sidebarOpen && (
-        <div className="fixed top-0 right-0 w-96 h-full bg-white shadow-lg z-50 p-8 overflow-y-auto">
-          <button className="absolute top-4 right-4" onClick={() => setSidebarOpen(false)}>Kapat</button>
-          {sidebarContent === 'kvkk' && <Kvkk />}
-          {sidebarContent === 'gizlilik' && <PrivacyPolicy />}
+        <div
+          className="fixed inset-0 z-50 flex justify-end"
+          onClick={() => setSidebarOpen(false)}
+        >
+          {/* Sidebar */}
+          <div
+            className="w-96 h-full bg-white shadow-lg p-8 overflow-y-auto relative"
+            onClick={e => e.stopPropagation()}
+          >
+            <button className="absolute top-4 right-4" onClick={() => setSidebarOpen(false)}>Kapat</button>
+            {sidebarContent === 'kvkk' && <Kvkk />}
+            {sidebarContent === 'gizlilik' && <PrivacyPolicy />}
+          </div>
         </div>
       )}
     </div>

@@ -63,30 +63,28 @@ const ContactInfo: React.FC = () => {
       <Typography variant="h5" sx={{ mb: 2 }}>İletişim Bilgileri</Typography>
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField label="Adres (TR)" fullWidth value={form.address_tr} onChange={(e) => handleChange('address_tr', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField label="Adres (EN)" fullWidth value={form.address_en} onChange={(e) => handleChange('address_en', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField label="Adres (DE)" fullWidth value={form.address_de} onChange={(e) => handleChange('address_de', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField label="Adres (RU)" fullWidth value={form.address_ru} onChange={(e) => handleChange('address_ru', e.target.value)} />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField label="Telefon" fullWidth value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+         <Grid size={{xs:12, md:6}}>
             <TextField type="email" label="E-posta" fullWidth value={form.email} onChange={(e) => handleChange('email', e.target.value)} />
           </Grid>
-          <Grid item xs={12}>
-            <TextField label="Harita URL" fullWidth value={form.locationUrl} onChange={(e) => handleChange('locationUrl', e.target.value)} />
+         <Grid size={{xs:12, md:6}}>            <TextField label="Harita URL" fullWidth value={form.locationUrl} onChange={(e) => handleChange('locationUrl', e.target.value)} />
           </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel control={<Switch checked={form.isActive} onChange={(e) => handleChange('isActive', e.target.checked)} />} label="Aktif" />
+         <Grid size={{xs:12, md:6}}>            <FormControlLabel control={<Switch checked={form.isActive} onChange={(e) => handleChange('isActive', e.target.checked)} />} label="Aktif" />
           </Grid>
         </Grid>
 

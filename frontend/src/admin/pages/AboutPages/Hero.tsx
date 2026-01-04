@@ -69,29 +69,29 @@ const Hero: React.FC = () => {
       <Typography variant="h5" sx={{ mb: 2 }}>Hakkımızda - Hero İçeriği</Typography>
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Başlık (TR)" fullWidth value={form.intro_title_tr} onChange={(e) => handleChange('intro_title_tr', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Başlık (EN)" fullWidth value={form.intro_title_en} onChange={(e) => handleChange('intro_title_en', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Başlık (DE)" fullWidth value={form.intro_title_de} onChange={(e) => handleChange('intro_title_de', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Başlık (RU)" fullWidth value={form.intro_title_ru} onChange={(e) => handleChange('intro_title_ru', e.target.value)} />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Metin (TR)" multiline minRows={3} fullWidth value={form.intro_text_tr} onChange={(e) => handleChange('intro_text_tr', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Metin (EN)" multiline minRows={3} fullWidth value={form.intro_text_en} onChange={(e) => handleChange('intro_text_en', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Metin (DE)" multiline minRows={3} fullWidth value={form.intro_text_de} onChange={(e) => handleChange('intro_text_de', e.target.value)} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField label="Metin (RU)" multiline minRows={3} fullWidth value={form.intro_text_ru} onChange={(e) => handleChange('intro_text_ru', e.target.value)} />
           </Grid>
         </Grid>
