@@ -2,9 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
-import cron from 'node-cron'; // YENİ: Zamanlayıcı için eklendi
-import axios from 'axios';    // YENİ: API isteği için eklendi
+import cron from 'node-cron'; 
 import prisma from './lib/prisma';
+
+
 
 // Route Importları
 import authRoutes from './routes/authRoutes';
@@ -24,8 +25,7 @@ import feeRoutes from './routes/feeRoutes';
 import systemSettingRoutes from './routes/systemSettingRoutes';
 import notificationRuleRoutes from './routes/notificationRuleRoutes';
 import socialMediaRoutes from './routes/socialMediaRoutes';
-import paymentRotes from './routes/paymentRoutes';
-import { processBankEmailsService } from "./Services/paymentService";
+
 dotenv.config();
 
 const app = express();
@@ -56,7 +56,7 @@ app.use('/api/fee', feeRoutes);
 app.use('/api/admin/settings', systemSettingRoutes);
 app.use('/api/admin/rules', notificationRuleRoutes);
 app.use('/api/socials', socialMediaRoutes);
-app.use('/api/payment', paymentRotes);
+
 
 // Health check api
 app.get('/', (req, res) => {
@@ -66,35 +66,4 @@ app.get('/', (req, res) => {
 // --- SUNUCU BAŞLATMA VE ROBOT KURULUMU ---
 app.listen(PORT, () => {
     console.log(`Sunucu şu portda çalışıyor: ${PORT}`);
-
-    // ============================================================
-    // 🤖 AKILLI ÖDEME KONTROL ROBOTU (CRON JOB)
-    // ============================================================
-    console.log("🧠 Odeme Kontrol Robot Devrede: Her 2 dakikada bir bekleyen ödemeleri kontrol edecek. not : daha sonra sureyi uzat");
-
-    // Cron Zamanlaması: '*/5 * * * *' -> Her 5 dakikada bir çalışır
-    cron.schedule('*/2 * * * *', async () => {
-        try {
-            // 1. Bekleyen kontrolü
-            const pendingCount = await prisma.application.count({
-                where: { status: 'REVIEW' }
-            });
-
-            if (pendingCount === 0) return;
-
-            console.log(`🔔 DİKKAT: ${pendingCount} bekleyen ödeme. Servis başlatılıyor...`);
-
-            // 2. API üzerinden mail kontrol endpoint'ini çağır
-            const result = await processBankEmailsService();
-            
-            if (result.processed > 0) {
-                console.log(`✅ ROBOT RAPORU: ${result.processed} adet başvuru onaylandı!`);
-            } else {
-                console.log("👀 Kontrol edildi, henüz ödeme yok.");
-            }
-
-        } catch (error: any) {
-            console.error("❌ Robot Hatası:", error.message || error);
-        }
-    });
 });

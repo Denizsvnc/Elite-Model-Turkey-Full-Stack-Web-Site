@@ -7,9 +7,8 @@ const ApplicationsRejected : React.FC = () => {
         const getAllRejectedApplications = async ()=>{
             try{
                 const response = await api.get("/api/applications?status=REJECTED");
-                setApplications(response.data);
+                setApplications(response.data.data);
             }catch(error){console.error("Red Edilen Başvurular Alınamadı:", error);};
-                
         }
         getAllRejectedApplications();
     },[]);

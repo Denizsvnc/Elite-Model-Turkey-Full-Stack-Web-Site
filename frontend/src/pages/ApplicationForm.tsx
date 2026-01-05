@@ -5,8 +5,6 @@ import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectChangeEve
 import ReactSelect from 'react-select';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import Iban from "../../components/iban";
-import CreditSection from '../../components/CreditSection';
 import PaymentOk from '@/components/PaymentOk';
 
 // --- SEÇENEKLER ---
@@ -91,6 +89,7 @@ const ApplicationForm: React.FC = () => {
     response();
   }, []);
 
+  // paymentKey sadece backend'den alınır ve başvuruya iletilir
   const handleSubmit = async (paymentKeyParam?: string) => {
     const errors: {[key: string]: string} = {};
     
@@ -205,12 +204,8 @@ const ApplicationForm: React.FC = () => {
     setPaymentMethod(event.target.value as string);
   };
 
-  // Düzeltildi: React.ReactNode kullanıldı
-  const formComponents: { [key: string]: React.ReactNode } = {
-    creditCard: <CreditSection price={price} loading={loading} onSubmit={handleSubmit} />, 
-    eft: <Iban price={price} loading={loading} onSubmit={handleSubmit} NameSurname={formData.fullName} />, 
-    PaymentOk : <PaymentOk />
-  };
+  
+  
 
   const rawText = dict?.ApplicationPage?.Warning || "* KATILIM ÜCRETİ {price} TL OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR.";
   const warningText = rawText.replace("{price}", String(price ?? 0));
@@ -225,7 +220,7 @@ const ApplicationForm: React.FC = () => {
           {dict?.ApplicationPage?.HeroContent || "Join The Elite Model Turkey. Please fill out the form below with accurate measurements and natural light polaroids."}
         </p>
       </div>
-
+      
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-12">
         {/* Kişisel Bilgiler */}
         <section>
@@ -543,10 +538,7 @@ const ApplicationForm: React.FC = () => {
           </div>
         </section>
 
-        <div className="pt-8">
-          <p className="text-center text-xs text-slate-400 mt-6"> {dict?.ApplicationPage?.ToInform || "Bu formu göndererek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz."}
-          </p>
-        </div>
+        
         
         {/* Payment Section */}
         <div>
@@ -581,37 +573,28 @@ const ApplicationForm: React.FC = () => {
               <h1 className='text-red-500 font-bold text-xl mr-auto mt-4'>{warningText}</h1>
             </div>
             
-            <div style={{marginTop:"1rem",alignItems:"center", justifyContent:"center", textAlign:"left", }}>
-              <h1 style={{fontFamily:"-apple-system", fontSize:"3rem", fontWeight:"bold"}}>{dict?.ApplicationPage?.PaymentMethod || "Ödeme Yöntemi Seçiniz:"}    </h1>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{dict?.ApplicationPage?.PaymentMethodBox   || "Ödeme Yöntemi"}</InputLabel>
-                <MuiSelect
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={paymentMethod}
-                  label="Ödeme Yöntemi"
-                  onChange={handleChangePayment}
-                >
-                  <MenuItem value={""} sx={{color:"blue", fontSize:"1rem", fontWeight:"bold"}} >{dict?.ApplicationPage?.PaymentMethod || "Ödeme Yöntemi Seçiniz"}</MenuItem>
-                  <MenuItem value={"creditCard"}> {dict?.ApplicationPage?.PaymentBox1 || "Kredi Kartı"}</MenuItem>
-                  <MenuItem value={"eft"}>{dict?.ApplicationPage?.PaymentBox2 || "Havale & Eft ile Ödeme"}</MenuItem>
-                </MuiSelect>
-              </FormControl>
-            </div>
             
-            <div>
-              {paymentMethod && formComponents[paymentMethod]}
-            </div>
-            
-            {!paymentMethod && (
-              <PaymentOk />
-            )}
+            <PaymentOk />
             
             {submitted && (
               <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
                 <p className="text-green-800 font-semibold"> {dict?.ApplicationPage?.ApplicationSubmitted || "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."}</p>
               </div>
             )}
+
+              
+            <div className="pt-8 flex flex-col items-center">
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition-colors duration-200 mb-4"
+                disabled={loading}
+              >
+                Başvuruyu Gönder
+              </button>
+              <p className="text-center text-xs text-slate-400 mt-2">{dict?.ApplicationPage?.ToInform || "Bu formu göndererek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz."}</p>
+            </div>
+
+
           </div>       
         </div>
       </form>
