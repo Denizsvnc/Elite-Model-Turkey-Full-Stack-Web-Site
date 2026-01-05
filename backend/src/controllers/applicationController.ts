@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { ApplicationStatus } from '../../generated/prisma'; // Enum importu
+import { ApplicationStatus, Gender } from '../../generated/prisma'; // Enum importu
+import { customAlphabet } from 'nanoid';
 import { NotificationService } from '../Services/NotificationService'; // Orkestra şefi importu
 
 // ==========================================
@@ -18,7 +19,26 @@ export const createApplication = async (req: Request, res: Response) => {
         selfieUrl, profilePhoto, fullBodyPhoto,
         // Statü (opsiyonel)
         status,
-        paymentKey
+       
+    }: {
+        fullName: string;
+        birthDate: string;
+        gender: string;
+        nationality: string;
+        email: string;
+        phone: string;
+        city: string;
+        heightCm: string | number;
+        chestCm: string | number;
+        hipsCm: string | number;
+        footCm: string | number;
+        waistCm: string | number;
+        eyeColor: string;
+        selfieUrl?: string;
+        profilePhoto?: string;
+        fullBodyPhoto?: string;
+        status?: string;
+       
     } = req.body;
 
     // --- 1. GÖRSEL URL OPTİMİZASYONU ---
@@ -46,12 +66,15 @@ export const createApplication = async (req: Request, res: Response) => {
             });
         }
 
-        // --- 3. VERİTABANI KAYDI ---
+
+     
+      
+
         const newApplication = await prisma.application.create({
             data: {
                 fullName,
                 birthDate: parsedDate, // Doğrulanmış tarihi kullan
-                gender,
+                gender: gender as Gender,
                 nationality,
                 email,
                 phone,
@@ -65,9 +88,9 @@ export const createApplication = async (req: Request, res: Response) => {
                 selfieUrl: selfieUrlFull,
                 profilePhoto: profilePhotoFull,
                 fullBodyPhoto: fullBodyPhotoFull,
-                // Status kontrolü: Eğer geçerli bir enum değeri ise onu kullan, değilse 'NEW' yap
-                status: status && Object.values(ApplicationStatus).includes(status) ? status : 'NEW',
-                paymentKey: paymentKey || undefined
+                status: status && Object.values(ApplicationStatus).includes(status as ApplicationStatus) ? status as ApplicationStatus : ApplicationStatus.NEW,
+               
+                submittedAt: new Date(), // Her zaman backend'de setle
             },
         });
 
@@ -97,7 +120,7 @@ export const createApplication = async (req: Request, res: Response) => {
 // 2. Başvuruları Listele (Admin - Filtreleme Destekli)
 // ==========================================
 export const getApplications = async (req: Request, res: Response) => {
-    const { status, gender, year, month, ageMin, ageMax } = req.query;
+    const { status, gender, year, month, ageMin, ageMax, page = '1', limit = '20' } = req.query;
 
     try {
         // Filtreleme için where objesi oluştur
@@ -105,12 +128,9 @@ export const getApplications = async (req: Request, res: Response) => {
         if (status) {
             where.status = status as ApplicationStatus;
         } else {
-            // Eğer status parametresi yoksa sadece NEW ve ACCEPTED başvuruları getir
             where.status = { in: ['NEW', 'ACCEPTED'] };
         }
         if (gender) where.gender = gender;
-
-        // Yıl ve ay ile doğum tarihi aralığı
         if (year) {
             const y = parseInt(year as string, 10);
             if (!isNaN(y)) {
@@ -126,9 +146,7 @@ export const getApplications = async (req: Request, res: Response) => {
                 where.birthDate = { gte: start, lt: end };
             }
         }
-
         // Yaş aralığı (ageMin, ageMax)
-        // Şu anki tarih - doğum tarihi = yaş
         const now = new Date();
         const currentYear = now.getFullYear();
         if (ageMin || ageMax) {
@@ -136,7 +154,6 @@ export const getApplications = async (req: Request, res: Response) => {
             if (ageMin) {
                 const min = parseInt(ageMin as string, 10);
                 if (!isNaN(min)) {
-                    // min yaşındaki en genç kişi: doğum tarihi <= bugün - min yıl
                     maxDate = new Date(now);
                     maxDate.setFullYear(currentYear - min);
                 }
@@ -144,10 +161,9 @@ export const getApplications = async (req: Request, res: Response) => {
             if (ageMax) {
                 const max = parseInt(ageMax as string, 10);
                 if (!isNaN(max)) {
-                    // max yaşındaki en yaşlı kişi: doğum tarihi >= bugün - max yıl - 1
                     minDate = new Date(now);
                     minDate.setFullYear(currentYear - max - 1);
-                    minDate.setDate(minDate.getDate() + 1); // bir gün ileri
+                    minDate.setDate(minDate.getDate() + 1);
                 }
             }
             if (minDate && maxDate) {
@@ -159,13 +175,52 @@ export const getApplications = async (req: Request, res: Response) => {
             }
         }
 
+        // Pagination
+        const pageNum = Math.max(1, parseInt(page as string, 10) || 1);
+        const limitNum = Math.max(1, Math.min(100, parseInt(limit as string, 10) || 20));
+        const skip = (pageNum - 1) * limitNum;
+
+        // Toplam kayıt sayısı
+        const total = await prisma.application.count({ where });
+        const lastPage = Math.ceil(total / limitNum);
+
+        // Sadece hafif metadata alanlarını çek
         const applications = await prisma.application.findMany({
             where,
-            orderBy: {
-                submittedAt: 'desc',
+            orderBy: { submittedAt: 'desc' },
+            skip,
+            take: limitNum,
+            select: {
+                id: true,
+                fullName: true,
+                status: true,
+                submittedAt: true,
+                birthDate: true,
+                gender: true,
+                city: true,
+                email: true,
+                phone: true,
+                selfieUrl: true,
+                profilePhoto: true,
+                fullBodyPhoto: true,
+                chestCm: true,
+                hipsCm: true,
+                footCm: true,
+                waistCm: true,
+                eyeColor: true,
+                nationality: true,
             },
         });
-        res.json(applications);
+
+        res.json({
+            data: applications,
+            meta: {
+                total,
+                page: pageNum,
+                lastPage,
+                limit: limitNum
+            }
+        });
     } catch (error) {
         res.status(500).json({ error: 'Başvurular çekilemedi.' });
     }

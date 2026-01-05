@@ -66,8 +66,13 @@ const Applications = () => {
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(20);
   
   // Filtreler
+  const [status, setStatus] = useState('');
   const [gender, setGender] = useState('');
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
@@ -107,40 +112,73 @@ const Applications = () => {
     }
   };
 
-  const fetchApplications = () => {
+  const fetchApplications = (pageNum = 1) => {
     setLoading(true);
     clearSelection(); 
-    
-    const params: any = {};
+    const params: any = { page: pageNum, limit };
+    if (status) params.status = status;
     if (gender) params.gender = gender;
     if (year) params.year = year;
     if (month) params.month = month;
     if (ageMin) params.ageMin = ageMin;
     if (ageMax) params.ageMax = ageMax;
-    
     api.get('/api/applications', { params })
       .then(res => {
-        setApplications(res.data);
+        setApplications(res.data.data);
+        setPage(res.data.meta.page);
+        setLastPage(res.data.meta.lastPage);
+        setTotal(res.data.meta.total);
+        setLimit(res.data.meta.limit);
       })
-      .catch(() => setApplications([]))
+      .catch(() => {
+        setApplications([]);
+        setPage(1);
+        setLastPage(1);
+        setTotal(0);
+      })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    fetchApplications(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   const handleFilter = () => {
-    fetchApplications();
+    setPage(1);
+    fetchApplications(1);
   };
 
   const handleClearFilters = () => {
+    setStatus('');
     setGender('');
     setYear('');
     setMonth('');
     setAgeMin('');
     setAgeMax('');
+    setPage(1);
+    fetchApplications(1);
   };
+        {/* Pagination Controls */}
+        <div className="flex justify-between items-center my-4">
+          <button
+            className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
+            onClick={() => page > 1 && setPage(page - 1)}
+            disabled={page <= 1}
+          >
+            ← Prev
+          </button>
+          <span className="text-sm text-slate-600">
+            Page {page} of {lastPage} | Total: {total}
+          </span>
+          <button
+            className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
+            onClick={() => page < lastPage && setPage(page + 1)}
+            disabled={page >= lastPage}
+          >
+            Next →
+          </button>
+        </div>
 
   const handleImgClick = (src: string, alt?: string) => {
     setModalImg({ src, alt });
@@ -158,7 +196,21 @@ const Applications = () => {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">Filtreler</h2>
           <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Durum</label>
+                <select
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  value={status}
+                  onChange={e => setStatus(e.target.value)}
+                >
+                  <option value="">Tümü</option>
+                  <option value="NEW">Yeni</option>
+                  <option value="ACCEPTED">Onaylanan</option>
+                  <option value="REJECTED">Reddedilen</option>
+                  <option value="REVIEW">İnceleniyor</option>
+                </select>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Cinsiyet</label>
                 <select 
@@ -369,16 +421,44 @@ const Applications = () => {
                           <span>{app.city}</span>
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">🌎</span>
+                          <span>{app.nationality || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
                           <span className="text-lg">👤</span>
                           <span>{app.gender === 'MALE' ? 'Erkek' : app.gender === 'FEMALE' ? 'Kadın' : 'Diğer'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">🎂</span>
+                          <span>{app.birthDate ? new Date(app.birthDate).toLocaleDateString('tr-TR') : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
                           <span className="text-lg">📏</span>
-                          <span>{app.heightCm} cm</span>
+                          <span>{app.heightCm ? app.heightCm + ' cm' : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">🦵</span>
+                          <span>{app.footCm ? app.footCm + ' cm' : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">🦶</span>
+                          <span>{app.hipsCm ? app.hipsCm + ' cm' : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">🦴</span>
+                          <span>{app.waistCm ? app.waistCm + ' cm' : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">💪</span>
+                          <span>{app.chestCm ? app.chestCm + ' cm' : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="text-lg">👁️</span>
+                          <span>{app.eyeColor || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
                           <span className="text-lg">📅</span>
-                          <span>{new Date(app.submittedAt).toLocaleDateString('tr-TR')}</span>
+                          <span>{app.submittedAt ? new Date(app.submittedAt).toLocaleDateString('tr-TR') : '-'}</span>
                         </div>
                       </div>
                     </div>

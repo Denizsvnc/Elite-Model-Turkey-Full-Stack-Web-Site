@@ -8,7 +8,7 @@ const PendingApplications : React.FC = () => {
         const getAllApplications = async () => {
             try {
                 const response = await api.get('/api/applications?status=REVIEW');
-                setApplications(response.data);
+                setApplications(response.data.data);
 
             } catch (error) {
                 console.error('Başvurular alınamadı:', error);
