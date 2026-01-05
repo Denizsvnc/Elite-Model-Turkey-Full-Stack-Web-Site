@@ -434,7 +434,7 @@ const Applications = () => {
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
                           <span className="text-lg">📏</span>
-                          <span>{app.heightCm ? app.heightCm + ' cm' : '-'}</span>
+                          <span>{Number(app.heightCm) ? Number(app.heightCm) + ' cm' : '-'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-slate-600">
                           <span className="text-lg">🦵</span>

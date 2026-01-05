@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
 import prisma from '../lib/prisma';
 import { ApplicationStatus, Gender } from '../../generated/prisma'; // Enum importu
 import { customAlphabet } from 'nanoid';
@@ -8,6 +9,11 @@ import { NotificationService } from '../Services/NotificationService'; // Orkest
 // 1. Başvuru Oluştur (Public - Kullanıcı Formu)
 // ==========================================
 export const createApplication = async (req: Request, res: Response) => {
+        // express-validator ile gelen hataları kontrol et
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
     const {
         // Kişisel
         fullName, birthDate, gender, nationality,
@@ -203,6 +209,7 @@ export const getApplications = async (req: Request, res: Response) => {
                 selfieUrl: true,
                 profilePhoto: true,
                 fullBodyPhoto: true,
+                heightCm: true,
                 chestCm: true,
                 hipsCm: true,
                 footCm: true,
@@ -272,7 +279,29 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
 // ==========================================
 export const deleteApplication = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const fs = require('fs');
+    const path = require('path');
     try {
+        // Önce başvuru kaydını bul
+        const application = await prisma.application.findUnique({ where: { id } });
+        if (!application) {
+            return res.status(404).json({ error: 'Başvuru bulunamadı.' });
+        }
+
+        // Silinecek dosya yolları
+        const files = [application.selfieUrl, application.profilePhoto, application.fullBodyPhoto]
+            .filter(Boolean)
+            .filter((filePath) => filePath.startsWith('/uploads'));
+
+        for (const filePath of files) {
+            const absPath = path.join(process.cwd(), 'src', filePath);
+            fs.unlink(absPath, (err: any) => {
+                if (err) {
+                    console.error('Görsel silinemedi:', absPath, err.message);
+                }
+            });
+        }
+
         await prisma.application.delete({ where: { id } });
         res.json({ message: 'Başvuru silindi.' });
     } catch (error) {

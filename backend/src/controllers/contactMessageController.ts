@@ -6,6 +6,12 @@ import { NotificationService } from '../Services/NotificationService'; // Yolu k
 // 1. Yeni Mesaj Gönder (Public - İletişim Formu)
 // ==========================================
 export const createContactMessage = async (req: Request, res: Response) => {
+        // express-validator ile gelen hataları kontrol et
+        const { validationResult } = require('express-validator');
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
     try {
         const { fullName, email, subject, message } = req.body;
 

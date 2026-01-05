@@ -2,7 +2,8 @@
 import prisma from '../lib/prisma';
 import { TelegramConfig, TelegramMessageOptions } from '../types/telegram.types';
 import path from 'path';
-import { fileToBase64 } from '../utils/fileToBase64';
+import fs from 'fs';
+import FormData from 'form-data';
 
 export class TelegramService {
 
@@ -38,19 +39,38 @@ export class TelegramService {
   }
 
   // 2. YARDIMCI: Genel İstek Atma Fonksiyonu (Private)
-  private static async sendRequest(endpoint: string, body: any, token: string) {
+  private static async sendRequest(endpoint: string, body: any, token: string, isFormData = false) {
     try {
       const url = `https://api.telegram.org/bot${token}/${endpoint}`;
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-
-      const data = await response.json();
-      if (!data.ok) {
-        throw new Error(`Telegram API (${endpoint}) Hatası: ${data.description}`);
+      let response, data, responseText;
+      if (isFormData) {
+        response = await fetch(url, {
+          method: 'POST',
+          headers: body.getHeaders(),
+          body,
+        });
+        responseText = await response.text();
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          data = {};
+        }
+      } else {
+        response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        responseText = await response.text();
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          data = {};
+        }
+      }
+      if (!data || !data.ok) {
+        console.error(`❌ Telegram API response text:`, responseText);
+        throw new Error(`Telegram API (${endpoint}) Hatası: ${(data && data.description) || 'Bilinmeyen hata'} | Raw response: ${responseText}`);
       }
       console.log(`✅ Telegram ${endpoint} başarılı.`);
     } catch (error) {
@@ -77,17 +97,23 @@ export class TelegramService {
     const config = await this.getConfig();
     if (!config || !options.mediaUrl) return;
 
-    let photoToSend = options.mediaUrl;
+    // Eğer local path ise dosyayı doğrudan gönder
     if (options.mediaUrl.startsWith('/uploads')) {
-      // Sunucu kökünden dosya yolu oluştur
       const absPath = path.join(process.cwd(), 'src', options.mediaUrl);
-      const base64 = fileToBase64(absPath);
-      if (base64) photoToSend = base64;
+      if (fs.existsSync(absPath)) {
+        const form = new FormData();
+        form.append('chat_id', config.telegram_chat_id);
+        form.append('photo', fs.createReadStream(absPath));
+        if (options.caption) form.append('caption', options.caption);
+        form.append('parse_mode', 'HTML');
+        await this.sendRequest('sendPhoto', form, config.telegram_token!, true);
+        return;
+      }
     }
-
+    // Aksi halde (tam url ise) eski yöntemle gönder
     await this.sendRequest('sendPhoto', {
       chat_id: config.telegram_chat_id,
-      photo: photoToSend, // Base64 veya tam link
+      photo: options.mediaUrl,
       caption: options.caption || "",
       parse_mode: 'HTML'
     }, config.telegram_token!);
