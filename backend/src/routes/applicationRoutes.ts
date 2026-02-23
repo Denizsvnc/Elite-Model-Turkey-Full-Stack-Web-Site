@@ -10,7 +10,7 @@ import { body } from 'express-validator';
 
 const router = Router();
 
-// Public: Başvuru Gönder
+
 router.post(
     '/',
     [
