@@ -7,11 +7,11 @@ const router = Router();
 // Public routes
 router.post('/login', authController.login);
 
-// Protected routes - Sadece kimlik doğrulaması gerekli
+// Protected routes 
 router.get('/profile', authMiddleware, authController.getProfile);
 router.post('/change-password', authMiddleware, authController.changePassword);
 
-// Protected routes - Sadece SUPERADMIN erişebilir
+
 router.post(
     '/register',
     authMiddleware,

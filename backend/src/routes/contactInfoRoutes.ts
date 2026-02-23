@@ -3,11 +3,11 @@ import { getContactInfo, upsertContactInfo } from '../controllers/contactInfoCon
 
 const router = Router();
 
-// Bilgileri getir
+// bilgileri getir
 // GET /api/contact
 router.get('/', getContactInfo);
 
-// Bilgileri kaydet/güncelle
+// kaydet / guncelle
 // POST /api/contact
 router.post('/', upsertContactInfo);
 
