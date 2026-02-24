@@ -3,8 +3,9 @@ import { Box, Typography, Card, CardContent, CardMedia, Button, Switch, FormCont
 import axios from 'axios';
 import ImageUploader from '../../components/imageUploader';
 import MultiLangText from '../../components/Text';
+import { getApiBaseUrl } from '../../../services/api';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 type NewsItem = {
   id: string;

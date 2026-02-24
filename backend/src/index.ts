@@ -5,9 +5,8 @@ import path from 'path';
 import cron from 'node-cron'; 
 import prisma from './lib/prisma';
 
+dotenv.config();
 
-
-// Route Importları
 import authRoutes from './routes/authRoutes';
 import sliderRoutes from './routes/sliderRoutes';
 import coverImageRoutes from './routes/coverImageRoutes';
@@ -32,7 +31,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3005;
 
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map(o => o.trim()) || ['http://localhost:3000'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Serve static uploads

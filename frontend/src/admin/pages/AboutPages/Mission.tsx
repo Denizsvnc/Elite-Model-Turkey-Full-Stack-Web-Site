@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, TextField, Typography, Button, Grid, Paper } from '@mui/material';
-import api from '../../../services/api';
+import api, { getApiBaseUrl } from '../../../services/api';
 import ImageUploader from '../../components/imageUploader';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 interface MissionForm {
   mission_imageUrl: string;

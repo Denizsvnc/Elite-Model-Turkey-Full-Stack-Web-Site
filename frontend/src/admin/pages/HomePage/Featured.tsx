@@ -9,8 +9,8 @@ import {
   Button,
   Skeleton,
 } from '@mui/material';
-// Removed Grid due to MUI v7 typing conflicts; using responsive Box layout
 import ImageUploader from '../../components/imageUploader';
+import { getApiBaseUrl } from '../../../services/api';
 
 type FeaturedItem = {
   id: string;
@@ -22,7 +22,7 @@ type FeaturedItem = {
   isPlaceholder?: boolean;
 };
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 export default function Featured() {
   const [items, setItems] = useState<FeaturedItem[]>([]);

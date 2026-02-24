@@ -19,9 +19,9 @@ import {
     Chip
 } from '@mui/material';
 import { Visibility, VisibilityOff, Save, Email, Telegram, WhatsApp, Settings as SettingsIcon } from '@mui/icons-material';
+import { getApiBaseUrl } from '../../../services/api';
 
-// 1. API ADRESİ ve TİP TANIMLARI
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 interface SystemSetting {
     id: number;

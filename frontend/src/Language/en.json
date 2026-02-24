@@ -274,5 +274,43 @@
     "ButtonText" : "SUBMIT APPLICATION IF YOU COPIED THE TEXT!",
     "ButtonCreditText" : "PAY AND START YOUR PROFESSIONAL JOURNEY",
     "ApplicationSubmitted" : "✓ Your application has been successfully submitted! We will contact you as soon as possible."
+    },
+    "ErrorPage": {
+        "gameTitle": "While You're Here, Play a Game! 🎮",
+        "goBack": "Go Back",
+        "goHome": "Go Home",
+        "needHelp": "Need help?",
+        "contactUs": "Contact Us",
+        "followUs": "Follow Us on Social Media",
+        "error400": {
+            "title": "Bad Request",
+            "message": "The request you sent is invalid. Please check your information and try again.",
+            "emoji": "🤔"
+        },
+        "error401": {
+            "title": "Unauthorized Access",
+            "message": "You need to log in to view this page.",
+            "emoji": "🔐"
+        },
+        "error403": {
+            "title": "Access Denied",
+            "message": "You don't have permission to access this page.",
+            "emoji": "🚫"
+        },
+        "error404": {
+            "title": "Page Not Found",
+            "message": "The page you are looking for doesn't exist or might have been moved.",
+            "emoji": "🦖"
+        },
+        "error500": {
+            "title": "Server Error",
+            "message": "Something went wrong on our end. Our team is working to fix this.",
+            "emoji": "💥"
+        },
+        "error503": {
+            "title": "Service Unavailable",
+            "message": "Our server is currently under maintenance. Please try again later.",
+            "emoji": "🔧"
+        }
     }
 }

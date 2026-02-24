@@ -5,7 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // HTML'deki ayar
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {

@@ -20,8 +20,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Drawer from '../../components/Drawer';
 import MultiLangText from '../../components/Text';
 import ImageUploader from '../../components/imageUploader';
-// API base (fallback to backend default port)
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+import { getApiBaseUrl } from '../../../services/api';
+
+const API_BASE = getApiBaseUrl();
 
 // Types matching backend schema
 type HomeSliderItem = {
@@ -76,7 +77,6 @@ function Sliders() {
       .then((data: HomeSlider[]) => {
         setGroups(data || []);
         setError(null);
-        // no UI selection needed; list remains for display only
       })
       .catch((err) => {
         setError(err?.message || 'Veri çekilemedi');

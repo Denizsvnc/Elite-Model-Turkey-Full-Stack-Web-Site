@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import api from '../services/api';
+import api, { getApiBaseUrl } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 interface AboutPageData {
   intro_title_tr: string; intro_title_en: string; intro_title_de: string; intro_title_ru: string;
