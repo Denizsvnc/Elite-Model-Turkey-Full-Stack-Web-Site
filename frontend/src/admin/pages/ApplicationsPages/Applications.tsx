@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
 
-// --- API SABİTİ (DÜZELTİLDİ) ---
-// Artık .env dosyasındaki VITE_API_BASE değerini okur. Yoksa varsayılan 3005'i kullanır.
 const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
 
 // --- SEÇENEKLER ---
@@ -81,6 +79,21 @@ const Applications = () => {
   
   // Modal için
   const [modalImg, setModalImg] = useState<{ src: string, alt?: string } | null>(null);
+  
+  // Dropdown state - hangi kartın detayları açık
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+  
+  const toggleCardDetails = (id: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   // Çoklu seçim kutusu değişimi (Tekil)
   const handleSelect = (id: string, checked: boolean) => {
@@ -142,7 +155,7 @@ const Applications = () => {
   useEffect(() => {
     fetchApplications(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, limit]);
 
   const handleFilter = () => {
     setPage(1);
@@ -159,26 +172,6 @@ const Applications = () => {
     setPage(1);
     fetchApplications(1);
   };
-        {/* Pagination Controls */}
-        <div className="flex justify-between items-center my-4">
-          <button
-            className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
-            onClick={() => page > 1 && setPage(page - 1)}
-            disabled={page <= 1}
-          >
-            ← Prev
-          </button>
-          <span className="text-sm text-slate-600">
-            Page {page} of {lastPage} | Total: {total}
-          </span>
-          <button
-            className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
-            onClick={() => page < lastPage && setPage(page + 1)}
-            disabled={page >= lastPage}
-          >
-            Next →
-          </button>
-        </div>
 
   const handleImgClick = (src: string, alt?: string) => {
     setModalImg({ src, alt });
@@ -353,7 +346,9 @@ const Applications = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {applications.map(app => (
+            {applications.map(app => {
+              const isExpanded = expandedCards.has(app.id);
+              return (
               <div key={app.id} className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden relative border-2 ${selectedIds.includes(app.id) ? 'border-blue-500 ring-2 ring-blue-100' : 'border-transparent'}`}>
                 {/* Çoklu seçim kutusu */}
                 <div className="absolute top-3 right-3 z-10">
@@ -368,13 +363,13 @@ const Applications = () => {
                 
                 <div className="p-6">
                     {/* Görseller */}
-                    <div className="flex gap-3 mb-5 overflow-x-auto pb-2 scrollbar-hide">
+                    <div className="flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide">
                       {app.selfieUrl && app.selfieUrl !== '' && (
                         <div className="flex-shrink-0 group relative">
                           <img
                             src={app.selfieUrl.startsWith('http') ? app.selfieUrl : `${API_BASE}${app.selfieUrl}`}
                             alt="Selfie"
-                            className="w-28 h-28 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
+                            className="w-24 h-24 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
                             onClick={() => handleImgClick(app.selfieUrl.startsWith('http') ? app.selfieUrl : `${API_BASE}${app.selfieUrl}`, 'Selfie')}
                           />
                         </div>
@@ -384,7 +379,7 @@ const Applications = () => {
                           <img
                             src={app.profilePhoto.startsWith('http') ? app.profilePhoto : `${API_BASE}${app.profilePhoto}`}
                             alt="Profil"
-                            className="w-28 h-28 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
+                            className="w-24 h-24 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
                             onClick={() => handleImgClick(app.profilePhoto.startsWith('http') ? app.profilePhoto : `${API_BASE}${app.profilePhoto}`, 'Profil')}
                           />
                         </div>
@@ -394,74 +389,84 @@ const Applications = () => {
                           <img
                             src={app.fullBodyPhoto.startsWith('http') ? app.fullBodyPhoto : `${API_BASE}${app.fullBodyPhoto}`}
                             alt="Tam Boy"
-                            className="w-28 h-28 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
+                            className="w-24 h-24 object-cover rounded-lg cursor-pointer shadow-md group-hover:shadow-xl transition-all duration-300 ring-2 ring-transparent group-hover:ring-blue-500"
                             onClick={() => handleImgClick(app.fullBodyPhoto.startsWith('http') ? app.fullBodyPhoto : `${API_BASE}${app.fullBodyPhoto}`, 'Tam Boy')}
                           />
                         </div>
                       )}
                     </div>
 
-                    {/* Bilgiler */}
-                    <div className="space-y-3">
-                      <div>
-                        <h3 className="font-bold text-xl text-slate-800">{app.fullName}</h3>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">📧</span>
-                          <span className="break-all">{app.email}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">📱</span>
-                          <span>{app.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">📍</span>
-                          <span>{app.city}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">🌎</span>
-                          <span>{app.nationality || '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">👤</span>
-                          <span>{app.gender === 'MALE' ? 'Erkek' : app.gender === 'FEMALE' ? 'Kadın' : 'Diğer'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">🎂</span>
-                          <span>{app.birthDate ? new Date(app.birthDate).toLocaleDateString('tr-TR') : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">📏</span>
-                          <span>{Number(app.heightCm) ? Number(app.heightCm) + ' cm' : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">🦵</span>
-                          <span>{app.footCm ? app.footCm + ' cm' : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">🦶</span>
-                          <span>{app.hipsCm ? app.hipsCm + ' cm' : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">🦴</span>
-                          <span>{app.waistCm ? app.waistCm + ' cm' : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">💪</span>
-                          <span>{app.chestCm ? app.chestCm + ' cm' : '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">👁️</span>
-                          <span>{app.eyeColor || '-'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <span className="text-lg">📅</span>
-                          <span>{app.submittedAt ? new Date(app.submittedAt).toLocaleDateString('tr-TR') : '-'}</span>
-                        </div>
-                      </div>
+                    {/* İsim ve Detay Butonu */}
+                    <div className="mb-3">
+                      <h3 className="font-bold text-xl text-slate-800 mb-2">{app.fullName}</h3>
+                      <button
+                        onClick={() => toggleCardDetails(app.id)}
+                        className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      >
+                        <span>{isExpanded ? '▼' : '▶'}</span>
+                        <span>{isExpanded ? 'Detayları Gizle' : 'Detayları Göster'}</span>
+                      </button>
                     </div>
+                    
+                    {/* Detaylar - Dropdown */}
+                    {isExpanded && (
+                      <div className="space-y-3 border-t border-slate-200 pt-3 mt-3 animate-fadeIn">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">📧</span>
+                            <span className="break-all">{app.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">📱</span>
+                            <span>{app.phone}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">📍</span>
+                            <span>{app.city}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">🌎</span>
+                            <span>{app.nationality || '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">👤</span>
+                            <span>{app.gender === 'MALE' ? 'Erkek' : app.gender === 'FEMALE' ? 'Kadın' : 'Diğer'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">🎂</span>
+                            <span>{app.birthDate ? new Date(app.birthDate).toLocaleDateString('tr-TR') : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">📏</span>
+                            <span>{Number(app.heightCm) ? Number(app.heightCm) + ' cm' : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">🦵</span>
+                            <span>{app.footCm ? app.footCm + ' cm' : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">🦶</span>
+                            <span>{app.hipsCm ? app.hipsCm + ' cm' : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">🦴</span>
+                            <span>{app.waistCm ? app.waistCm + ' cm' : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">💪</span>
+                            <span>{app.chestCm ? app.chestCm + ' cm' : '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">👁️</span>
+                            <span>{app.eyeColor || '-'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <span className="text-lg">📅</span>
+                            <span>{app.submittedAt ? new Date(app.submittedAt).toLocaleDateString('tr-TR') : '-'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="bg-slate-50 px-6 py-3 border-t border-slate-200 flex items-center justify-between">
@@ -494,9 +499,102 @@ const Applications = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
          
+        )}
+
+        {/* Pagination Controls */}
+        {!loading && applications.length > 0 && (
+          <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-sm text-slate-600">
+                Sayfa <span className="font-semibold text-slate-900">{page}</span> / <span className="font-semibold text-slate-900">{lastPage}</span>
+                <span className="mx-2">•</span>
+                Toplam <span className="font-semibold text-slate-900">{total}</span> başvuru
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPage(1)}
+                  disabled={page <= 1}
+                  className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm"
+                >
+                  ⏮ İlk
+                </button>
+                <button
+                  onClick={() => setPage(page - 1)}
+                  disabled={page <= 1}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm shadow-md"
+                >
+                  ← Önceki
+                </button>
+                
+                {/* Page Numbers */}
+                <div className="hidden sm:flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, lastPage) }, (_, i) => {
+                    let pageNum;
+                    if (lastPage <= 5) {
+                      pageNum = i + 1;
+                    } else if (page <= 3) {
+                      pageNum = i + 1;
+                    } else if (page >= lastPage - 2) {
+                      pageNum = lastPage - 4 + i;
+                    } else {
+                      pageNum = page - 2 + i;
+                    }
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setPage(pageNum)}
+                        className={`w-10 h-10 rounded-lg font-medium text-sm transition-all ${
+                          page === pageNum
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  onClick={() => setPage(page + 1)}
+                  disabled={page >= lastPage}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm shadow-md"
+                >
+                  Sonraki →
+                </button>
+                <button
+                  onClick={() => setPage(lastPage)}
+                  disabled={page >= lastPage}
+                  className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm"
+                >
+                  Son ⏭
+                </button>
+              </div>
+            </div>
+            
+            {/* Items per page selector */}
+            <div className="mt-4 pt-4 border-t border-slate-200 flex items-center gap-3">
+              <label className="text-sm text-slate-600 font-medium">Sayfa başına:</label>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
         )}
       </div>
     </div>

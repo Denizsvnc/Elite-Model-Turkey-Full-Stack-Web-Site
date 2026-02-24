@@ -52,10 +52,6 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <IconButton color="inherit">
-                        <span className="material-symbols-outlined">notifications</span>
-                    </IconButton>
-
                     <Box
                         sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
                         onClick={handleMenu}
