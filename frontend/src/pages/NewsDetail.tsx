@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../services/api'; // Axios instance kullanmak daha sağlıklıdır
+import api, { getApiBaseUrl } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 const NewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

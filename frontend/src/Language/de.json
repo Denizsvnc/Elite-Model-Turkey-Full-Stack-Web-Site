@@ -273,5 +273,43 @@
     "ButtonText" : "BEWERBUNG SENDEN, WENN TEXT KOPIERT WURDE!",
     "ButtonCreditText" : "BEZAHLEN UND PROFESSIONELLE REISE BEGINNEN",
     "ApplicationSubmitted" : "✓ Ihre Bewerbung wurde erfolgreich gesendet! Wir werden uns so schnell wie möglich bei Ihnen melden."
+    },
+    "ErrorPage": {
+        "gameTitle": "Spielen Sie ein Spiel, während Sie hier sind! 🎮",
+        "goBack": "Zurück",
+        "goHome": "Startseite",
+        "needHelp": "Brauchen Sie Hilfe?",
+        "contactUs": "Kontaktieren Sie uns",
+        "followUs": "Folgen Sie uns in den sozialen Medien",
+        "error400": {
+            "title": "Ungültige Anfrage",
+            "message": "Die gesendete Anfrage ist ungültig. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
+            "emoji": "🤔"
+        },
+        "error401": {
+            "title": "Nicht autorisiert",
+            "message": "Sie müssen sich anmelden, um diese Seite anzuzeigen.",
+            "emoji": "🔐"
+        },
+        "error403": {
+            "title": "Zugriff verweigert",
+            "message": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen.",
+            "emoji": "🚫"
+        },
+        "error404": {
+            "title": "Seite nicht gefunden",
+            "message": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+            "emoji": "🦖"
+        },
+        "error500": {
+            "title": "Serverfehler",
+            "message": "Es ist ein Fehler aufgetreten. Unser Team arbeitet daran, dies zu beheben.",
+            "emoji": "💥"
+        },
+        "error503": {
+            "title": "Dienst nicht verfügbar",
+            "message": "Unser Server befindet sich derzeit in Wartung. Bitte versuchen Sie es später erneut.",
+            "emoji": "🔧"
+        }
     }
 }

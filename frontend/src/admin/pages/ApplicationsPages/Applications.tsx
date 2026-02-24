@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../services/api';
+import api, { getApiBaseUrl } from '../../../services/api';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 // --- SEÇENEKLER ---
 const genderOptions = [

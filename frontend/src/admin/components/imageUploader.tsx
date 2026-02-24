@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+import { getApiBaseUrl } from '../../services/api';
+
+const API_BASE = getApiBaseUrl();
 
 export default function ImageUploader({ files, setFiles, onUploaded, folder = 'sliders' }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

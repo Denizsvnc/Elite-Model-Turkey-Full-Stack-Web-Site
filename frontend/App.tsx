@@ -40,6 +40,8 @@ import PendingApplications from './src/admin/pages/ApplicationsPages/PendingAppl
 import ApplicationsRejected from './src/admin/pages/ApplicationsPages/ApplicationsRejected';
 import Kvkk from "./components/Kvkk";
 import PrivacyPolicy from './components/PrivacyPolicy';
+import ErrorPage from './src/pages/ErrorPage';
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
@@ -86,6 +88,9 @@ const App: React.FC = () => {
           <Route path="applications/pending" element={<PendingApplications />} /> 
           <Route path="applications/rejected" element={<ApplicationsRejected />} /> 
         </Route>
+
+        {/* 404 - Catch all undefined routes */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );

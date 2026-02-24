@@ -12,6 +12,8 @@ import {
     IconButton,
     CircularProgress,
 } from '@mui/material';
+import api from '../services/api';
+
 const Login: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,28 +31,17 @@ const Login: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3005/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+            const response = await api.post('/api/auth/login', { email, password });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Giriş başarısız');
+            if (response.data?.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('adminUser', JSON.stringify(response.data.adminUser));
+                navigate(from, { replace: true });
+            } else {
+                throw new Error('Giriş başarısız');
             }
-
-            // Token'ı localStorage'a kaydet
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('adminUser', JSON.stringify(data.adminUser));
-
-            // Admin paneline yönlendir (kullanıcının geldiği sayfaya veya dashboard'a)
-            navigate(from, { replace: true });
         } catch (err: any) {
-            setError(err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+            setError(err.response?.data?.error || err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
         } finally {
             setLoading(false);
         }
