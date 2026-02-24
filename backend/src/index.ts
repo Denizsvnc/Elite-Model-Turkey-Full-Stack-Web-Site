@@ -25,6 +25,7 @@ import feeRoutes from './routes/feeRoutes';
 import systemSettingRoutes from './routes/systemSettingRoutes';
 import notificationRuleRoutes from './routes/notificationRuleRoutes';
 import socialMediaRoutes from './routes/socialMediaRoutes';
+import statsRoutes from './routes/statsRoutes';
 
 dotenv.config();
 
@@ -56,6 +57,7 @@ app.use('/api/fee', feeRoutes);
 app.use('/api/admin/settings', systemSettingRoutes);
 app.use('/api/admin/rules', notificationRuleRoutes);
 app.use('/api/socials', socialMediaRoutes);
+app.use('/api/stats', statsRoutes);
 
 
 // Health check api

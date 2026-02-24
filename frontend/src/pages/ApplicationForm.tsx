@@ -1,52 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import api from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
-import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectChangeEvent, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectChangeEvent, TextField, LinearProgress, CircularProgress } from '@mui/material';
 import ReactSelect from 'react-select';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import PaymentOk from '@/components/PaymentOk';
+import { getCountryOptions, getCityOptions } from '../data/countries';
+
+// Date-fns locales
+import { tr } from 'date-fns/locale/tr';
+import { enGB } from 'date-fns/locale/en-GB';
+import { de } from 'date-fns/locale/de';
+import { ru } from 'date-fns/locale/ru';
 
 // --- SEÇENEKLER ---
 
-// Türkiye şehirleri
-const turkeyCities = [
-  { value: 'Istanbul', label: 'Istanbul' },
-  { value: 'Ankara', label: 'Ankara' },
-  { value: 'Izmir', label: 'Izmir' },
-  { value: 'Bursa', label: 'Bursa' },
-  { value: 'Antalya', label: 'Antalya' },
-  { value: 'Adana', label: 'Adana' },
-  { value: 'Konya', label: 'Konya' },
-  { value: 'Gaziantep', label: 'Gaziantep' },
-  { value: 'Kayseri', label: 'Kayseri' },
-  { value: 'Mersin', label: 'Mersin' },
-  { value: 'Eskişehir', label: 'Eskişehir' },
-  { value: 'Samsun', label: 'Samsun' },
-  { value: 'Trabzon', label: 'Trabzon' },
-  { value: 'Diyarbakır', label: 'Diyarbakır' },
-  // ... Diğer iller eklenebilir
-];
-
-// Ülke listesi
-const countryOptions = [
-  { value: 'Turkey', label: 'Turkey' },
-  { value: 'Germany', label: 'Germany' },
-  { value: 'France', label: 'France' },
-  { value: 'United States', label: 'United States' },
-  { value: 'United Kingdom', label: 'United Kingdom' },
-  { value: 'Italy', label: 'Italy' },
-  { value: 'Spain', label: 'Spain' },
-  { value: 'Russia', label: 'Russia' },
-  { value: 'Azerbaijan', label: 'Azerbaijan' },
-  { value: 'Netherlands', label: 'Netherlands' },
-  { value: 'Greece', label: 'Greece' },
-  { value: 'Ukraine', label: 'Ukraine' },
-  { value: 'Poland', label: 'Poland' },
-  { value: 'Other', label: 'Other' },
-];
-
 const ApplicationForm: React.FC = () => {
+  const { dict, language } = useLanguage();
+  
+  
+  const getDateLocale = () => {
+    switch (language) {
+      case 'tr': return tr;
+      case 'en': return enGB;
+      case 'de': return de;
+      case 'ru': return ru;
+      default: return tr;
+    }
+  };
+  
   const [formData, setFormData] = useState({
     fullName: '',
     birthDate: '',
@@ -69,11 +52,19 @@ const ApplicationForm: React.FC = () => {
   const [birthDateValue, setBirthDateValue] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const { dict } = useLanguage();
   const [price, setPrice] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
   const [photoPreviews, setPhotoPreviews] = useState<{[key: string]: string}>({});
+  const [uploadingPhotos, setUploadingPhotos] = useState<{[key: string]: boolean}>({});
+  const [touchedFields, setTouchedFields] = useState<{[key: string]: boolean}>({});
+  
+  
+  const fieldRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+  
+  // Dinamik şehir seçenekleri
+  const cityOptions = formData.nationality ? getCityOptions(formData.nationality) : [];
+  const countryOptions = getCountryOptions();
 
   useEffect(() => {
     const response = async () => {
@@ -89,33 +80,94 @@ const ApplicationForm: React.FC = () => {
     response();
   }, []);
 
+  // Field-level validation function
+  const validateField = (name: string, value: any): string => {
+    switch (name) {
+      case 'fullName':
+        if (!value || !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
+          return 'Geçerli bir ad soyad giriniz (sadece harfler)';
+        }
+        if (value.length < 3) {
+          return 'Ad soyad en az 3 karakter olmalıdır';
+        }
+        break;
+      case 'birthDate':
+        if (!value) return 'Doğum tarihi zorunludur';
+        break;
+      case 'nationality':
+        if (!value) return 'Ülke seçimi zorunludur';
+        break;
+      case 'email':
+        if (!value) return 'E-posta zorunludur';
+        if (!/^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,})$/.test(value)) {
+          return 'Geçerli bir e-posta adresi giriniz';
+        }
+        break;
+      case 'phone':
+        if (!value) return 'Telefon numarası zorunludur';
+        if (!/^\+?[0-9\s]{10,20}$/.test(value)) {
+          return 'Geçerli bir telefon numarası giriniz';
+        }
+        break;
+      case 'city':
+        if (!value) return 'Şehir seçimi zorunludur';
+        break;
+      case 'heightCm':
+      case 'chestCm':
+      case 'hipsCm':
+      case 'footCm':
+      case 'waistCm':
+        if (!value || isNaN(Number(value)) || Number(value) <= 0) {
+          return 'Geçerli bir sayı giriniz';
+        }
+        break;
+      case 'eyeColor':
+        if (!value) return 'Göz rengi seçimi zorunludur';
+        break;
+      case 'selfieUrl':
+        if (!value) return 'Selfie fotoğrafı zorunludur';
+        break;
+      case 'profilePhoto':
+        if (!value) return 'Profil fotoğrafı zorunludur';
+        break;
+      case 'fullBodyPhoto':
+        if (!value) return 'Tam boy fotoğraf zorunludur';
+        break;
+    }
+    return '';
+  };
+
+  // Smooth scroll to first error
+  const scrollToError = (errors: {[key: string]: string}) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField && fieldRefs.current[firstErrorField]) {
+      fieldRefs.current[firstErrorField]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      // Focus on the field after scroll
+      setTimeout(() => {
+        const input = fieldRefs.current[firstErrorField]?.querySelector('input, select, textarea');
+        (input as HTMLElement)?.focus();
+      }, 500);
+    }
+  };
+
   // paymentKey sadece backend'den alınır ve başvuruya iletilir
   const handleSubmit = async (paymentKeyParam?: string) => {
     const errors: {[key: string]: string} = {};
     
-    if (!formData.fullName || !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(formData.fullName)) errors.fullName = 'Geçerli bir ad soyad giriniz';
-    if (!formData.birthDate) errors.birthDate = 'Doğum tarihi zorunlu';
-    if (!formData.gender) errors.gender = 'Cinsiyet zorunlu';
-    if (!formData.nationality) errors.nationality = 'Ülke zorunlu';
-    if (!formData.email || !/^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,})$/.test(formData.email)) errors.email = 'Geçerli bir e-posta giriniz';
-    if (!formData.phone || !/^\+?[0-9\s]{10,20}$/.test(formData.phone)) errors.phone = 'Geçerli bir telefon numarası giriniz';
-    if (!formData.city) errors.city = 'Şehir zorunlu';
-    
-    ['heightCm','chestCm','hipsCm','footCm','waistCm'].forEach(f => {
-      // @ts-ignore
-      if (!formData[f] || isNaN(Number(formData[f])) || Number(formData[f]) <= 0) errors[f] = 'Geçerli bir değer giriniz';
+    // Validate all fields
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, (formData as any)[key]);
+      if (error) errors[key] = error;
     });
-
-    if (!formData.eyeColor) errors.eyeColor = 'Göz rengi zorunlu';
-    if (!formData.selfieUrl) errors.selfieUrl = 'Selfie fotoğrafı zorunlu';
-    if (!formData.profilePhoto) errors.profilePhoto = 'Profil fotoğrafı zorunlu';
-    if (!formData.fullBodyPhoto) errors.fullBodyPhoto = 'Tam boy fotoğraf zorunlu';
     
     setFormErrors(errors);
+    setTouchedFields(Object.keys(formData).reduce((acc, key) => ({...acc, [key]: true}), {}));
     
     if (Object.keys(errors).length > 0) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      alert("Lütfen kırmızı ile işaretlenen alanları kontrol ediniz.");
+      scrollToError(errors);
       return;
     }
 
@@ -173,7 +225,21 @@ const ApplicationForm: React.FC = () => {
 
     if (type === 'file' && files && files[0]) {
       const file = files[0];
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Dosya boyutu 5MB\'dan küçük olmalıdır');
+        return;
+      }
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Sadece resim dosyaları yüklenebilir');
+        return;
+      }
+      
       setPhotoPreviews(prev => ({ ...prev, [name]: URL.createObjectURL(file) }));
+      setUploadingPhotos(prev => ({ ...prev, [name]: true }));
       
       const form = new FormData();
       form.append('file', file);
@@ -191,24 +257,55 @@ const ApplicationForm: React.FC = () => {
           url = `/uploads/${folder}/${url}`;
         }
         setFormData(prev => ({ ...prev, [name]: url }));
+        setUploadingPhotos(prev => ({ ...prev, [name]: false }));
+        
+        // Validate field after upload
+        if (touchedFields[name]) {
+          const error = validateField(name, url);
+          setFormErrors(prev => ({ ...prev, [name]: error }));
+        }
       }).catch(err => {
           console.error("Fotoğraf yükleme hatası", err);
           alert("Fotoğraf yüklenirken bir hata oluştu.");
+          setUploadingPhotos(prev => ({ ...prev, [name]: false }));
+          setPhotoPreviews(prev => {
+            const newPreviews = { ...prev };
+            delete newPreviews[name];
+            return newPreviews;
+          });
       });
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
+      
+      // Real-time validation for touched fields
+      if (touchedFields[name]) {
+        const error = validateField(name, value);
+        setFormErrors(prev => ({ ...prev, [name]: error }));
+      }
     }
+  };
+
+  const handleFieldBlur = (name: string) => {
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, (formData as any)[name]);
+    setFormErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleChangePayment = (event: SelectChangeEvent) => {
     setPaymentMethod(event.target.value as string);
   };
 
-  
-  
-
   const rawText = dict?.ApplicationPage?.Warning || "* KATILIM ÜCRETİ {price} TL OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR.";
   const warningText = rawText.replace("{price}", String(price ?? 0));
+
+  // Calculate form completion progress
+  const calculateProgress = () => {
+    const totalFields = Object.keys(formData).length;
+    const filledFields = Object.values(formData).filter(val => val && val !== '').length;
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
+  const progress = calculateProgress();
 
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 md:py-20">
@@ -220,6 +317,30 @@ const ApplicationForm: React.FC = () => {
           {dict?.ApplicationPage?.HeroContent || "Join The Elite Model Turkey. Please fill out the form below with accurate measurements and natural light polaroids."}
         </p>
       </div>
+
+      {/* Progress Indicator */}
+      <div className="mb-8 bg-white rounded-xl shadow-lg p-6">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold text-slate-700">Form İlerlemesi</h3>
+          <span className="text-sm font-bold text-blue-600">{progress}%</span>
+        </div>
+        <LinearProgress 
+          variant="determinate" 
+          value={progress} 
+          sx={{
+            height: 8,
+            borderRadius: 4,
+            backgroundColor: '#e2e8f0',
+            '& .MuiLinearProgress-bar': {
+              borderRadius: 4,
+              backgroundColor: progress === 100 ? '#10b981' : '#3b82f6'
+            }
+          }}
+        />
+        <p className="text-xs text-slate-500 mt-2">
+          {progress === 100 ? '✓ Tüm alanlar dolduruldu!' : `${Object.values(formData).filter(v => v === '').length} alan eksik`}
+        </p>
+      </div>
       
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-12">
         {/* Kişisel Bilgiler */}
@@ -229,13 +350,14 @@ const ApplicationForm: React.FC = () => {
             <h2 className="text-xl font-bold">{dict?.ApplicationPage?.PersonalDetails || "Personal Details"}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
+            <div className="md:col-span-2" ref={el => { fieldRefs.current['fullName'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.NameSurname || "Ad Soyad (Full Name)"}</label>
               <input 
                 type="text" 
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur('fullName')}
                 onKeyDown={(e) => {
                   const key = e.key;
                   if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]$/.test(key) && key.length === 1 && key !== 'Backspace' && key !== 'Tab' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
@@ -243,16 +365,24 @@ const ApplicationForm: React.FC = () => {
                   }
                 }}
                 required
-                className={`w-full p-4 bg-slate-50 border ${formErrors.fullName ? 'border-red-500' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
-                placeholder="Adınız Soyadınız" 
+                className={`w-full p-4 bg-slate-50 border ${formErrors.fullName && touchedFields.fullName ? 'border-red-500 bg-red-50' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
+                placeholder="Adınız Soyadınız"
+                aria-label="Ad Soyad"
+                aria-invalid={!!formErrors.fullName}
+                aria-describedby={formErrors.fullName ? "fullName-error" : undefined}
               />
-              {formErrors.fullName && <p className="text-red-500 text-xs mt-1">{formErrors.fullName}</p>}
+              {formErrors.fullName && touchedFields.fullName && (
+                <p id="fullName-error" className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  {formErrors.fullName}
+                </p>
+              )}
             </div>
 
             {/* Tarih Seçici */}
-            <div>
+            <div ref={el => { fieldRefs.current['birthDate'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.DateOfBorn || "Doğum Tarihi (Date of Birth)"}</label>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={getDateLocale()}>
                 <DatePicker
                   value={birthDateValue}
                   onChange={(newValue) => {
@@ -299,28 +429,30 @@ const ApplicationForm: React.FC = () => {
             <h2 className="text-xl font-bold">{dict?.ApplicationPage?.Contact || "Contact Information"}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+            <div ref={el => { fieldRefs.current['email'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.email || "E-posta (Email)"}</label>
               <TextField
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur('email')}
                 required
                 fullWidth
                 className="bg-slate-50"
                 placeholder="ornek@mail.com"
-                error={Boolean(formErrors.email)}
-                helperText={formErrors.email}
+                error={Boolean(formErrors.email && touchedFields.email)}
+                helperText={touchedFields.email && formErrors.email}
               />
             </div>
-            <div>
+            <div ref={el => { fieldRefs.current['phone'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.Phone || "Telefon (Phone)"}</label>
               <TextField
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur('phone')}
                 onKeyDown={(e) => {
                   const key = e.key;
                   if (!/[0-9+\s]/.test(key) && key.length === 1 && key !== 'Backspace' && key !== 'Tab' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
@@ -332,24 +464,29 @@ const ApplicationForm: React.FC = () => {
                 className="bg-slate-50"
                 placeholder="+90 555 000 0000"
                 inputProps={{ maxLength: 20 }}
-                error={Boolean(formErrors.phone)}
-                helperText={formErrors.phone}
+                error={Boolean(formErrors.phone && touchedFields.phone)}
+                helperText={touchedFields.phone && formErrors.phone}
               />
             </div>
             
             {/* Ülke Seçimi */}
-            <div>
+            <div ref={el => { fieldRefs.current['nationality'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.Nationality || "Ülke (Nationality)"}</label>
               <ReactSelect
                 options={countryOptions}
                 value={countryOptions.find(opt => opt.value === formData.nationality) || null}
                 onChange={option => {
+                  const newNationality = option ? option.value : '';
                   setFormData(prev => ({ 
                     ...prev, 
-                    nationality: option ? option.value : '',
+                    nationality: newNationality,
                     city: '' 
                   }));
+                  setTouchedFields(prev => ({ ...prev, nationality: true, city: false }));
+                  const error = validateField('nationality', newNationality);
+                  setFormErrors(prev => ({ ...prev, nationality: error, city: '' }));
                 }}
+                onBlur={() => handleFieldBlur('nationality')}
                 placeholder="Ülke Seçiniz / Select Country"
                 isClearable
                 isSearchable
@@ -358,23 +495,35 @@ const ApplicationForm: React.FC = () => {
                     ...base, 
                     minHeight: 56, 
                     background: '#f8fafc', 
-                    borderColor: formErrors.nationality ? '#ef4444' : '#e2e8f0' 
+                    borderColor: (formErrors.nationality && touchedFields.nationality) ? '#ef4444' : '#e2e8f0' 
                   }),
                   menu: (base) => ({ ...base, zIndex: 9999 }),
                 }}
               />
-              {formErrors.nationality && <p className="text-red-500 text-xs mt-1">{formErrors.nationality}</p>}
+              {formErrors.nationality && touchedFields.nationality && (
+                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  {formErrors.nationality}
+                </p>
+              )}
             </div>
 
             {/* Şehir Seçimi */}
-            <div>
+            <div ref={el => { fieldRefs.current['city'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.City || "Şehir (City)"}</label>
-              {formData.nationality === 'Turkey' ? (
+              {cityOptions.length > 0 ? (
                 <ReactSelect
-                  options={turkeyCities}
-                  value={turkeyCities.find(opt => opt.value === formData.city) || null}
-                  onChange={option => setFormData(prev => ({ ...prev, city: option ? option.value : '' }))}
-                  placeholder="Şehir Seçiniz..."
+                  options={cityOptions}
+                  value={cityOptions.find(opt => opt.value === formData.city) || null}
+                  onChange={option => {
+                    const newCity = option ? option.value : '';
+                    setFormData(prev => ({ ...prev, city: newCity }));
+                    setTouchedFields(prev => ({ ...prev, city: true }));
+                    const error = validateField('city', newCity);
+                    setFormErrors(prev => ({ ...prev, city: error }));
+                  }}
+                  onBlur={() => handleFieldBlur('city')}
+                  placeholder="Şehir Seçiniz / Select City"
                   isClearable
                   isSearchable
                   styles={{
@@ -382,7 +531,7 @@ const ApplicationForm: React.FC = () => {
                       ...base, 
                       minHeight: 56, 
                       background: '#f8fafc', 
-                      borderColor: formErrors.city ? '#ef4444' : '#e2e8f0' 
+                      borderColor: (formErrors.city && touchedFields.city) ? '#ef4444' : '#e2e8f0' 
                     }),
                     menu: (base) => ({ ...base, zIndex: 9999 }),
                   }}
@@ -393,14 +542,21 @@ const ApplicationForm: React.FC = () => {
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
+                  onBlur={() => handleFieldBlur('city')}
                   required
                   fullWidth
                   className="bg-slate-50"
-                  placeholder="Şehir giriniz"
+                  placeholder="Şehir giriniz / Enter city"
                   disabled={!formData.nationality} 
-                  error={Boolean(formErrors.city)}
-                  helperText={!formData.nationality ? "Önce ülke seçiniz" : formErrors.city}
+                  error={Boolean(formErrors.city && touchedFields.city)}
+                  helperText={!formData.nationality ? "Önce ülke seçiniz" : (touchedFields.city && formErrors.city)}
                 />
+              )}
+              {formErrors.city && touchedFields.city && cityOptions.length > 0 && (
+                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  {formErrors.city}
+                </p>
               )}
             </div>
           </div>
@@ -420,7 +576,7 @@ const ApplicationForm: React.FC = () => {
               { label: dict?.ApplicationPage?.Hips || 'Basen (Hips)', unit: 'cm', name: 'hipsCm', ph: '90' },
               { label: dict?.ApplicationPage?.Shoe || 'Ayak (Shoe)', unit: 'EU', name: 'footCm', ph: '38' },
             ].map((m) => (
-              <div key={m.name}>
+              <div key={m.name} ref={el => { fieldRefs.current[m.name] = el; }}>
                 <label className="block text-sm font-bold text-slate-700 mb-2">{m.label}</label>
                 <div className="relative">
                   <input 
@@ -428,22 +584,35 @@ const ApplicationForm: React.FC = () => {
                     name={m.name}
                     value={(formData as any)[m.name]}
                     onChange={handleInputChange}
+                    onBlur={() => handleFieldBlur(m.name)}
                     required
-                    className={`w-full p-4 bg-slate-50 border ${formErrors[m.name] ? 'border-red-500' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
-                    placeholder={m.ph} 
+                    className={`w-full p-4 bg-slate-50 border ${formErrors[m.name] && touchedFields[m.name] ? 'border-red-500 bg-red-50' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
+                    placeholder={m.ph}
+                    min="0"
+                    step="1"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">{m.unit}</span>
                 </div>
+                {formErrors[m.name] && touchedFields[m.name] && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">error</span>
+                    {formErrors[m.name]}
+                  </p>
+                )}
               </div>
             ))}
-            <div>
+            <div ref={el => { fieldRefs.current['eyeColor'] = el; }}>
               <label className="block text-sm font-bold text-slate-700 mb-2">{dict?.ApplicationPage?.Eyes ||  "Göz (Eyes)"}</label>
               <select 
                 name="eyeColor"
                 value={formData.eyeColor}
-                onChange={handleSelectChange}
+                onChange={(e) => {
+                  handleSelectChange(e);
+                  setTouchedFields(prev => ({ ...prev, eyeColor: true }));
+                }}
+                onBlur={() => handleFieldBlur('eyeColor')}
                 required
-                className={`w-full p-4 bg-slate-50 border ${formErrors.eyeColor ? 'border-red-500' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors appearance-none`}
+                className={`w-full p-4 bg-slate-50 border ${formErrors.eyeColor && touchedFields.eyeColor ? 'border-red-500 bg-red-50' : 'border-slate-200'} rounded-lg focus:outline-none focus:border-blue-500 transition-colors appearance-none`}
               >
                 <option value="">{dict?.ApplicationPage?.Select || "Select"}</option>
                 <option value="Brown">{dict?.ApplicationPage?.Brown || "Kahverengi"}</option>
@@ -452,6 +621,12 @@ const ApplicationForm: React.FC = () => {
                 <option value="Hazel">{dict?.ApplicationPage?.Hazel || "Ela"}</option>
                 <option value="Black">{dict?.ApplicationPage?.Black || "Siyah"}</option>
               </select>
+              {formErrors.eyeColor && touchedFields.eyeColor && (
+                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  {formErrors.eyeColor}
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -467,8 +642,13 @@ const ApplicationForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Selfie */}
-            <div className={`relative border-2 border-dashed ${formErrors.selfieUrl ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all group h-64`}>
-              {(photoPreviews.selfieUrl || formData.selfieUrl) ? (
+            <div ref={el => { fieldRefs.current['selfieUrl'] = el; }} className={`relative border-2 border-dashed ${formErrors.selfieUrl && touchedFields.selfieUrl ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer ${!uploadingPhotos.selfieUrl && 'hover:border-blue-500 hover:bg-blue-50'} transition-all group h-64`}>
+              {uploadingPhotos.selfieUrl ? (
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <CircularProgress size={40} />
+                  <p className="text-sm text-slate-600">Yükleniyor...</p>
+                </div>
+              ) : (photoPreviews.selfieUrl || formData.selfieUrl) ? (
                 <div className="relative w-full h-full">
                   <img src={photoPreviews.selfieUrl || formData.selfieUrl} alt="Selfie Preview" className="w-full h-full object-contain rounded-lg" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
@@ -484,14 +664,29 @@ const ApplicationForm: React.FC = () => {
                   <p className="text-xs text-slate-500 mt-1 mb-2">{dict?.ApplicationPage?.Shot3 ||  "Face close-up, neutral expression"}</p>
                 </>
               )}
-              <label className="absolute inset-0 cursor-pointer">
-                <input type="file" name="selfieUrl" accept="image/*" onChange={handleInputChange} className="hidden" />
-              </label>
+              {!uploadingPhotos.selfieUrl && (
+                <label className="absolute inset-0 cursor-pointer">
+                  <input type="file" name="selfieUrl" accept="image/*" onChange={handleInputChange} className="hidden" />
+                </label>
+              )}
+              {formErrors.selfieUrl && touchedFields.selfieUrl && (
+                <div className="absolute -bottom-8 left-0 right-0">
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1 justify-center">
+                    <span className="material-symbols-outlined text-sm">error</span>
+                    {formErrors.selfieUrl}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Profile */}
-            <div className={`relative border-2 border-dashed ${formErrors.profilePhoto ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all group h-64`}>
-              {(photoPreviews.profilePhoto || formData.profilePhoto) ? (
+            <div ref={el => { fieldRefs.current['profilePhoto'] = el; }} className={`relative border-2 border-dashed ${formErrors.profilePhoto && touchedFields.profilePhoto ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer ${!uploadingPhotos.profilePhoto && 'hover:border-blue-500 hover:bg-blue-50'} transition-all group h-64`}>
+              {uploadingPhotos.profilePhoto ? (
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <CircularProgress size={40} />
+                  <p className="text-sm text-slate-600">Yükleniyor...</p>
+                </div>
+              ) : (photoPreviews.profilePhoto || formData.profilePhoto) ? (
                 <div className="relative w-full h-full">
                   <img src={photoPreviews.profilePhoto || formData.profilePhoto} alt="Profile Preview" className="w-full h-full object-contain rounded-lg" />
                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
@@ -507,14 +702,29 @@ const ApplicationForm: React.FC = () => {
                   <p className="text-xs text-slate-500 mt-1 mb-2">{dict?.ApplicationPage?.Shot2 || "Side view, clear jawline"}</p>
                 </>
               )}
-              <label className="absolute inset-0 cursor-pointer">
-                <input type="file" name="profilePhoto" accept="image/*" onChange={handleInputChange} className="hidden" />
-              </label>
+              {!uploadingPhotos.profilePhoto && (
+                <label className="absolute inset-0 cursor-pointer">
+                  <input type="file" name="profilePhoto" accept="image/*" onChange={handleInputChange} className="hidden" />
+                </label>
+              )}
+              {formErrors.profilePhoto && touchedFields.profilePhoto && (
+                <div className="absolute -bottom-8 left-0 right-0">
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1 justify-center">
+                    <span className="material-symbols-outlined text-sm">error</span>
+                    {formErrors.profilePhoto}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Full Body */}
-            <div className={`relative border-2 border-dashed ${formErrors.fullBodyPhoto ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all group h-64`}>
-              {(photoPreviews.fullBodyPhoto || formData.fullBodyPhoto) ? (
+            <div ref={el => { fieldRefs.current['fullBodyPhoto'] = el; }} className={`relative border-2 border-dashed ${formErrors.fullBodyPhoto && touchedFields.fullBodyPhoto ? 'border-red-500 bg-red-50' : 'border-slate-300'} rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer ${!uploadingPhotos.fullBodyPhoto && 'hover:border-blue-500 hover:bg-blue-50'} transition-all group h-64`}>
+              {uploadingPhotos.fullBodyPhoto ? (
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <CircularProgress size={40} />
+                  <p className="text-sm text-slate-600">Yükleniyor...</p>
+                </div>
+              ) : (photoPreviews.fullBodyPhoto || formData.fullBodyPhoto) ? (
                 <div className="relative w-full h-full">
                   <img src={photoPreviews.fullBodyPhoto || formData.fullBodyPhoto} alt="Full Body Preview" className="w-full h-full object-contain rounded-lg" />
                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
@@ -530,9 +740,19 @@ const ApplicationForm: React.FC = () => {
                   <p className="text-xs text-slate-500 mt-1 mb-2">{dict?.ApplicationPage?.Shot1 || "Head to toe, form fitting clothes"}</p>
                 </>
               )}
-              <label className="absolute inset-0 cursor-pointer">
-                <input type="file" name="fullBodyPhoto" accept="image/*" onChange={handleInputChange} className="hidden" />
-              </label>
+              {!uploadingPhotos.fullBodyPhoto && (
+                <label className="absolute inset-0 cursor-pointer">
+                  <input type="file" name="fullBodyPhoto" accept="image/*" onChange={handleInputChange} className="hidden" />
+                </label>
+              )}
+              {formErrors.fullBodyPhoto && touchedFields.fullBodyPhoto && (
+                <div className="absolute -bottom-8 left-0 right-0">
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1 justify-center">
+                    <span className="material-symbols-outlined text-sm">error</span>
+                    {formErrors.fullBodyPhoto}
+                  </p>
+                </div>
+              )}
             </div>
 
           </div>
@@ -586,10 +806,20 @@ const ApplicationForm: React.FC = () => {
             <div className="pt-8 flex flex-col items-center">
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition-colors duration-200 mb-4"
+                className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition-all duration-200 mb-4 min-w-[200px] flex items-center justify-center gap-2 ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
                 disabled={loading}
               >
-                Başvuruyu Gönder
+                {loading ? (
+                  <>
+                    <CircularProgress size={20} sx={{ color: 'white' }} />
+                    <span>Gönderiliyor...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined">send</span>
+                    <span>Başvuruyu Gönder</span>
+                  </>
+                )}
               </button>
               <p className="text-center text-xs text-slate-400 mt-2">{dict?.ApplicationPage?.ToInform || "Bu formu göndererek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz."}</p>
             </div>
