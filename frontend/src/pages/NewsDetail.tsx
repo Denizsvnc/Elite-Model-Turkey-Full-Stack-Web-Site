@@ -31,6 +31,20 @@ const NewsDetail: React.FC = () => {
       });
   }, [id]);
 
+  // Otomatik slider geçişi - 5 saniyede bir
+  useEffect(() => {
+    if (!news || !news.galleryUrls || news.galleryUrls.length === 0) return;
+    
+    const images = [news.imageUrl, ...news.galleryUrls];
+    if (images.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [news, activeIndex]);
+
   // Tarih formatını dile göre ayarlayan yardımcı fonksiyon
   const getLocale = (lang: string) => {
     switch (lang) {

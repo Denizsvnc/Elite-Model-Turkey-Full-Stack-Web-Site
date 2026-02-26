@@ -68,6 +68,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   // State
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const [socialLinks, setSocialLinks] = useState<SocialMedia[]>([]);
+  const [isApplicationActive, setIsApplicationActive] = useState<boolean>(true);
   
   // --- 3. VERİ ÇEKME (Contact + Socials) ---
   useEffect(() => {
@@ -77,8 +78,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       // İki isteği paralel atıyoruz (Daha performanslı)
       Promise.all([
         axiosInstance.get('/api/contact-info'), // Backend endpointin bu olduğunu varsayıyoruz
-        axiosInstance.get('/api/socials')       // Yeni eklediğimiz endpoint
-      ]).then(([contactRes, socialRes]) => {
+        axiosInstance.get('/api/socials'),       // Yeni eklediğimiz endpoint
+        axiosInstance.get('/api/application-page/status') // Başvuru sayfası durumu
+      ]).then(([contactRes, socialRes, appStatusRes]) => {
         
         // İletişim Bilgileri
         if(contactRes.data) {
@@ -89,6 +91,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         if (Array.isArray(socialRes.data)) {
           const activeSocials = socialRes.data.filter((s: SocialMedia) => s.isActive);
           setSocialLinks(activeSocials);
+        }
+        
+        // Başvuru Sayfası Durumu
+        if (appStatusRes.data?.success && appStatusRes.data?.data) {
+          setIsApplicationActive(appStatusRes.data.data.isActive);
         }
       }).catch(err => console.error("Veri çekme hatası:", err));
     });
@@ -205,13 +212,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             ))}
 
-            <Link
-              to="/basvuru"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-4 px-6 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-center"
-            >
-               {dict?.common?.ApplyNow || 'BAŞVURU YAP'}
-            </Link>
+            {isApplicationActive && (
+              <Link
+                to="/basvuru"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mt-4 px-6 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-center"
+              >
+                {dict?.common?.ApplyNow || 'BAŞVURU YAP'}
+              </Link>
+            )}
           </div>
         )}
       </nav>
@@ -240,10 +249,26 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                {dict?.Footer?.Content || 'İstanbul merkezli, uluslararası sahnede konumlandırılan modeller için stratejik temsil.'}
             </p>
             <div className="flex flex-wrap gap-3 mt-2">
-              <Link to="/basvuru" className={`${isDarkModePage ? 'bg-white text-black hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'} px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors`}>
-                {dict?.common?.Apply || 'Başvuru Yap'}
-              </Link>
-              <Link to="/iletisim" className={`${isDarkModePage ? 'border border-slate-700 text-slate-200 hover:border-slate-500' : 'border border-slate-300 text-slate-800 hover:border-slate-500'} px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors`}>
+              {isApplicationActive && (
+                <Link
+                  to="/basvuru"
+                  className={`${
+                    isDarkModePage
+                      ? 'bg-white text-black hover:bg-slate-200'
+                      : 'bg-slate-900 text-white hover:bg-slate-800'
+                  } px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors`}
+                >
+                  {dict?.common?.Apply || 'Başvuru Yap'}
+                </Link>
+              )}
+              <Link
+                to="/iletisim"
+                className={`${
+                  isDarkModePage
+                    ? 'border border-slate-700 text-slate-200 hover:border-slate-500'
+                    : 'border border-slate-300 text-slate-800 hover:border-slate-500'
+                } px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors`}
+              >
                 {dict?.common?.ContactUs || 'İletişim'}
               </Link>
             </div>

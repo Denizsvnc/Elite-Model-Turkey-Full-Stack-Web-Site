@@ -8,6 +8,7 @@ import {
         deleteContactMessage
 } from '../controllers/contactMessageController';
 import { body } from 'express-validator';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -24,15 +25,15 @@ router.post(
 );
 
 // Admin: Gelen kutusunu gör
-router.get('/', getContactMessages);
+router.get('/', adminAuth, getContactMessages);
 
 // Admin: Mesaj detayını gör
-router.get('/:id', getMessageById);
+router.get('/:id', adminAuth, getMessageById);
 
 // Admin: Mesajı okundu/okunmadı yap
-router.patch('/:id', markMessageAsRead);
+router.patch('/:id', adminAuth, markMessageAsRead);
 
 // Admin: Mesajı sil
-router.delete('/:id', deleteContactMessage);
+router.delete('/:id', adminAuth, deleteContactMessage);
 
 export default router;

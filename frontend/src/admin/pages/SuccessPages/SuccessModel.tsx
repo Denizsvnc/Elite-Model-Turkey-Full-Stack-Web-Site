@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, Button, Switch, FormControlLabel, Stack } from '@mui/material';
+import { Box, Typography, Card, Button, Switch, FormControlLabel, Stack, Skeleton, Alert, CardMedia, CardContent, Divider, Chip } from '@mui/material';
 import axios from 'axios';
 import ImageUploader from '../../components/imageUploader';
 import MultiLangText from '../../components/Text';
@@ -24,6 +24,8 @@ type ModelReview = {
 function SuccessModel() {
   const [item, setItem] = useState<ModelReview | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     imageUrl: '',
     title_tr: '', title_en: '', title_de: '', title_ru: '',
@@ -34,7 +36,10 @@ function SuccessModel() {
 
   const loadItem = () => {
     setLoading(true);
-    axios.get(`${API_BASE}/api/success-model-reviews`)
+    const token = localStorage.getItem('token');
+    axios.get(`${API_BASE}/api/success-model-reviews`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(res => {
         const existing = res.data?.[0];
         if (existing) {
@@ -60,66 +65,272 @@ function SuccessModel() {
   useEffect(() => { loadItem(); }, []);
 
   const handleSave = () => {
+    if (!form.imageUrl) {
+      setError('Lütfen bir görsel yükleyin');
+      return;
+    }
+    
+    setSaving(true);
+    setError(null);
+    
+    const token = localStorage.getItem('token');
     const url = item 
       ? `${API_BASE}/api/success-model-reviews/${item.id}` 
       : `${API_BASE}/api/success-model-reviews`;
     const method = item ? 'put' : 'post';
 
-    axios[method](url, form)
+    axios[method](url, form, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(() => {
         loadItem();
-        alert('Kaydedildi!');
+        setFiles([]); // Upload edilen dosyaları temizle
+        setError(null);
+        // Success notification - could use a snackbar here
       })
       .catch(err => {
         console.error(err);
-        alert('Hata oluştu!');
-      });
+        setError(err.response?.data?.message || 'Kaydedilirken bir hata oluştu');
+      })
+      .finally(() => setSaving(false));
   };
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Model Spotlight</Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Sadece 1 adet model spotlight içeriği yüklenebilir. Mevcut içeriği düzenleyin.
-      </Typography>
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Model Spotlight
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Başarı sayfasında öne çıkarılacak model yorumunu yönetin.
+        </Typography>
+      </Box>
 
-      {loading ? <Typography>Yükleniyor...</Typography> : (
-      <Card sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>{item ? 'Model Spotlight Düzenle' : 'Model Spotlight Ekle'}</Typography>
-        
-        <ImageUploader files={files} setFiles={setFiles} folder="Success/models" onUploaded={(url) => setForm({ ...form, imageUrl: url })} />
-        
-        {form.imageUrl && (
-          <Box sx={{ my: 2 }}>
-            <img src={form.imageUrl.startsWith('/') ? `${API_BASE}${form.imageUrl}` : form.imageUrl} alt="Preview" style={{ maxWidth: 200, maxHeight: 150 }} />
+      {/* Error Alert */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Loading State */}
+      {loading ? (
+        <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
+          <Box sx={{ flex: { xs: '1', md: '0 0 40%' } }}>
+            <Card>
+              <Skeleton variant="rectangular" height={300} />
+              <CardContent>
+                <Skeleton variant="text" height={40} />
+                <Skeleton variant="text" height={80} />
+              </CardContent>
+            </Card>
           </Box>
-        )}
+          <Box sx={{ flex: { xs: '1', md: '0 0 calc(60% - 24px)' } }}>
+            <Card>
+              <CardContent>
+                <Skeleton variant="text" height={60} />
+                <Skeleton variant="rectangular" height={200} sx={{ my: 2 }} />
+                <Skeleton variant="text" height={60} />
+              </CardContent>
+            </Card>
+          </Box>
+        </Box>
+      ) : (
+        <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
+         
+          {/* Left Side - Preview */}
+          <Box sx={{ flex: { xs: '1', md: '0 0 40%' } }}>
+            <Card elevation={3}>
+              <Box sx={{ position: 'relative' }}>
+                {form.imageUrl ? (
+                  <>
+                    <CardMedia
+                      component="img"
+                      height="400"
+                      image={form.imageUrl.startsWith('/') ? `${API_BASE}${form.imageUrl}` : form.imageUrl}
+                      alt="Model Preview"
+                      sx={{ 
+                        objectFit: 'cover',
+                        borderRadius: '4px 4px 0 0'
+                      }}
+                    />
+                    <Chip 
+                      label={form.isActive ? 'Aktif' : 'Pasif'}
+                      color={form.isActive ? 'success' : 'default'}
+                      size="small"
+                      sx={{ 
+                        position: 'absolute', 
+                        top: 16, 
+                        right: 16,
+                        fontWeight: 600
+                      }}
+                    />
+                  </>
+                ) : (
+                  <Box 
+                    sx={{ 
+                      height: 400, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      bgcolor: 'action.hover',
+                      borderRadius: '4px 4px 0 0'
+                    }}
+                  >
+                    <Stack alignItems="center" spacing={1}>
+                      <Box 
+                        sx={{ 
+                          width: 80, 
+                          height: 80, 
+                          borderRadius: '50%', 
+                          bgcolor: 'action.selected',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Typography variant="h3">🖼️</Typography>
+                      </Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Henüz görsel yüklenmedi
+                      </Typography>
+                    </Stack>
+                  </Box>
+                )}
+              </Box>
+              <CardContent>
+                <Stack spacing={1}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {form.title_tr || 'Başlık girilmedi'}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {form.text_tr || 'Açıklama girilmedi'}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="caption" color="text.secondary">
+                      Durum:
+                    </Typography>
+                    <Chip 
+                      label={form.isActive ? 'Yayında' : 'Taslak'}
+                      size="small"
+                      color={form.isActive ? 'success' : 'default'}
+                      variant="outlined"
+                    />
+                  </Stack>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Box>
 
-        <MultiLangText 
-          label="Başlık" 
-          values={{ tr: form.title_tr, en: form.title_en, de: form.title_de, ru: form.title_ru }}
-          onChange={(lang, val) => setForm({ ...form, [`title_${lang}`]: val })}
-        />
+          {/* Right Side - Form */}
+          <Box sx={{ flex: { xs: '1', md: '0 0 calc(60% - 24px)' } }}>
+            <Card elevation={3}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+                  {item ? 'Model Spotlight Düzenle' : 'Yeni Model Spotlight'}
+                </Typography>
+                
+                {/* Image Upload Section */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                    Model Görseli
+                  </Typography>
+                  <ImageUploader 
+                    files={files} 
+                    setFiles={setFiles} 
+                    folder="Success/models" 
+                    onUploaded={(url) => {
+                      setForm({ ...form, imageUrl: url });
+                      setError(null);
+                    }} 
+                  />
+                  {form.imageUrl && (
+                    <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 1 }}>
+                      ✓ Görsel yüklendi
+                    </Typography>
+                  )}
+                </Box>
 
-        <MultiLangText 
-          label="Metin" 
-          values={{ tr: form.text_tr, en: form.text_en, de: form.text_de, ru: form.text_ru }}
-          onChange={(lang, val) => setForm({ ...form, [`text_${lang}`]: val })}
-          multiline
-        />
+                <Divider sx={{ my: 3 }} />
 
-        <FormControlLabel 
-          control={<Switch checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />} 
-          label="Aktif" 
-          sx={{ mt: 2 }}
-        />
+                {/* Title Section */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                    Başlık (Çoklu Dil)
+                  </Typography>
+                  <MultiLangText 
+                    label="Başlık" 
+                    values={{ tr: form.title_tr, en: form.title_en, de: form.title_de, ru: form.title_ru }}
+                    onChange={(lang, val) => setForm({ ...form, [`title_${lang}`]: val })}
+                  />
+                </Box>
 
-        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-          <Button variant="contained" onClick={handleSave} size="large">
-            Kaydet
-          </Button>
-        </Stack>
-      </Card>
+                {/* Text Section */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                    Açıklama Metni (Çoklu Dil)
+                  </Typography>
+                  <MultiLangText 
+                    label="Metin" 
+                    values={{ tr: form.text_tr, en: form.text_en, de: form.text_de, ru: form.text_ru }}
+                    onChange={(lang, val) => setForm({ ...form, [`text_${lang}`]: val })}
+                    multiline
+                  />
+                </Box>
+
+                <Divider sx={{ my: 3 }} />
+
+                {/* Active Toggle */}
+                <Box sx={{ mb: 3 }}>
+                  <FormControlLabel 
+                    control={
+                      <Switch 
+                        checked={form.isActive} 
+                        onChange={(e) => setForm({ ...form, isActive: e.target.checked })} 
+                        color="success"
+                      />
+                    } 
+                    label={
+                      <Stack>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          Yayın Durumu
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {form.isActive ? 'Model spotlight web sitesinde gösteriliyor' : 'Model spotlight gizli (taslak)'}
+                        </Typography>
+                      </Stack>
+                    }
+                  />
+                </Box>
+
+                {/* Action Buttons */}
+                <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+                  <Button 
+                    variant="contained" 
+                    size="large"
+                    onClick={handleSave} 
+                    disabled={saving || !form.imageUrl}
+                    sx={{ minWidth: 140 }}
+                  >
+                    {saving ? 'Kaydediliyor...' : 'Kaydet'}
+                  </Button>
+                  {item && (
+                    <Button 
+                      variant="outlined" 
+                      size="large"
+                      onClick={loadItem}
+                      disabled={saving}
+                    >
+                      İptal
+                    </Button>
+                  )}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Box>
+        </Box>
       )}
     </Box>
   );
