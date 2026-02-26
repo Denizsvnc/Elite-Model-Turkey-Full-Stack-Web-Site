@@ -312,3 +312,23 @@ enum ApplicationStatus {
   REJECTED
   ACCEPTED
 }
+
+
+model ApplicationPage_Status {
+  id Int @id @default(1)
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model ApplicationNotificationRequest {
+  id        String   @id @default(cuid())
+  fullName  String
+  phone     String
+  email     String   @unique
+  isNotified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+  @@index([isNotified])
+}

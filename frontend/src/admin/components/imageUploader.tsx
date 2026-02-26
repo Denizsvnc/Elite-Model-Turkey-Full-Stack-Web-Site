@@ -19,8 +19,12 @@ export default function ImageUploader({ files, setFiles, onUploaded, folder = 's
         const formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         try {
+          const token = localStorage.getItem('token');
           const res = await fetch(`${API_BASE}/api/uploads?folder=${folder}`, {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
             body: formData,
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -39,8 +43,12 @@ export default function ImageUploader({ files, setFiles, onUploaded, folder = 's
     const formData = new FormData();
     formData.append('file', files[0]);
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(`${API_BASE}/api/uploads?folder=${folder}`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData,
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

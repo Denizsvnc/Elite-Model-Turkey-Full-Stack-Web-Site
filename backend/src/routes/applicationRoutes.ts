@@ -7,6 +7,7 @@ import {
         deleteApplication
 } from '../controllers/applicationController';
 import { body } from 'express-validator';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -36,15 +37,15 @@ router.post(
 );
 
 // Admin: Tümünü Listele
-router.get('/', getApplications);
+router.get('/', adminAuth, getApplications);
 
 // Admin: Detay Gör
-router.get('/:id', getApplicationById);
+router.get('/:id', adminAuth, getApplicationById);
 
 // Admin: Durum veya Not Güncelle
-router.patch('/:id', updateApplicationStatus);
+router.patch('/:id', adminAuth, updateApplicationStatus);
 
 // Admin: Sil
-router.delete('/:id', deleteApplication);
+router.delete('/:id', adminAuth, deleteApplication);
 
 export default router;

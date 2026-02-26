@@ -63,9 +63,13 @@ export default function Featured() {
   });
 
   const updateImage = (id: string, url: string) => {
+    const token = localStorage.getItem('token');
     fetch(`${API_BASE}/api/featured-items/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ imageUrl: url }),
     })
       .then(async (res) => {
@@ -97,9 +101,13 @@ export default function Featured() {
       content_ru: '',
     };
 
+    const token = localStorage.getItem('token');
     fetch(`${API_BASE}/api/featured-items`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(async (res) => {

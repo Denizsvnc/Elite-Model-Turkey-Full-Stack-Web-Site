@@ -6,13 +6,14 @@ import {
     updateFeaturedItem,
     deleteFeaturedItem
 } from '../controllers/featuredItemController';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
 router.get('/', getFeaturedItems);
 router.get('/:id', getFeaturedItemById);
-router.post('/', createFeaturedItem);
-router.put('/:id', updateFeaturedItem);
-router.delete('/:id', deleteFeaturedItem);
+router.post('/', adminAuth, createFeaturedItem);
+router.put('/:id', adminAuth, updateFeaturedItem);
+router.delete('/:id', adminAuth, deleteFeaturedItem);
 
 export default router;

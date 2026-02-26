@@ -25,6 +25,8 @@ import systemSettingRoutes from './routes/systemSettingRoutes';
 import notificationRuleRoutes from './routes/notificationRuleRoutes';
 import socialMediaRoutes from './routes/socialMediaRoutes';
 import statsRoutes from './routes/statsRoutes';
+import applicationPageRoutes from './routes/applicationPage.routes';
+import applicationNotificationRoutes from './routes/applicationNotificationRoutes';
 
 dotenv.config();
 
@@ -64,6 +66,8 @@ app.use('/api/about', aboutPageRoutes);
 app.use('/api/contact-info', contactInfoRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/application-page', applicationPageRoutes);
+app.use('/api/application-notifications', applicationNotificationRoutes);
 app.use('/api/contact-messages', contactMessageRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/fee', feeRoutes);
@@ -73,12 +77,12 @@ app.use('/api/socials', socialMediaRoutes);
 app.use('/api/stats', statsRoutes);
 
 
-// Health check api
+// Health check
 app.get('/', (req, res) => {
     res.send('Elite Model Backend API çalışıyor');
 });
 
-// --- SUNUCU BAŞLATMA VE ROBOT KURULUMU ---
+
 app.listen(PORT, () => {
     console.log(`Sunucu şu portda çalışıyor: ${PORT}`);
 });

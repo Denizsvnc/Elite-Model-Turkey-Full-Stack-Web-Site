@@ -273,7 +273,20 @@
     "Ok" : "If you have made the payment, please click the button below. We will get back to you via SMS within 30 minutes.",
     "ButtonText" : "SUBMIT APPLICATION IF YOU COPIED THE TEXT!",
     "ButtonCreditText" : "PAY AND START YOUR PROFESSIONAL JOURNEY",
-    "ApplicationSubmitted" : "✓ Your application has been successfully submitted! We will contact you as soon as possible."
+    "ApplicationSubmitted" : "✓ Your application has been successfully submitted! We will contact you as soon as possible.",
+    
+    "ClosedTitle": "Applications Are Currently Closed",
+    "ClosedDescription": "We're sorry, but we are not accepting applications at this time. Please check back later or contact us for more information.",
+    "ClosedContact": "Contact Us",
+    "ClosedBackHome": "Back to Home",
+    "NotifyTitle": "Get notified when applications open?",
+    "NotifyDescription": "Leave your information and we'll email you when applications open.",
+    "NotifyFullName": "Full Name",
+    "NotifyPhone": "Phone Number",
+    "NotifyEmail": "Email Address",
+    "NotifySubmit": "Request Notification",
+    "NotifySubmitting": "Submitting...",
+    "NotifySuccess": "✓ Your request has been saved! We'll email you when applications open."
     },
     "ErrorPage": {
         "gameTitle": "While You're Here, Play a Game! 🎮",

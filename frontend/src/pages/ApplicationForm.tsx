@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectChangeEvent, TextField, LinearProgress, CircularProgress } from '@mui/material';
@@ -58,6 +59,17 @@ const ApplicationForm: React.FC = () => {
   const [photoPreviews, setPhotoPreviews] = useState<{[key: string]: string}>({});
   const [uploadingPhotos, setUploadingPhotos] = useState<{[key: string]: boolean}>({});
   const [touchedFields, setTouchedFields] = useState<{[key: string]: boolean}>({});
+  const [isApplicationActive, setIsApplicationActive] = useState<boolean>(true);
+  
+  // Notification form states
+  const [notificationForm, setNotificationForm] = useState({
+    fullName: '',
+    phone: '',
+    email: ''
+  });
+  const [notificationSubmitting, setNotificationSubmitting] = useState(false);
+  const [notificationSuccess, setNotificationSuccess] = useState(false);
+  const [notificationError, setNotificationError] = useState('');
   
   
   const fieldRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
@@ -65,6 +77,21 @@ const ApplicationForm: React.FC = () => {
   // Dinamik şehir seçenekleri
   const cityOptions = formData.nationality ? getCityOptions(formData.nationality) : [];
   const countryOptions = getCountryOptions();
+
+  // Başvuru sayfası aktiflik kontrolü
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      try {
+        const res = await api.get('/api/application-page/status');
+        if (res.data?.success && res.data?.data) {
+          setIsApplicationActive(res.data.data.isActive);
+        }
+      } catch (error) {
+        console.error("Başvuru sayfası durum kontrolü hatası:", error);
+      }
+    };
+    checkApplicationStatus();
+  }, []);
 
   useEffect(() => {
     const response = async () => {
@@ -307,6 +334,158 @@ const ApplicationForm: React.FC = () => {
 
   const progress = calculateProgress();
 
+  // Notification form submit handler
+  const handleNotificationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNotificationSubmitting(true);
+    setNotificationError('');
+
+    try {
+      const res = await api.post('/api/application-notifications', notificationForm);
+      
+      if (res.data.success) {
+        setNotificationSuccess(true);
+        setNotificationForm({ fullName: '', phone: '', email: '' });
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+      setNotificationError(errorMessage);
+    } finally {
+      setNotificationSubmitting(false);
+    }
+  };
+
+  // Eğer başvurular kapalıysa bilgilendirme mesajı göster
+  if (!isApplicationActive) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-6 py-12 md:py-20">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-100 mb-8">
+            <span className="material-symbols-outlined text-6xl text-slate-400">block</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-6 text-slate-800">
+            {dict?.ApplicationPage?.ClosedTitle || "Başvurular Şu Anda Kapalı"}
+          </h1>
+          <p className="text-slate-600 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed">
+            {dict?.ApplicationPage?.ClosedDescription || "Üzgünüz, şu anda başvuru kabul etmiyoruz. Lütfen daha sonra tekrar kontrol edin veya daha fazla bilgi için bizimle iletişime geçin."}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link 
+              to="/iletisim" 
+              className="px-8 py-4 bg-slate-900 text-white font-bold uppercase tracking-widest text-sm rounded hover:bg-slate-800 transition-colors"
+            >
+              {dict?.ApplicationPage?.ClosedContact || "Bize Ulaşın"}
+            </Link>
+            <Link 
+              to="/" 
+              className="px-8 py-4 border-2 border-slate-300 text-slate-800 font-bold uppercase tracking-widest text-sm rounded hover:border-slate-500 transition-colors"
+            >
+              {dict?.ApplicationPage?.ClosedBackHome || "Ana Sayfaya Dön"}
+            </Link>
+          </div>
+
+          {/* Notification Request Form */}
+          {!notificationSuccess ? (
+            <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
+                  <span className="material-symbols-outlined text-4xl text-blue-600">notifications_active</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-3 text-slate-800">
+                  {dict?.ApplicationPage?.NotifyTitle || "Başvurular açıldığında size haber verelim mi?"}
+                </h2>
+                <p className="text-slate-600">
+                  {dict?.ApplicationPage?.NotifyDescription || "Bilgilerinizi bırakın, başvurular açıldığında size e-posta gönderelim."}
+                </p>
+              </div>
+
+              <form onSubmit={handleNotificationSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyFullName || "Ad Soyad"} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={notificationForm.fullName}
+                    onChange={(e) => setNotificationForm({ ...notificationForm, fullName: e.target.value })}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder={dict?.ApplicationPage?.NotifyFullName || "Ad Soyad"}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyPhone || "Telefon Numarası"} *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={notificationForm.phone}
+                    onChange={(e) => setNotificationForm({ ...notificationForm, phone: e.target.value })}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder="+90 555 123 4567"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyEmail || "E-posta Adresi"} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={notificationForm.email}
+                    onChange={(e) => setNotificationForm({ ...notificationForm, email: e.target.value })}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder="ornek@email.com"
+                  />
+                </div>
+
+                {notificationError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2">
+                    <span className="material-symbols-outlined text-xl">error</span>
+                    <span className="text-sm">{notificationError}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={notificationSubmitting}
+                  className="w-full px-8 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-sm rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {notificationSubmitting ? (
+                    <>
+                      <CircularProgress size={20} sx={{ color: 'white' }} />
+                      {dict?.ApplicationPage?.NotifySubmitting || "Gönderiliyor..."}
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined">send</span>
+                      {dict?.ApplicationPage?.NotifySubmit || "Bilgilendirme İste"}
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="max-w-2xl mx-auto bg-green-50 border-2 border-green-200 rounded-2xl shadow-xl p-8 md:p-12 text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
+                <span className="material-symbols-outlined text-5xl text-green-600">check_circle</span>
+              </div>
+              <h3 className="text-2xl font-bold text-green-800 mb-4">
+                {dict?.ApplicationPage?.NotifySuccess || "✓ Talebiniz kaydedildi! Başvurular açıldığında size e-posta göndereceğiz."}
+              </h3>
+              <p className="text-green-700 mb-6">
+                {notificationForm.email}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 md:py-20">
       <div className="text-center mb-16">
@@ -317,6 +496,18 @@ const ApplicationForm: React.FC = () => {
           {dict?.ApplicationPage?.HeroContent || "Join The Elite Model Turkey. Please fill out the form below with accurate measurements and natural light polaroids."}
         </p>
       </div>
+
+      {/* Success Notification */}
+      {submitted && (
+        <div className="mb-8 bg-green-50 border-2 border-green-200 rounded-xl shadow-lg p-6 animate-fade-in">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-3xl text-green-600">check_circle</span>
+            <p className="text-green-800 font-semibold text-lg">
+              {dict?.ApplicationPage?.ApplicationSubmitted || "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Progress Indicator */}
       <div className="mb-8 bg-white rounded-xl shadow-lg p-6">
@@ -795,13 +986,6 @@ const ApplicationForm: React.FC = () => {
             
             
             <PaymentOk />
-            
-            {submitted && (
-              <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-                <p className="text-green-800 font-semibold"> {dict?.ApplicationPage?.ApplicationSubmitted || "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."}</p>
-              </div>
-            )}
-
               
             <div className="pt-8 flex flex-col items-center">
               <button

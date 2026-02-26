@@ -11,9 +11,11 @@ interface DrawerProps {
   onSave?: () => void;
   onCancel?: () => void;
   children?: React.ReactNode;
+  saving?: boolean;
+  disabled?: boolean;
 }
 
-export default function Drawer({ open, onClose, title, onSave, onCancel, children }: DrawerProps) {
+export default function Drawer({ open, onClose, title, onSave, onCancel, children, saving = false, disabled = false }: DrawerProps) {
   const handleCancel = () => {
     onCancel ? onCancel() : onClose();
   };
@@ -35,7 +37,7 @@ export default function Drawer({ open, onClose, title, onSave, onCancel, childre
     >
       <Box sx={{ p: 3, pb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">{title}</Typography>
-        <Button variant="text" onClick={onClose}>Kapat</Button>
+        <Button variant="text" onClick={onClose} disabled={saving}>Kapat</Button>
       </Box>
       <Divider />
       <Box sx={{ p: 3, flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -44,8 +46,17 @@ export default function Drawer({ open, onClose, title, onSave, onCancel, childre
 
       <Divider />
       <Box sx={{ p: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-        <Button onClick={handleCancel} variant="outlined" color="secondary">İptal</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">Kaydet</Button>
+        <Button onClick={handleCancel} variant="outlined" color="secondary" disabled={saving}>
+          İptal
+        </Button>
+        <Button 
+          onClick={handleSave} 
+          variant="contained" 
+          color="primary"
+          disabled={saving || disabled}
+        >
+          {saving ? 'Kaydediliyor...' : 'Kaydet'}
+        </Button>
       </Box>
     </Box>
   );

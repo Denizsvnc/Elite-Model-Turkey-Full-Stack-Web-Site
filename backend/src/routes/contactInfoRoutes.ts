@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getContactInfo, upsertContactInfo } from '../controllers/contactInfoController';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -9,6 +10,6 @@ router.get('/', getContactInfo);
 
 // kaydet / guncelle
 // POST /api/contact
-router.post('/', upsertContactInfo);
+router.post('/', adminAuth, upsertContactInfo);
 
 export default router;

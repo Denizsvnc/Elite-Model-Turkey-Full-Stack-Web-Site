@@ -161,7 +161,7 @@ const Login: React.FC = () => {
 
                     <Box sx={{ mt: 3, textAlign: 'center' }}>
                         <Typography variant="caption" color="text.secondary">
-                            Varsayılan Giriş: admin@com / 123
+                            Varsayılan Giriş: admin@elitemodel.com / admin123
                         </Typography>
                     </Box>
                 </Paper>

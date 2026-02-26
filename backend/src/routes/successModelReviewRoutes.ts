@@ -6,6 +6,7 @@ import {
     updateSuccessModelReview,
     deleteSuccessModelReview
 } from '../controllers/successModelReviewController';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -16,12 +17,12 @@ router.get('/', getSuccessModelReviews);
 router.get('/:id', getSuccessModelReviewById);
 
 // Yeni yorum oluştur
-router.post('/', createSuccessModelReview);
+router.post('/', adminAuth, createSuccessModelReview);
 
 // Yorum güncelle
-router.put('/:id', updateSuccessModelReview);
+router.put('/:id', adminAuth, updateSuccessModelReview);
 
 // Yorum sil
-router.delete('/:id', deleteSuccessModelReview);
+router.delete('/:id', adminAuth, deleteSuccessModelReview);
 
 export default router;

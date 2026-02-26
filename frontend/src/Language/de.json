@@ -272,7 +272,20 @@
     "Ok" : "Wenn Sie die Zahlung getätigt haben, klicken Sie bitte auf den untenstehenden Button. Wir werden uns innerhalb von 30 Minuten per SMS bei Ihnen melden.",
     "ButtonText" : "BEWERBUNG SENDEN, WENN TEXT KOPIERT WURDE!",
     "ButtonCreditText" : "BEZAHLEN UND PROFESSIONELLE REISE BEGINNEN",
-    "ApplicationSubmitted" : "✓ Ihre Bewerbung wurde erfolgreich gesendet! Wir werden uns so schnell wie möglich bei Ihnen melden."
+    "ApplicationSubmitted" : "✓ Ihre Bewerbung wurde erfolgreich gesendet! Wir werden uns so schnell wie möglich bei Ihnen melden.",
+    
+    "ClosedTitle": "Bewerbungen Sind Derzeit Geschlossen",
+    "ClosedDescription": "Es tut uns leid, aber wir nehmen derzeit keine Bewerbungen an. Bitte schauen Sie später noch einmal vorbei oder kontaktieren Sie uns für weitere Informationen.",
+    "ClosedContact": "Kontaktieren Sie Uns",
+    "ClosedBackHome": "Zurück Zur Startseite",
+    "NotifyTitle": "Benachrichtigt werden, wenn Bewerbungen öffnen?",
+    "NotifyDescription": "Hinterlassen Sie Ihre Informationen und wir senden Ihnen eine E-Mail, wenn Bewerbungen öffnen.",
+    "NotifyFullName": "Vollständiger Name",
+    "NotifyPhone": "Telefonnummer",
+    "NotifyEmail": "E-Mail-Adresse",
+    "NotifySubmit": "Benachrichtigung Anfordern",
+    "NotifySubmitting": "Wird Gesendet...",
+    "NotifySuccess": "✓ Ihre Anfrage wurde gespeichert! Wir senden Ihnen eine E-Mail, wenn Bewerbungen öffnen."
     },
     "ErrorPage": {
         "gameTitle": "Spielen Sie ein Spiel, während Sie hier sind! 🎮",

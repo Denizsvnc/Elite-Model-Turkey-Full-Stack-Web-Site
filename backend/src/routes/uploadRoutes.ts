@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import prisma from '../lib/prisma';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ const upload = multer({
 });
 
 // POST /api/uploads?folder=Home/sliders
-router.post('/', upload.single('file'), async (req, res) => {
+router.post('/', adminAuth, upload.single('file'), async (req, res) => {
   const safeFolder = sanitizeFolder(req.query.folder);
   if (!req.file) return res.status(400).json({ error: 'Dosya bulunamadı' });
 

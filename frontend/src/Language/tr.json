@@ -283,7 +283,20 @@
         "Ok" : "Eğer ödeme yaptıysanız, lütfen aşağıdaki butona tıklayın. Size 30 dakika içerisinde SMS ile dönüş yapacağız.",
         "ButtonText" : "METNİ KOPYALADISYAN BAŞVURUYU GÖNDER!",
         "ButtonCreditText" : "ÖDEME YAP VE PROFESYONEL YOLCULUĞUNA BAŞLA",
-        "ApplicationSubmitted" : "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."
+        "ApplicationSubmitted" : "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz.",
+        
+        "ClosedTitle": "Başvurular Şu Anda Kapalı",
+        "ClosedDescription": "Üzgünüz, şu anda başvuru kabul etmiyoruz. Lütfen daha sonra tekrar kontrol edin veya daha fazla bilgi için bizimle iletişime geçin.",
+        "ClosedContact": "Bize Ulaşın",
+        "ClosedBackHome": "Ana Sayfaya Dön",
+        "NotifyTitle": "Başvurular açıldığında size haber verelim mi?",
+        "NotifyDescription": "Bilgilerinizi bırakın, başvurular açıldığında size e-posta gönderelim.",
+        "NotifyFullName": "Ad Soyad",
+        "NotifyPhone": "Telefon Numarası",
+        "NotifyEmail": "E-posta Adresi",
+        "NotifySubmit": "Bilgilendirme İste",
+        "NotifySubmitting": "Gönderiliyor...",
+        "NotifySuccess": "✓ Talebiniz kaydedildi! Başvurular açıldığında size e-posta göndereceğiz."
     },
     "ErrorPage": {
         "gameTitle": "Buradayken, Bir Oyun Oynamaya Ne Dersin? 🎮",
