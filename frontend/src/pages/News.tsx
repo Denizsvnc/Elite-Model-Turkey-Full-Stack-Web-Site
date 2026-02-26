@@ -9,7 +9,6 @@ const API_BASE = getApiBaseUrl();
 const News: React.FC = () => {
   const location = useLocation();
   
-  // 1. Context'ten 't', 'dict' ve 'language' çekiyoruz
   const { t, dict, language } = useLanguage();
   
   const [newsData, setNewsData] = useState<any[]>([]);

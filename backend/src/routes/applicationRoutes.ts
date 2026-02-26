@@ -8,12 +8,14 @@ import {
 } from '../controllers/applicationController';
 import { body } from 'express-validator';
 import { authMiddleware as adminAuth } from '../middleware/auth';
+import { applicationLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
 
 router.post(
     '/',
+    applicationLimiter,
     [
         body('fullName').isString().isLength({ min: 2, max: 100 }).trim(),
         body('birthDate').isISO8601().toDate(),

@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
+import { getJWTSecret } from '../config/validateEnv';
+
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Admin kullanıcı kaydı (sadece SUPERADMIN oluşturabilir)
 export const register = async (req: Request, res: Response) => {
@@ -15,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
         });
 
         if (existingUser) {
-            return res.status(400).json({ error: 'Bu email zaten kullanılıyor' });
+            return res.status(400).json({ error: 'Kayıt işlemi başarısız. Lütfen bilgilerinizi kontrol edin.' });
         }
 
         // Şifreyi hashle
@@ -76,19 +79,26 @@ export const login = async (req: Request, res: Response) => {
             return res.status(401).json({ error: 'Email veya şifre hatalı' });
         }
 
-        // JWT token oluştur
         const token = jwt.sign(
             {
                 id: adminUser.id,
                 email: adminUser.email,
                 role: adminUser.role
             },
-            process.env.JWT_SECRET!
+            getJWTSecret(),
+            { expiresIn: '8h' }
         );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 8 * 60 * 60 * 1000,
+            path: '/'
+        });
 
         res.json({
             message: 'Giriş başarılı',
-            token,
             adminUser: {
                 id: adminUser.id,
                 email: adminUser.email,
@@ -102,7 +112,16 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-// Profil bilgilerini getir
+export const logout = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie('token', { path: '/' });
+        res.json({ message: 'Çıkış başarılı' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        res.status(500).json({ error: 'Çıkış sırasında bir hata oluştu' });
+    }
+};
+
 export const getProfile = async (req: AuthRequest, res: Response) => {
     try {
         const adminUser = await prisma.adminUser.findUnique({
@@ -133,7 +152,12 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
     try {
         const { currentPassword, newPassword } = req.body;
 
-        // Mevcut kullanıcıyı bul
+        if (!PASSWORD_REGEX.test(newPassword)) {
+            return res.status(400).json({ 
+                error: 'Şifre en az 8 karakter, 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter (@$!%*?&) içermelidir' 
+            });
+        }
+
         const adminUser = await prisma.adminUser.findUnique({
             where: { id: req.adminUser!.id }
         });
@@ -142,11 +166,14 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
         }
 
-        // Mevcut şifre kontrolü
         const isPasswordValid = await bcrypt.compare(currentPassword, adminUser.passwordHash);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Mevcut şifre hatalı' });
+        }
+
+        if (currentPassword === newPassword) {
+            return res.status(400).json({ error: 'Yeni şifre eski şifre ile aynı olamaz' });
         }
 
         // Yeni şifreyi hashle

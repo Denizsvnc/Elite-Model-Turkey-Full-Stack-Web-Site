@@ -22,8 +22,8 @@ import ProtectedRoute from './src/admin/components/ProtectedRoute';
 
 import Sliders from './src/admin/pages/HomePage/Sliders';
 import Featured from './src/admin/pages/HomePage/Featured';
-import NewsAdmin from './src/admin/pages/HomePage/News';
-import Latest from './src/admin/pages/SuccessPages/Latest';
+
+
 import SuccesModel from './src/admin/pages/SuccessPages/SuccessModel';
 import Hero from './src/admin/pages/AboutPages/Hero'; 
 import Vision from './src/admin/pages/AboutPages/Vision';
@@ -69,9 +69,9 @@ const App: React.FC = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="sliders" element={<Sliders />} /> 
           <Route path="featured-items" element={<Featured />} /> 
-          <Route path="news" element={<NewsAdmin />} /> 
+  
           <Route path="success-model" element={<SuccesModel />} /> 
-          <Route path="latest" element={<Latest />} /> 
+     
           <Route path="heroimg" element={<Heroimg />} /> 
 
           <Route path="news-management" element={<NewsManagement />} /> 
