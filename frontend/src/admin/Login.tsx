@@ -33,8 +33,7 @@ const Login: React.FC = () => {
         try {
             const response = await api.post('/api/auth/login', { email, password });
 
-            if (response.data?.token) {
-                localStorage.setItem('token', response.data.token);
+            if (response.data?.adminUser) {
                 localStorage.setItem('adminUser', JSON.stringify(response.data.adminUser));
                 navigate(from, { replace: true });
             } else {

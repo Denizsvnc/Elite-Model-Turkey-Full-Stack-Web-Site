@@ -9,12 +9,13 @@ import {
 } from '../controllers/contactMessageController';
 import { body } from 'express-validator';
 import { authMiddleware as adminAuth } from '../middleware/auth';
+import { contactLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// Public: Form gönderimi
 router.post(
     '/',
+    contactLimiter,
     [
         body('fullName').isString().isLength({ min: 2, max: 100 }).trim(),
         body('email').isEmail().normalizeEmail(),

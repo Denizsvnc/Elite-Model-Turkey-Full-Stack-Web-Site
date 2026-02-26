@@ -2,10 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
-import cron from 'node-cron'; 
+import cron from 'node-cron';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import prisma from './lib/prisma';
+import { validateEnv } from './config/validateEnv';
 
 dotenv.config();
+validateEnv();
 
 import authRoutes from './routes/authRoutes';
 import sliderRoutes from './routes/sliderRoutes';
@@ -27,32 +32,61 @@ import socialMediaRoutes from './routes/socialMediaRoutes';
 import statsRoutes from './routes/statsRoutes';
 import applicationPageRoutes from './routes/applicationPage.routes';
 import applicationNotificationRoutes from './routes/applicationNotificationRoutes';
-
-dotenv.config();
+import { loginLimiter, applicationLimiter, contactLimiter, uploadLimiter } from './middleware/rateLimiter';
 
 const app = express();
 const PORT = process.env.PORT || 3005;
 
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map(o => o.trim()) || ['http://localhost:3000'];
 
+const uploadsDir = path.resolve(process.cwd(), 'src/uploads');
+app.use('/uploads', express.static(uploadsDir));
+
+app.disable('x-powered-by');
+
+app.use(helmet({
+    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https:", "http:", "blob:"],
+            scriptSrc: ["'self'"],
+            connectSrc: ["'self'", ...allowedOrigins],
+            frameSrc: ["'none'"],
+            objectSrc: ["'none'"]
+        }
+    } : false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: process.env.NODE_ENV === 'production' 
+        ? { policy: "cross-origin" }
+        : false,
+    hsts: process.env.NODE_ENV === 'production' ? {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    } : false
+}));
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (origin && allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else if (!origin && process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('CORS politikası tarafından engellendi'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400
 }));
 
-app.use(express.json());
-
-// Serve static uploads
-const uploadsDir = path.resolve(process.cwd(), 'src/uploads');
-app.use('/uploads', express.static(uploadsDir));
+app.use(cookieParser());
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Routes
 app.use('/api/auth', authRoutes);

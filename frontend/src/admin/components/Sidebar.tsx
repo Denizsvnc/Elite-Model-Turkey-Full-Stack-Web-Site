@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             children: [
                 { title: 'Slider Görselleri', path: '/admin/sliders', icon: 'photo_library' },
                 { title: 'Öne Çıkan Kişiler', path: '/admin/featured-items', icon: 'stars' },
-                { title: 'Son Haberler', path: '/admin/news', icon: 'newspaper' },
+        
             ]
         },
         {
@@ -55,9 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             section: 'success',
             children: [
                 { title: 'Hero Görseli', path: '/admin/heroimg', icon: 'military_tech' },
-
                 { title: 'Başarılı Model', path: '/admin/success-model', icon: 'military_tech' },
-                { title: 'Son Öne Çıkanlar', path: '/admin/latest', icon: 'rate_review' },
+                
             ]
         },
         {
@@ -70,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             icon: 'info',
             section: 'about',
             children: [
-                { title: 'About Us', path: '/admin/about/hero', icon: 'description' },
+                { title: 'Hakkımızda', path: '/admin/about/hero', icon: 'description' },
                 { title: 'Vizyonumuz', path: '/admin/about/vision', icon: 'visibility' },
                 { title: 'Misyonumuz', path: '/admin/about/mission', icon: 'flag' },
             ]

@@ -15,8 +15,6 @@ import { enGB } from 'date-fns/locale/en-GB';
 import { de } from 'date-fns/locale/de';
 import { ru } from 'date-fns/locale/ru';
 
-// --- SEÇENEKLER ---
-
 const ApplicationForm: React.FC = () => {
   const { dict, language } = useLanguage();
   
