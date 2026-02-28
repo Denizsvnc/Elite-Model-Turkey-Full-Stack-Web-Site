@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -212,6 +212,7 @@ model FAQ {
 model Application {
   id            String            @id @default(cuid())
   fullName      String
+  applicationCode String?         @unique
   birthDate     DateTime
   gender        Gender
   nationality   String
@@ -233,6 +234,9 @@ model Application {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   paymentAmount Decimal?          @db.Decimal(10, 2)
+  payments      Payment[]
+  primaryPaymentId String? @unique
+  primaryPayment   Payment? @relation("ApplicationPrimaryPayment", fields: [primaryPaymentId], references: [id])
 
   @@index([status])
   @@index([submittedAt])
@@ -308,27 +312,36 @@ enum Gender {
 
 enum ApplicationStatus {
   NEW
+  PENDING_PAYMENT
   REVIEW
   REJECTED
   ACCEPTED
 }
 
-
-model ApplicationPage_Status {
-  id Int @id @default(1)
-  isActive Boolean @default(true)
-  updatedAt DateTime @updatedAt
+model Payment {
+  id            String        @id @default(cuid())
+  applicationId String
+  application   Application   @relation(fields: [applicationId], references: [id])
+  primaryFor    Application?  @relation("ApplicationPrimaryPayment")
+  iyzicoToken   String?       @unique
+  paymentId     String?       @unique
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("TRY")
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
-model ApplicationNotificationRequest {
-  id        String   @id @default(cuid())
-  fullName  String
-  phone     String
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILURE
+}
+
+model VerificationCode {
+  id        Int      @id @default(autoincrement())
   email     String   @unique
-  isNotified Boolean @default(false)
+  code      String
+  expiresAt DateTime
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@index([email])
-  @@index([isNotified])
 }

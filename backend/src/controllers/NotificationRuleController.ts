@@ -27,7 +27,7 @@ export const updateRule = async (req: Request, res: Response) => {
 
     try {
         const updatedRule = await prisma.notificationRule.update({
-            where: { slug: slug },
+            where: { slug: slug as string },
             data: {
                 emailEnabled,
                 telegramEnabled,

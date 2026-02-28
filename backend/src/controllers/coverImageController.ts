@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { CoverType } from '../../generated/prisma'; // Enum'ı import ettik
-
+import { CoverType } from '../generated/prisma';
+ 
 // 1. Tüm Bölüm Kapaklarını Getir
 export const getCoverImages = async (req: Request, res: Response) => {
     try {

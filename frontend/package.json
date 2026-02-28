@@ -17,15 +17,18 @@
     "@mui/x-date-pickers": "^8.23.0",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
+    "formik": "^2.4.9",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-dropzone": "^14.3.8",
     "react-router-dom": "^7.11.0",
-    "react-select": "^5.10.2"
+    "react-select": "^5.10.2",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/iyzipay": "^2.0.3",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.23",

@@ -13,6 +13,7 @@ import Women from './src/pages/Women';
 import Men from './src/pages/Men';
 import NewFaces from './src/pages/NewFaces';
 import NewsDetail from './src/pages/NewsDetail';
+import ApplicationResult from './src/pages/ApplicationResult';
 
 // Admin imports
 import Login from './src/admin/Login';
@@ -50,6 +51,7 @@ const App: React.FC = () => {
         {/* Public Routes */}
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/basvuru" element={<Layout><ApplicationForm /></Layout>} />
+        <Route path="/application-result" element={<Layout><ApplicationResult /></Layout>} />
         <Route path="/hakkimizda" element={<Layout><About /></Layout>} />
         <Route path="/sss" element={<Layout><FAQ /></Layout>} />
         <Route path="/iletisim" element={<Layout><Contact /></Layout>} />
