@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+import { getApiBaseUrl } from '../../services/api';
+
+const API_BASE = getApiBaseUrl();
 
 export default function ImageUploader({ files, setFiles, onUploaded, folder = 'sliders' }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -17,8 +19,12 @@ export default function ImageUploader({ files, setFiles, onUploaded, folder = 's
         const formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         try {
+          const token = localStorage.getItem('token');
           const res = await fetch(`${API_BASE}/api/uploads?folder=${folder}`, {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
             body: formData,
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -37,8 +43,12 @@ export default function ImageUploader({ files, setFiles, onUploaded, folder = 's
     const formData = new FormData();
     formData.append('file', files[0]);
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(`${API_BASE}/api/uploads?folder=${folder}`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData,
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

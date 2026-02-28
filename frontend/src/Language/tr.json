@@ -283,6 +283,57 @@
         "Ok" : "Eğer ödeme yaptıysanız, lütfen aşağıdaki butona tıklayın. Size 30 dakika içerisinde SMS ile dönüş yapacağız.",
         "ButtonText" : "METNİ KOPYALADISYAN BAŞVURUYU GÖNDER!",
         "ButtonCreditText" : "ÖDEME YAP VE PROFESYONEL YOLCULUĞUNA BAŞLA",
-        "ApplicationSubmitted" : "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz."
+        "ApplicationSubmitted" : "✓ Başvurunuz başarıyla gönderildi! En kısa sürede sizinle iletişime geçeceğiz.",
+        
+        "ClosedTitle": "Başvurular Şu Anda Kapalı",
+        "ClosedDescription": "Üzgünüz, şu anda başvuru kabul etmiyoruz. Lütfen daha sonra tekrar kontrol edin veya daha fazla bilgi için bizimle iletişime geçin.",
+        "ClosedContact": "Bize Ulaşın",
+        "ClosedBackHome": "Ana Sayfaya Dön",
+        "NotifyTitle": "Başvurular açıldığında size haber verelim mi?",
+        "NotifyDescription": "Bilgilerinizi bırakın, başvurular açıldığında size e-posta gönderelim.",
+        "NotifyFullName": "Ad Soyad",
+        "NotifyPhone": "Telefon Numarası",
+        "NotifyEmail": "E-posta Adresi",
+        "NotifySubmit": "Bilgilendirme İste",
+        "NotifySubmitting": "Gönderiliyor...",
+        "NotifySuccess": "✓ Talebiniz kaydedildi! Başvurular açıldığında size e-posta göndereceğiz."
+    },
+    "ErrorPage": {
+        "gameTitle": "Buradayken, Bir Oyun Oynamaya Ne Dersin? 🎮",
+        "goBack": "Geri Dön",
+        "goHome": "Ana Sayfa",
+        "needHelp": "Yardıma mı ihtiyacınız var?",
+        "contactUs": "Bize Ulaşın",
+        "followUs": "Sosyal Medyada Bizi Takip Edin",
+        "error400": {
+            "title": "Hatalı İstek",
+            "message": "Gönderdiğiniz istek geçersiz. Lütfen bilgilerinizi kontrol edip tekrar deneyin.",
+            "emoji": "🤔"
+        },
+        "error401": {
+            "title": "Yetkisiz Erişim",
+            "message": "Bu sayfayı görüntülemek için giriş yapmanız gerekiyor.",
+            "emoji": "🔐"
+        },
+        "error403": {
+            "title": "Erişim Engellendi",
+            "message": "Bu sayfaya erişim yetkiniz bulunmuyor.",
+            "emoji": "🚫"
+        },
+        "error404": {
+            "title": "Sayfa Bulunamadı",
+            "message": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
+            "emoji": "🦖"
+        },
+        "error500": {
+            "title": "Sunucu Hatası",
+            "message": "Bir şeyler ters gitti. Ekibimiz bu sorunu çözmek için çalışıyor.",
+            "emoji": "💥"
+        },
+        "error503": {
+            "title": "Servis Kullanılamıyor",
+            "message": "Sunucumuz şu anda bakımda. Lütfen daha sonra tekrar deneyin.",
+            "emoji": "🔧"
+        }
     }
 }

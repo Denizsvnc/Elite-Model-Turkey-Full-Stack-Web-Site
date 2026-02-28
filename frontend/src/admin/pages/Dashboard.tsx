@@ -4,10 +4,10 @@ import api from '../../services/api';
 
 const Dashboard: React.FC = () => {
     const [stats, setStats] = useState([
-        { title: 'Toplam Başvuru', value: '-', icon: 'people', color: '#667eea', change: '', key: 'total' },
-        { title: 'Bekleyen Başvuru', value: '-', icon: 'pending', color: '#f59e0b', change: '', key: 'pending' },
-        { title: 'Aktif Modeller', value: '-', icon: 'stars', color: '#10b981', change: '', key: 'active' },
-        { title: 'Mesajlar', value: '-', icon: 'mail', color: '#ef4444', change: '', key: 'messages' },
+        { title: 'Toplam Başvuru', value: 0, icon: 'people', color: '#667eea', change: '', key: 'total' },
+        { title: 'Bekleyen Başvuru', value: 0, icon: 'pending', color: '#f59e0b', change: '', key: 'pending' },
+        { title: 'Aktif Modeller', value: 0, icon: 'stars', color: '#10b981', change: '', key: 'active' },
+        { title: 'Mesajlar', value: 0, icon: 'mail', color: '#ef4444', change: '', key: 'messages' },
     ]);
     const [loading, setLoading] = useState(true);
 
@@ -15,23 +15,53 @@ const Dashboard: React.FC = () => {
         const fetchStats = async () => {
             setLoading(true);
             try {
-                // Toplam başvuru
-                const totalRes = await api.get('/api/applications');
-                // Bekleyen başvuru
-                const pendingRes = await api.get('/api/applications?status=REVIEW');
-                // Aktif modeller (ACCEPTED başvurular)
-                const activeRes = await api.get('/api/applications?status=ACCEPTED');
-                // Mesajlar
-                const msgRes = await api.get('/api/contact-messages');
+                // Tüm istatistikleri tek bir API çağrısında al
+                const response = await api.get('/api/stats/dashboard');
+                const data = response.data;
 
                 setStats([
-                    { title: 'Toplam Başvuru', value: totalRes.data.length, icon: 'people', color: '#667eea', change: '', key: 'total' },
-                    { title: 'Bekleyen Başvuru', value: pendingRes.data.length, icon: 'pending', color: '#f59e0b', change: '', key: 'pending' },
-                    { title: 'Aktif Modeller', value: activeRes.data.length, icon: 'stars', color: '#10b981', change: '', key: 'active' },
-                    { title: 'Mesajlar', value: msgRes.data.length, icon: 'mail', color: '#ef4444', change: '', key: 'messages' },
+                    { 
+                        title: 'Toplam Başvuru', 
+                        value: data.totalApplications || 0, 
+                        icon: 'people', 
+                        color: '#667eea', 
+                        change: '', 
+                        key: 'total' 
+                    },
+                    { 
+                        title: 'Bekleyen Başvuru', 
+                        value: data.pendingApplications || 0, 
+                        icon: 'pending', 
+                        color: '#f59e0b', 
+                        change: '', 
+                        key: 'pending' 
+                    },
+                    { 
+                        title: 'Aktif Modeller', 
+                        value: data.activeModels || 0, 
+                        icon: 'stars', 
+                        color: '#10b981', 
+                        change: '', 
+                        key: 'active' 
+                    },
+                    { 
+                        title: 'Mesajlar', 
+                        value: data.totalMessages || 0, 
+                        icon: 'mail', 
+                        color: '#ef4444', 
+                        change: '', 
+                        key: 'messages' 
+                    },
                 ]);
             } catch (e) {
-                // Hata durumunda değerler - olarak kalır
+                console.error('Dashboard stats fetch error:', e);
+                // Hata durumunda varsayılan değerler
+                setStats([
+                    { title: 'Toplam Başvuru', value: 0, icon: 'people', color: '#667eea', change: '', key: 'total' },
+                    { title: 'Bekleyen Başvuru', value: 0, icon: 'pending', color: '#f59e0b', change: '', key: 'pending' },
+                    { title: 'Aktif Modeller', value: 0, icon: 'stars', color: '#10b981', change: '', key: 'active' },
+                    { title: 'Mesajlar', value: 0, icon: 'mail', color: '#ef4444', change: '', key: 'messages' },
+                ]);
             } finally {
                 setLoading(false);
             }

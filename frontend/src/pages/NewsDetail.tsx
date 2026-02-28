@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../services/api'; // Axios instance kullanmak daha sağlıklıdır
+import api, { getApiBaseUrl } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 const NewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +30,20 @@ const NewsDetail: React.FC = () => {
         setLoading(false);
       });
   }, [id]);
+
+  // Otomatik slider geçişi - 5 saniyede bir
+  useEffect(() => {
+    if (!news || !news.galleryUrls || news.galleryUrls.length === 0) return;
+    
+    const images = [news.imageUrl, ...news.galleryUrls];
+    if (images.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [news, activeIndex]);
 
   // Tarih formatını dile göre ayarlayan yardımcı fonksiyon
   const getLocale = (lang: string) => {

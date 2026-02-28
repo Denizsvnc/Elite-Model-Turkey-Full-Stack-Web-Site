@@ -3,23 +3,55 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import prisma from '../lib/prisma';
+import { authMiddleware as adminAuth } from '../middleware/auth';
+import { uploadLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// Sanitize nested upload path like "Home/sliders"
+const ALLOWED_MIME_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp'
+];
+
+const ALLOWED_FOLDERS = [
+    'Applications',
+    'Home',
+    'News',
+    'About',
+    'Success'
+];
+
 function sanitizeFolder(input: unknown): string {
-  const raw = String(input || 'sliders');
-  const parts = raw.split('/').filter(Boolean);
-  const safeParts = parts
-    .map(p => p.replace(/[^a-zA-Z0-9_-]/g, ''))
-    .filter(p => p.length > 0);
-  return safeParts.length ? safeParts.join('/') : 'sliders';
+    const raw = String(input || 'sliders');
+
+    if (raw.includes('..') || raw.includes('~')) {
+        throw new Error('Geçersiz klasör yolu');
+    }
+
+    const parts = raw.split('/').filter(Boolean);
+    const safeParts = parts
+        .map(p => p.replace(/[^a-zA-Z0-9_-]/g, ''))
+        .filter(p => p.length > 0);
+
+    if (safeParts.length === 0) {
+        return 'sliders';
+    }
+
+    const sanitized = safeParts.join('/');
+
+    if (!ALLOWED_FOLDERS.some(folder => sanitized === folder || sanitized.startsWith(folder + '/'))) {
+        throw new Error(`Klasör izin verilen listede değil: ${sanitized}`);
+    }
+
+    return sanitized;
 }
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const safeFolder = sanitizeFolder(req.query.folder);
-    // Haberler için tarih bazlı alt klasör ekle (News/YYYY/MM/DD)
     const now = new Date();
     const datePath = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
     const folderWithDate = safeFolder === 'News' || safeFolder.startsWith('News/')
@@ -38,13 +70,30 @@ const storage = multer.diskStorage({
   }
 });
 
+const fileFilter = (req: any, file: any, cb: any) => {
+    if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const allowedExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        if (allowedExts.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Geçersiz dosya uzantısı'), false);
+        }
+    } else {
+        cb(new Error('Sadece resim dosyaları yüklenebilir'), false);
+    }
+};
+
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { 
+    fileSize: 10 * 1024 * 1024,
+    files: 1
+  },
+  fileFilter
 });
 
-// POST /api/uploads?folder=Home/sliders
-router.post('/', upload.single('file'), async (req, res) => {
+router.post('/', uploadLimiter, adminAuth, upload.single('file'), async (req, res) => {
   const safeFolder = sanitizeFolder(req.query.folder);
   if (!req.file) return res.status(400).json({ error: 'Dosya bulunamadı' });
 

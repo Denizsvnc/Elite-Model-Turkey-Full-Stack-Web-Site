@@ -20,8 +20,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Drawer from '../../components/Drawer';
 import MultiLangText from '../../components/Text';
 import ImageUploader from '../../components/imageUploader';
-// API base (fallback to backend default port)
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+import { getApiBaseUrl } from '../../../services/api';
+
+const API_BASE = getApiBaseUrl();
 
 // Types matching backend schema
 type HomeSliderItem = {
@@ -76,7 +77,6 @@ function Sliders() {
       .then((data: HomeSlider[]) => {
         setGroups(data || []);
         setError(null);
-        // no UI selection needed; list remains for display only
       })
       .catch((err) => {
         setError(err?.message || 'Veri çekilemedi');
@@ -119,9 +119,13 @@ function Sliders() {
     };
 
     setSaving(true);
+    const token = localStorage.getItem('token');
     fetch(`${API_BASE}/api/sliders/item`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(async (res) => {
@@ -207,7 +211,11 @@ function Sliders() {
                       <Stack direction="row" spacing={1} alignItems="center">
                         <Chip size="small" label={`Sıra: ${item.order}`} variant="outlined" />
                         <IconButton aria-label="Sil" size="small" onClick={() => {
-                          fetch(`${API_BASE}/api/sliders/item/${item.id}`, { method: 'DELETE' })
+                          const token = localStorage.getItem('token');
+                          fetch(`${API_BASE}/api/sliders/item/${item.id}`, { 
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                          })
                             .then(async (res) => {
                               if (!res.ok) throw new Error(await res.text());
                               return res.json();

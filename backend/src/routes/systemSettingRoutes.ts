@@ -4,12 +4,13 @@ import {
     updateSetting, 
     createSetting 
 } from '../controllers/SystemSettingController';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
 // Endpoint: /api/admin/settings
-router.get('/', getAllSettings);           // Tüm ayarları getir
-router.put('/:key', updateSetting);        // Ayar güncelle (Örn: /telegram_token)
-router.post('/', createSetting);           // Yeni ayar ekle
+router.get('/', adminAuth, getAllSettings);           // Tüm ayarları getir
+router.put('/:key', adminAuth, updateSetting);        // Ayar güncelle (Örn: /telegram_token)
+router.post('/', adminAuth, createSetting);           // Yeni ayar ekle
 
 export default router;

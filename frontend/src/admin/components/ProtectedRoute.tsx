@@ -10,8 +10,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        // Token yoksa login sayfasına yönlendir
-        // Giriş yaptıktan sonra geri dönmek için mevcut konumu kaydet
         return <Navigate to="/admin/login" state={{ from: location }} replace />;
     }
 

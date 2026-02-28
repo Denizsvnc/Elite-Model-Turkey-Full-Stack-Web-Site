@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import ApplicationForm from './src/pages/ApplicationForm';
@@ -23,8 +23,8 @@ import ProtectedRoute from './src/admin/components/ProtectedRoute';
 
 import Sliders from './src/admin/pages/HomePage/Sliders';
 import Featured from './src/admin/pages/HomePage/Featured';
-import NewsAdmin from './src/admin/pages/HomePage/News';
-import Latest from './src/admin/pages/SuccessPages/Latest';
+
+
 import SuccesModel from './src/admin/pages/SuccessPages/SuccessModel';
 import Hero from './src/admin/pages/AboutPages/Hero'; 
 import Vision from './src/admin/pages/AboutPages/Vision';
@@ -41,6 +41,8 @@ import PendingApplications from './src/admin/pages/ApplicationsPages/PendingAppl
 import ApplicationsRejected from './src/admin/pages/ApplicationsPages/ApplicationsRejected';
 import Kvkk from "./components/Kvkk";
 import PrivacyPolicy from './components/PrivacyPolicy';
+import ErrorPage from './src/pages/ErrorPage';
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
@@ -65,12 +67,13 @@ const App: React.FC = () => {
         {/* Admin Routes */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="sliders" element={<Sliders />} /> 
           <Route path="featured-items" element={<Featured />} /> 
-          <Route path="news" element={<NewsAdmin />} /> 
+  
           <Route path="success-model" element={<SuccesModel />} /> 
-          <Route path="latest" element={<Latest />} /> 
+     
           <Route path="heroimg" element={<Heroimg />} /> 
 
           <Route path="news-management" element={<NewsManagement />} /> 
@@ -87,6 +90,9 @@ const App: React.FC = () => {
           <Route path="applications/pending" element={<PendingApplications />} /> 
           <Route path="applications/rejected" element={<ApplicationsRejected />} /> 
         </Route>
+
+        {/* 404 - Catch all undefined routes */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
