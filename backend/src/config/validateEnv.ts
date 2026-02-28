@@ -19,7 +19,7 @@ export const validateEnv = () => {
         throw new Error('JWT_SECRET en az 32 karakter olmalı');
     }
     
-    console.log('✅ Ortam değişkenleri doğrulandı');
+    console.log('Ortam değişkenleri doğrulandı');
 };
 
 export const getJWTSecret = (): string => {

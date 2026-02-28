@@ -36,8 +36,6 @@ export const upsertAboutPage = async (req: Request, res: Response) => {
         let result;
 
         if (existingPage) {
-            // --- VARSA GÜNCELLE ---
-            // Görseller güncelleniyorsa, eski dosyaları sil
             try {
                 if (data.vision_imageUrl && existingPage.vision_imageUrl && data.vision_imageUrl !== existingPage.vision_imageUrl) {
                     if (existingPage.vision_imageUrl.startsWith('/uploads/')) {
