@@ -273,6 +273,57 @@
     "Ok" : "If you have made the payment, please click the button below. We will get back to you via SMS within 30 minutes.",
     "ButtonText" : "SUBMIT APPLICATION IF YOU COPIED THE TEXT!",
     "ButtonCreditText" : "PAY AND START YOUR PROFESSIONAL JOURNEY",
-    "ApplicationSubmitted" : "✓ Your application has been successfully submitted! We will contact you as soon as possible."
+    "ApplicationSubmitted" : "✓ Your application has been successfully submitted! We will contact you as soon as possible.",
+    
+    "ClosedTitle": "Applications Are Currently Closed",
+    "ClosedDescription": "We're sorry, but we are not accepting applications at this time. Please check back later or contact us for more information.",
+    "ClosedContact": "Contact Us",
+    "ClosedBackHome": "Back to Home",
+    "NotifyTitle": "Get notified when applications open?",
+    "NotifyDescription": "Leave your information and we'll email you when applications open.",
+    "NotifyFullName": "Full Name",
+    "NotifyPhone": "Phone Number",
+    "NotifyEmail": "Email Address",
+    "NotifySubmit": "Request Notification",
+    "NotifySubmitting": "Submitting...",
+    "NotifySuccess": "✓ Your request has been saved! We'll email you when applications open."
+    },
+    "ErrorPage": {
+        "gameTitle": "While You're Here, Play a Game! 🎮",
+        "goBack": "Go Back",
+        "goHome": "Go Home",
+        "needHelp": "Need help?",
+        "contactUs": "Contact Us",
+        "followUs": "Follow Us on Social Media",
+        "error400": {
+            "title": "Bad Request",
+            "message": "The request you sent is invalid. Please check your information and try again.",
+            "emoji": "🤔"
+        },
+        "error401": {
+            "title": "Unauthorized Access",
+            "message": "You need to log in to view this page.",
+            "emoji": "🔐"
+        },
+        "error403": {
+            "title": "Access Denied",
+            "message": "You don't have permission to access this page.",
+            "emoji": "🚫"
+        },
+        "error404": {
+            "title": "Page Not Found",
+            "message": "The page you are looking for doesn't exist or might have been moved.",
+            "emoji": "🦖"
+        },
+        "error500": {
+            "title": "Server Error",
+            "message": "Something went wrong on our end. Our team is working to fix this.",
+            "emoji": "💥"
+        },
+        "error503": {
+            "title": "Service Unavailable",
+            "message": "Our server is currently under maintenance. Please try again later.",
+            "emoji": "🔧"
+        }
     }
 }

@@ -16,12 +16,13 @@ import {
     Divider,
     IconButton,
     InputAdornment,
-    Chip
+    Chip,
+    
 } from '@mui/material';
 import { Visibility, VisibilityOff, Save, Email, Telegram, WhatsApp, Settings as SettingsIcon } from '@mui/icons-material';
+import { getApiBaseUrl } from '../../../services/api';
 
-// 1. API ADRESİ ve TİP TANIMLARI
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 interface SystemSetting {
     id: number;
@@ -50,6 +51,7 @@ const Setting = () => {
     const [activeTab, setActiveTab] = useState(0); 
     const [showSecrets, setShowSecrets] = useState<{ [key: string]: boolean }>({}); 
     const [rules, setRules] = useState<NotificationRule[]>([]);
+    const [applicationPageStatus, setApplicationPageStatus] = useState<boolean>(true);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false); 
     const [notification, setNotification] = useState<{open: boolean, message: string, type: 'success' | 'error'}>({
@@ -86,6 +88,14 @@ const Setting = () => {
             if (rulesRes.ok) {
                 const rulesData = await rulesRes.json();
                 setRules(rulesData);
+            }
+
+            const appStatusRes = await fetch(`${API_BASE}/api/application-page/status`);
+            if (appStatusRes.ok) {
+                const appStatusData = await appStatusRes.json();
+                if (appStatusData.success && appStatusData.data) {
+                    setApplicationPageStatus(appStatusData.data.isActive);
+                }
             }
 
         } catch (error) {
@@ -160,6 +170,31 @@ const Setting = () => {
             showNotification("Ayar kaydedilemedi.", "error");
         } finally {
             setActionLoading(false);
+        }
+    };
+
+    // Başvuru Sayfası Aktiflik Durumu Değiştirme
+    const handleApplicationStatusToggle = async (newStatus: boolean) => {
+        setApplicationPageStatus(newStatus);
+        
+        try {
+            const res = await fetch(`${API_BASE}/api/application-page/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+                body: JSON.stringify({ isActive: newStatus })
+            });
+            
+            if (res.ok) {
+                showNotification(
+                    newStatus ? "Başvuru sayfası aktif edildi." : "Başvuru sayfası devre dışı bırakıldı.",
+                    "success"
+                );
+            } else {
+                throw new Error('Güncelleme başarısız');
+            }
+        } catch (error) {
+            showNotification("Başvuru durumu güncellenemedi.", "error");
+            setApplicationPageStatus(!newStatus); // Geri al
         }
     };
 
@@ -245,6 +280,37 @@ const Setting = () => {
                                 <Button variant="contained" fullWidth onClick={handleFeeUpdate} disabled={actionLoading}>
                                     {actionLoading ? "..." : "Fiyatı Güncelle"}
                                 </Button>
+                                
+                                <Divider sx={{ my: 3 }} />
+                                
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+                                        📋 Başvuru Sayfası Durumu
+                                    </Typography>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={applicationPageStatus}
+                                                onChange={(e) => handleApplicationStatusToggle(e.target.checked)}
+                                                color="success"
+                                            />
+                                        }
+                                        label={
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Typography variant="body2" fontWeight="medium">
+                                                    {applicationPageStatus ? '✅ Başvurular Açık' : '❌ Başvurular Kapalı'}
+                                                </Typography>
+                                            </Box>
+                                        }
+                                        sx={{ justifyContent: 'center' }}
+                                    />
+                                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                        {applicationPageStatus 
+                                            ? 'Kullanıcılar başvuru yapabilir' 
+                                            : 'Başvuru sayfası devre dışı'}
+                                    </Typography>
+                                </Box>
+
                             </CardContent>
                         </Card>
                     </Box>

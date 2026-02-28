@@ -11,7 +11,7 @@ export const getCurrentFee = async (req: Request, res: Response) => {
       },
     });
 
-    // Eğer veritabanı sıfırsa (henüz hiç kayıt yoksa) 0 dönelim
+    // Eğer veritabanı sıfırsa (henüz hiç kayıt yoksa) 0
     if (!currentFee) {
       return res.status(200).json({
         success: true,

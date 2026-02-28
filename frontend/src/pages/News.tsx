@@ -2,13 +2,13 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getApiBaseUrl } from '../services/api';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 const News: React.FC = () => {
   const location = useLocation();
   
-  // 1. Context'ten 't', 'dict' ve 'language' çekiyoruz
   const { t, dict, language } = useLanguage();
   
   const [newsData, setNewsData] = useState<any[]>([]);

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../services/api';
+import api, { getApiBaseUrl } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 
-// Types
 interface SliderItem {
   id: number;
   imageUrl?: string | null;
@@ -42,11 +41,10 @@ interface FeaturedItem {
   order: number;
 }
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
-const HERO_SLIDER_KEY = (import.meta as any).env?.VITE_HERO_SLIDER_KEY || 'home-hero';
+const API_BASE = getApiBaseUrl();
+const HERO_SLIDER_KEY = import.meta.env.VITE_HERO_SLIDER_KEY || 'home-hero';
 
 const Home: React.FC = () => {
-  // 1. Context'ten 'dict' (statik json) ve 't' (db çevirici) alıyoruz
   const { t, dict } = useLanguage();
   
   const [currentSlide, setCurrentSlide] = useState(0);

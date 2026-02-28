@@ -11,16 +11,18 @@ import {
   CardMedia,
   CardContent,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
+  Skeleton,
+  Alert,
+  Divider,
+  IconButton
 } from '@mui/material';
 import axios from 'axios';
+import Drawer from '../components/Drawer';
 import ImageUploader from '../components/imageUploader';
 import MultiLangText from '../components/Text';
+import { getApiBaseUrl } from '../../services/api';
 
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+const API_BASE = getApiBaseUrl();
 
 type NewsItem = {
   id: string;
@@ -50,8 +52,10 @@ type NewsItem = {
 function NewsManagement() {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [form, setForm] = useState({
     imageUrl: '',
     galleryUrls: [] as string[],
@@ -67,46 +71,71 @@ function NewsManagement() {
 
   const loadItems = () => {
     setLoading(true);
-    axios.get(`${API_BASE}/api/news`)
+    const token = localStorage.getItem('token');
+    axios.get(`${API_BASE}/api/news`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(res => {
         const sorted = (res.data || []).sort((a: any, b: any) => 
           new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
         );
         setItems(sorted);
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err);
+        setError('Haberler yüklenirken bir hata oluştu');
+      })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { loadItems(); }, []);
 
   const handleSave = () => {
+    if (!form.imageUrl) {
+      setError('Lütfen bir görsel yükleyin');
+      return;
+    }
+    
+    setSaving(true);
+    setError(null);
+    
+    const token = localStorage.getItem('token');
     const url = editingId 
       ? `${API_BASE}/api/news/${editingId}` 
       : `${API_BASE}/api/news`;
     const method = editingId ? 'put' : 'post';
 
-    axios[method](url, form)
+    axios[method](url, form, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(() => {
         loadItems();
         resetForm();
-        setDialogOpen(false);
-        alert('Kaydedildi!');
+        setDrawerOpen(false);
+        setError(null);
       })
       .catch(err => {
         console.error(err);
-        alert('Hata oluştu!');
-      });
+        setError(err.response?.data?.message || 'Kaydedilirken bir hata oluştu');
+      })
+      .finally(() => setSaving(false));
   };
 
   const handleDelete = (id: string) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return;
-    axios.delete(`${API_BASE}/api/news/${id}`)
+    
+    const token = localStorage.getItem('token');
+    axios.delete(`${API_BASE}/api/news/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(() => {
         loadItems();
-        alert('Silindi!');
+        setError(null);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        setError('Silinirken bir hata oluştu');
+      });
   };
 
   const handleEdit = (item: NewsItem) => {
@@ -134,7 +163,7 @@ function NewsManagement() {
       publishedAt: item.publishedAt.split('T')[0],
       isActive: item.isActive
     });
-    setDialogOpen(true);
+    setDrawerOpen(true);
   };
 
   const resetForm = () => {
@@ -153,37 +182,95 @@ function NewsManagement() {
     setFiles([]);
   };
 
-  const openAddDialog = () => {
+  const openAddDrawer = () => {
     resetForm();
-    setDialogOpen(true);
+    setDrawerOpen(true);
   };
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>Haber Yönetimi</Typography>
-        <Button variant="contained" onClick={openAddDialog}>
-          Yeni Haber Ekle
-        </Button>
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+              Haber Yönetimi
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Haberlerinizi ekleyin, düzenleyin ve yönetin.
+            </Typography>
+          </Box>
+          <Button 
+            variant="contained" 
+            size="large"
+            onClick={openAddDrawer}
+            sx={{ minWidth: 160 }}
+          >
+            + Yeni Haber Ekle
+          </Button>
+        </Box>
       </Box>
 
+      {/* Error Alert */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
       {/* List */}
-      {loading ? <Typography>Yükleniyor...</Typography> : (
+      {loading ? (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {[1, 2, 3].map(i => (
+            <Card key={i} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+              <Skeleton variant="rectangular" sx={{ width: { xs: '100%', md: 250 }, height: { xs: 200, md: 180 } }} />
+              <CardContent sx={{ flex: 1 }}>
+                <Skeleton variant="text" height={40} sx={{ mb: 1 }} />
+                <Skeleton variant="text" height={60} sx={{ mb: 2 }} />
+                <Skeleton variant="rectangular" height={36} width={200} />
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {items.length === 0 ? (
-            <Typography color="text.secondary">Henüz haber eklenmemiş</Typography>
+            <Card elevation={0} sx={{ p: 6, textAlign: 'center', bgcolor: 'action.hover' }}>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Henüz haber eklenmemiş
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                "Yeni Haber Ekle" butonuna tıklayarak ilk haberinizi ekleyin.
+              </Typography>
+              <Button variant="outlined" onClick={openAddDrawer}>
+                İlk Haberi Ekle
+              </Button>
+            </Card>
           ) : (
             items.map(item => (
-              <Card key={item.id} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+              <Card key={item.id} elevation={2} sx={{ 
+                display: 'flex', 
+                flexDirection: { xs: 'column', md: 'row' },
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: 4
+                }
+              }}>
                 <CardMedia 
                   component="img" 
-                  sx={{ width: { xs: '100%', md: 250 }, height: { xs: 200, md: 'auto' } }} 
+                  sx={{ 
+                    width: { xs: '100%', md: 280 }, 
+                    height: { xs: 200, md: 200 },
+                    objectFit: 'cover'
+                  }} 
                   image={item.imageUrl.startsWith('/') ? `${API_BASE}${item.imageUrl}` : item.imageUrl} 
+                  alt={item.title_tr}
                 />
-                <CardContent sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                <CardContent sx={{ flex: 1, p: 3 }}>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
                     {item.category && (
-                      <Chip label={item.category} size="small" color="primary" />
+                      <Chip label={item.category} size="small" color="primary" variant="outlined" />
                     )}
                     <Chip 
                       label={item.isActive ? 'Aktif' : 'Pasif'} 
@@ -191,26 +278,55 @@ function NewsManagement() {
                       color={item.isActive ? 'success' : 'default'}
                     />
                     {item.galleryUrls && item.galleryUrls.length > 0 && (
-                      <Chip label={`Galeri: ${item.galleryUrls.length}`} size="small" color="secondary" />
+                      <Chip 
+                        label={`${item.galleryUrls.length} Galeri Görseli`} 
+                        size="small" 
+                        color="secondary" 
+                        variant="outlined"
+                      />
                     )}
                   </Box>
-                  <Typography variant="h6" gutterBottom>{item.title_tr}</Typography>
+                  
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    {item.title_tr}
+                  </Typography>
+                  
                   {item.description_tr && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      {item.description_tr.substring(0, 150)}...
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {item.description_tr.substring(0, 200)}
+                      {item.description_tr.length > 200 && '...'}
                     </Typography>
                   )}
-                  <Typography variant="caption" display="block" sx={{ mb: 2 }}>
-                    Yayın: {new Date(item.publishedAt).toLocaleDateString('tr-TR')}
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <Button size="small" variant="outlined" onClick={() => handleEdit(item)}>
-                      Düzenle
-                    </Button>
-                    <Button size="small" variant="outlined" color="error" onClick={() => handleDelete(item.id)}>
-                      Sil
-                    </Button>
-                  </Stack>
+                  
+                  <Divider sx={{ my: 2 }} />
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="caption" color="text.secondary">
+                      📅 {new Date(item.publishedAt).toLocaleDateString('tr-TR', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                      })}
+                    </Typography>
+                    
+                    <Stack direction="row" spacing={1}>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        onClick={() => handleEdit(item)}
+                      >
+                        Düzenle
+                      </Button>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        color="error" 
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Sil
+                      </Button>
+                    </Stack>
+                  </Box>
                 </CardContent>
               </Card>
             ))
@@ -218,128 +334,217 @@ function NewsManagement() {
         </Box>
       )}
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>{editingId ? 'Haber Düzenle' : 'Yeni Haber Ekle'}</DialogTitle>
-        <DialogContent>
-          <Box sx={{ pt: 2 }}>
-            <ImageUploader 
-              files={files} 
-              setFiles={setFiles} 
-              folder="News" 
-              onUploaded={(url) => setForm({ ...form, imageUrl: url })} 
-            />
-            
-            {form.imageUrl && (
-              <Box sx={{ my: 2 }}>
-                <img 
-                  src={form.imageUrl.startsWith('/') ? `${API_BASE}${form.imageUrl}` : form.imageUrl} 
-                  alt="Preview" 
-                  style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8 }} 
-                />
-              </Box>
-            )}
+      {/* Add/Edit Drawer */}
+      <Drawer 
+        open={drawerOpen} 
+        onClose={() => !saving && setDrawerOpen(false)} 
+        onSave={handleSave}
+        onCancel={() => setDrawerOpen(false)}
+        title={editingId ? 'Haber Düzenle' : 'Yeni Haber Ekle'}
+        saving={saving}
+        disabled={!form.imageUrl}
+      >
+        {error && (
+          <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        
+        {/* Main Image Upload */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Ana Görsel *
+          </Typography>
+          <ImageUploader 
+            files={files} 
+            setFiles={setFiles} 
+            folder="News" 
+            onUploaded={(url) => {
+              setForm({ ...form, imageUrl: url });
+              setError(null);
+            }} 
+          />
+          
+          {form.imageUrl && (
+            <Box sx={{ mt: 2 }}>
+              <img 
+                src={form.imageUrl.startsWith('/') ? `${API_BASE}${form.imageUrl}` : form.imageUrl} 
+                alt="Preview" 
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: 200, 
+                  borderRadius: 8,
+                  border: '2px solid #e0e0e0'
+                }} 
+              />
+              <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 1 }}>
+                ✓ Ana görsel yüklendi
+              </Typography>
+            </Box>
+          )}
+        </Box>
 
-            {/* Galeri Yükleme */}
-            <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>Galeri Görselleri (opsiyonel)</Typography>
-            <ImageUploader 
-              files={files} 
-              setFiles={setFiles} 
-              folder="News" 
-              onUploaded={(url) => setForm({ ...form, galleryUrls: [...form.galleryUrls, url] })} 
-            />
-            {form.galleryUrls.length > 0 && (
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', my: 2 }}>
-                {form.galleryUrls.map((url) => (
-                  <Box key={url} sx={{ position: 'relative' }}>
-                    <img 
-                      src={url.startsWith('/') ? `${API_BASE}${url}` : url} 
-                      alt="Gallery" 
-                      style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 6 }}
-                    />
-                    <Button 
-                      size="small" 
-                      color="error" 
-                      variant="contained"
-                      onClick={() => setForm({ ...form, galleryUrls: form.galleryUrls.filter((g) => g !== url) })}
-                      sx={{ position: 'absolute', top: -10, right: -10, minWidth: 24, p: 0 }}
-                    >
-                      ×
-                    </Button>
-                  </Box>
-                ))}
-              </Box>
-            )}
+        <Divider />
 
-            <MultiLangText 
-              label="Kategori (opsiyonel)" 
-              values={{ 
-                tr: form.category_tr, 
-                en: form.category_en, 
-                de: form.category_de, 
-                ru: form.category_ru 
-              }}
-              onChange={(lang, val) => setForm({ ...form, [`category_${lang}`]: val })}
-            />
-            <TextField 
-              fullWidth 
-              label="Kategori (fallback, opsiyonel)" 
-              value={form.category} 
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-              placeholder="Örn: Editorial, Runway, Campaign"
-              sx={{ mb: 2 }}
-            />
+        {/* Gallery Images Upload */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Galeri Görselleri (opsiyonel)
+          </Typography>
+          <ImageUploader 
+            files={files} 
+            setFiles={setFiles} 
+            folder="News" 
+            onUploaded={(url) => setForm({ ...form, galleryUrls: [...form.galleryUrls, url] })} 
+          />
+          {form.galleryUrls.length > 0 && (
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+              {form.galleryUrls.map((url, idx) => (
+                <Box key={url} sx={{ position: 'relative' }}>
+                  <img 
+                    src={url.startsWith('/') ? `${API_BASE}${url}` : url} 
+                    alt={`Gallery ${idx + 1}`} 
+                    style={{ 
+                      width: 80, 
+                      height: 80, 
+                      objectFit: 'cover', 
+                      borderRadius: 6,
+                      border: '2px solid #e0e0e0'
+                    }}
+                  />
+                  <IconButton 
+                    size="small" 
+                    color="error"
+                    onClick={() => setForm({ ...form, galleryUrls: form.galleryUrls.filter((g) => g !== url) })}
+                    sx={{ 
+                      position: 'absolute', 
+                      top: -8, 
+                      right: -8,
+                      bgcolor: 'error.main',
+                      color: 'white',
+                      width: 24,
+                      height: 24,
+                      '&:hover': { bgcolor: 'error.dark' }
+                    }}
+                  >
+                    ×
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          )}
+        </Box>
 
-            <MultiLangText 
-              label="Başlık" 
-              values={{ tr: form.title_tr, en: form.title_en, de: form.title_de, ru: form.title_ru }}
-              onChange={(lang, val) => setForm({ ...form, [`title_${lang}`]: val })}
-            />
+        <Divider />
 
-            <MultiLangText 
-              label="Kısa Açıklama (opsiyonel)" 
-              values={{ 
-                tr: form.description_tr, 
-                en: form.description_en, 
-                de: form.description_de, 
-                ru: form.description_ru 
-              }}
-              onChange={(lang, val) => setForm({ ...form, [`description_${lang}`]: val })}
-              multiline
-              rows={3}
-            />
+        {/* Category Section */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Kategori (Çoklu Dil)
+          </Typography>
+          <MultiLangText 
+            label="Kategori (opsiyonel)" 
+            values={{ 
+              tr: form.category_tr, 
+              en: form.category_en, 
+              de: form.category_de, 
+              ru: form.category_ru 
+            }}
+            onChange={(lang, val) => setForm({ ...form, [`category_${lang}`]: val })}
+          />
+          <TextField 
+            fullWidth 
+            label="Kategori (fallback)" 
+            value={form.category} 
+            onChange={(e) => setForm({ ...form, category: e.target.value })}
+            placeholder="Örn: Editorial, Runway"
+            sx={{ mt: 2 }}
+            size="small"
+          />
+        </Box>
 
-            <MultiLangText 
-              label="İçerik / Haber Metni" 
-              values={{ tr: form.content_tr, en: form.content_en, de: form.content_de, ru: form.content_ru }}
-              onChange={(lang, val) => setForm({ ...form, [`content_${lang}`]: val })}
-              multiline
-              rows={8}
-            />
+        <Divider />
 
-            <TextField 
-              fullWidth 
-              label="Yayın Tarihi" 
-              type="date" 
-              value={form.publishedAt} 
-              onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
-              sx={{ my: 2 }}
-              InputLabelProps={{ shrink: true }}
-            />
+        {/* Title Section */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Başlık (Çoklu Dil) *
+          </Typography>
+          <MultiLangText 
+            label="Başlık" 
+            values={{ tr: form.title_tr, en: form.title_en, de: form.title_de, ru: form.title_ru }}
+            onChange={(lang, val) => setForm({ ...form, [`title_${lang}`]: val })}
+          />
+        </Box>
 
-            <FormControlLabel 
-              control={<Switch checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />} 
-              label="Aktif" 
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>İptal</Button>
-          <Button variant="contained" onClick={handleSave}>
-            Kaydet
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* Description Section */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Kısa Açıklama (opsiyonel)
+          </Typography>
+          <MultiLangText 
+            label="Kısa Açıklama" 
+            values={{ 
+              tr: form.description_tr, 
+              en: form.description_en, 
+              de: form.description_de, 
+              ru: form.description_ru 
+            }}
+            onChange={(lang, val) => setForm({ ...form, [`description_${lang}`]: val })}
+            multiline
+            rows={3}
+          />
+        </Box>
+
+        {/* Content Section */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Haber İçeriği (Çoklu Dil) *
+          </Typography>
+          <MultiLangText 
+            label="İçerik" 
+            values={{ tr: form.content_tr, en: form.content_en, de: form.content_de, ru: form.content_ru }}
+            onChange={(lang, val) => setForm({ ...form, [`content_${lang}`]: val })}
+            multiline
+            rows={8}
+          />
+        </Box>
+
+        <Divider />
+
+        {/* Publish Date & Active Status */}
+        <Box>
+          <TextField 
+            fullWidth
+            label="Yayın Tarihi" 
+            type="date" 
+            value={form.publishedAt} 
+            onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
+            InputLabelProps={{ shrink: true }}
+            sx={{ mb: 2 }}
+          />
+
+          <FormControlLabel 
+            control={
+              <Switch 
+                checked={form.isActive} 
+                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                color="success"
+              />
+            } 
+            label={
+              <Stack>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                  Yayın Durumu
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {form.isActive ? 'Aktif - Web sitesinde gösteriliyor' : 'Pasif - Gizli'}
+                </Typography>
+              </Stack>
+            }
+          />
+        </Box>
+          </Drawer>
     </Box>
   );
 }

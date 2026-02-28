@@ -8,12 +8,14 @@ import {
         deleteContactMessage
 } from '../controllers/contactMessageController';
 import { body } from 'express-validator';
+import { authMiddleware as adminAuth } from '../middleware/auth';
+import { contactLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// Public: Form gönderimi
 router.post(
     '/',
+    contactLimiter,
     [
         body('fullName').isString().isLength({ min: 2, max: 100 }).trim(),
         body('email').isEmail().normalizeEmail(),
@@ -24,15 +26,15 @@ router.post(
 );
 
 // Admin: Gelen kutusunu gör
-router.get('/', getContactMessages);
+router.get('/', adminAuth, getContactMessages);
 
 // Admin: Mesaj detayını gör
-router.get('/:id', getMessageById);
+router.get('/:id', adminAuth, getMessageById);
 
 // Admin: Mesajı okundu/okunmadı yap
-router.patch('/:id', markMessageAsRead);
+router.patch('/:id', adminAuth, markMessageAsRead);
 
 // Admin: Mesajı sil
-router.delete('/:id', deleteContactMessage);
+router.delete('/:id', adminAuth, deleteContactMessage);
 
 export default router;

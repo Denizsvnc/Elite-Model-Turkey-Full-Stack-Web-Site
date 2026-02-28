@@ -11,6 +11,7 @@ import {
     deleteSliderItem,
     updateSliderItem
 } from '../controllers/HomeSliderController';
+import { authMiddleware as adminAuth } from '../middleware/auth';
 
 const router = Router();
 
@@ -28,11 +29,11 @@ router.get('/:id', getHomeSliderById);
 
 // Yeni bir slider grubu oluştur (İçi boş)
 // POST /api/sliders
-router.post('/', createHomeSlider);
+router.post('/', adminAuth, createHomeSlider);
 
 // Slider grubunun adını veya durumunu güncelle
 // PUT /api/sliders/1
-router.put('/:id', updateHomeSlider);
+router.put('/:id', adminAuth, updateHomeSlider);
 
 
 // ==========================================================
@@ -42,14 +43,14 @@ router.put('/:id', updateHomeSlider);
 // Mevcut bir gruba YENİ GÖRSEL ekle
 // POST /api/sliders/item
 // (Body içinde "homeSliderId" gönderilmelidir)
-router.post('/item', addSliderItem);
+router.post('/item', adminAuth, addSliderItem);
 
 // Tek bir görseli sil (ID: Resmin kendi ID'sidir)
 // DELETE /api/sliders/item/55
-router.delete('/item/:id', deleteSliderItem);
+router.delete('/item/:id', adminAuth, deleteSliderItem);
 
 // Tek bir görseli güncelle (Sıra, resim linki, başlıklar vb.)
 // PATCH /api/sliders/item/55
-router.patch('/item/:id', updateSliderItem);
+router.patch('/item/:id', adminAuth, updateSliderItem);
 
 export default router;

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../services/api';
+import api, { getApiBaseUrl } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3005';
+
+const API_BASE = getApiBaseUrl();
 
 const NewFaces: React.FC = () => {
     const [heroImage, setHeroImage] = useState('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=2000&auto=format&fit=crop');

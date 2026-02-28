@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem , Link} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 interface TopbarProps {
     onMenuClick: () => void;
@@ -20,10 +21,16 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('adminUser');
-        navigate('/admin/login');
+    const handleLogout = async () => {
+        try {
+            await api.post('/api/auth/logout');
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            localStorage.removeItem('token');
+            localStorage.removeItem('adminUser');
+            navigate('/admin/login');
+        }
     };
 
     return (
@@ -52,10 +59,6 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <IconButton color="inherit">
-                        <span className="material-symbols-outlined">notifications</span>
-                    </IconButton>
-
                     <Box
                         sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
                         onClick={handleMenu}

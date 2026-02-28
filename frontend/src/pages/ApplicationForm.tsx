@@ -331,6 +331,203 @@ const ApplicationForm: React.FC = () => {
     "* KATILIM ÜCRETİ {price} TL OLUP BANKA ÖDEMESİ GÖZÜKMEYEN BAŞVURULAR GEÇERSİZ SAYILACAKTIR.";
   const warningText = rawText.replace("{price}", String(price ?? 0));
 
+  // Calculate form completion progress
+  const calculateProgress = () => {
+    const totalFields = Object.keys(formData).length;
+    const filledFields = Object.values(formData).filter(
+      (val) => val && val !== "",
+    ).length;
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
+  const progress = calculateProgress();
+
+  // Notification form submit handler
+  const handleNotificationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNotificationSubmitting(true);
+    setNotificationError("");
+
+    try {
+      const res = await api.post(
+        "/api/application-notifications",
+        notificationForm,
+      );
+
+      if (res.data.success) {
+        setNotificationSuccess(true);
+        setNotificationForm({ fullName: "", phone: "", email: "" });
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Bir hata oluştu. Lütfen tekrar deneyin.";
+      setNotificationError(errorMessage);
+    } finally {
+      setNotificationSubmitting(false);
+    }
+  };
+
+  // Eğer başvurular kapalıysa bilgilendirme mesajı göster
+  if (!isApplicationActive) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-6 py-12 md:py-20">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-100 mb-8">
+            <span className="material-symbols-outlined text-6xl text-slate-400">
+              block
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-6 text-slate-800">
+            {dict?.ApplicationPage?.ClosedTitle || "Başvurular Şu Anda Kapalı"}
+          </h1>
+          <p className="text-slate-600 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed">
+            {dict?.ApplicationPage?.ClosedDescription ||
+              "Üzgünüz, şu anda başvuru kabul etmiyoruz. Lütfen daha sonra tekrar kontrol edin veya daha fazla bilgi için bizimle iletişime geçin."}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link
+              to="/iletisim"
+              className="px-8 py-4 bg-slate-900 text-white font-bold uppercase tracking-widest text-sm rounded hover:bg-slate-800 transition-colors"
+            >
+              {dict?.ApplicationPage?.ClosedContact || "Bize Ulaşın"}
+            </Link>
+            <Link
+              to="/"
+              className="px-8 py-4 border-2 border-slate-300 text-slate-800 font-bold uppercase tracking-widest text-sm rounded hover:border-slate-500 transition-colors"
+            >
+              {dict?.ApplicationPage?.ClosedBackHome || "Ana Sayfaya Dön"}
+            </Link>
+          </div>
+
+          {/* Notification Request Form */}
+          {!notificationSuccess ? (
+            <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
+                  <span className="material-symbols-outlined text-4xl text-blue-600">
+                    notifications_active
+                  </span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-3 text-slate-800">
+                  {dict?.ApplicationPage?.NotifyTitle ||
+                    "Başvurular açıldığında size haber verelim mi?"}
+                </h2>
+                <p className="text-slate-600">
+                  {dict?.ApplicationPage?.NotifyDescription ||
+                    "Bilgilerinizi bırakın, başvurular açıldığında size e-posta gönderelim."}
+                </p>
+              </div>
+
+              <form onSubmit={handleNotificationSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyFullName || "Ad Soyad"} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={notificationForm.fullName}
+                    onChange={(e) =>
+                      setNotificationForm({
+                        ...notificationForm,
+                        fullName: e.target.value,
+                      })
+                    }
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder={
+                      dict?.ApplicationPage?.NotifyFullName || "Ad Soyad"
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyPhone || "Telefon Numarası"} *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={notificationForm.phone}
+                    onChange={(e) =>
+                      setNotificationForm({
+                        ...notificationForm,
+                        phone: e.target.value,
+                      })
+                    }
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder="+90 555 123 4567"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    {dict?.ApplicationPage?.NotifyEmail || "E-posta Adresi"} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={notificationForm.email}
+                    onChange={(e) =>
+                      setNotificationForm({
+                        ...notificationForm,
+                        email: e.target.value,
+                      })
+                    }
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder="ornek@email.com"
+                  />
+                </div>
+
+                {notificationError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2">
+                    <span className="material-symbols-outlined text-xl">
+                      error
+                    </span>
+                    <span className="text-sm">{notificationError}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={notificationSubmitting}
+                  className="w-full px-8 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-sm rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {notificationSubmitting ? (
+                    <>
+                      <CircularProgress size={20} sx={{ color: "white" }} />
+                      {dict?.ApplicationPage?.NotifySubmitting ||
+                        "Gönderiliyor..."}
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined">send</span>
+                      {dict?.ApplicationPage?.NotifySubmit ||
+                        "Bilgilendirme İste"}
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="max-w-2xl mx-auto bg-green-50 border-2 border-green-200 rounded-2xl shadow-xl p-8 md:p-12 text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
+                <span className="material-symbols-outlined text-5xl text-green-600">
+                  check_circle
+                </span>
+              </div>
+              <h3 className="text-2xl font-bold text-green-800 mb-4">
+                {dict?.ApplicationPage?.NotifySuccess ||
+                  "✓ Talebiniz kaydedildi! Başvurular açıldığında size e-posta göndereceğiz."}
+              </h3>
+              <p className="text-green-700 mb-6">{notificationForm.email}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 md:py-20">
       <div className="text-center mb-16">
@@ -364,6 +561,7 @@ const ApplicationForm: React.FC = () => {
                 name="fullName"
                 value={formik.values.fullName}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur("fullName")}
                 onKeyDown={(e) => {
                   const key = e.key;
                   if (
@@ -468,6 +666,7 @@ const ApplicationForm: React.FC = () => {
                 name="email"
                 value={formik.values.email}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur("email")}
                 required
                 fullWidth
                 variant="outlined"
@@ -575,6 +774,7 @@ const ApplicationForm: React.FC = () => {
                 name="phone"
                 value={formik.values.phone}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur("phone")}
                 onKeyDown={(e) => {
                   const key = e.key;
                   if (
@@ -618,6 +818,7 @@ const ApplicationForm: React.FC = () => {
                   );
                   formik.setFieldValue("city", "");
                 }}
+                onBlur={() => handleFieldBlur("nationality")}
                 placeholder="Ülke Seçiniz / Select Country"
                 isClearable
                 isSearchable
@@ -683,6 +884,7 @@ const ApplicationForm: React.FC = () => {
                   name="city"
                   value={formik.values.city}
                   onChange={handleInputChange}
+                  onBlur={() => handleFieldBlur("city")}
                   required
                   fullWidth
                   className="bg-slate-50"
@@ -761,6 +963,7 @@ const ApplicationForm: React.FC = () => {
                     name={m.name}
                     value={(formik.values as any)[m.name]}
                     onChange={handleInputChange}
+                    onBlur={() => handleFieldBlur(m.name)}
                     required
                     className={`w-full p-4 bg-slate-50 border ${(formik.touched as any)[m.name] && (formik.errors as any)[m.name] ? "border-red-500" : "border-slate-200"} rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
                     placeholder={m.ph}
