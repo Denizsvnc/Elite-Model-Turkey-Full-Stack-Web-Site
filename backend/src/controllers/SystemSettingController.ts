@@ -30,7 +30,7 @@ export const updateSetting = async (req: Request, res: Response) => {
 
     try {
         const updatedSetting = await prisma.systemSetting.update({
-            where: { key: key },
+            where: { key: key as string },
             data: {
                 value: value,      // Yeni değer
                 isActive: isActive // Aktif/Pasif durumu

@@ -26,7 +26,7 @@ export const getSuccessHeroById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const hero = await prisma.successHero.findUnique({
-            where: { id },
+            where: { id: id as string },
         });
         if (!hero) {
             return res.status(404).json({ error: 'Kayıt bulunamadı.' });
@@ -85,7 +85,7 @@ export const updateSuccessHero = async (req: Request, res: Response) => {
     try {
         // Eğer imageUrl güncelleniyorsa, eski dosyayı sil
         if (data.imageUrl) {
-            const existing = await prisma.successHero.findUnique({ where: { id } });
+            const existing = await prisma.successHero.findUnique({ where: { id: id as string } });
             if (existing && existing.imageUrl && existing.imageUrl.startsWith('/uploads/')) {
                 const oldFilePath = path.join(process.cwd(), existing.imageUrl);
                 if (fs.existsSync(oldFilePath)) {
@@ -95,7 +95,7 @@ export const updateSuccessHero = async (req: Request, res: Response) => {
         }
 
         const updatedHero = await prisma.successHero.update({
-            where: { id },
+            where: { id: id as string },
             data: data, // Prisma alanları otomatik eşleştirir
         });
         res.json(updatedHero);
@@ -112,7 +112,7 @@ export const deleteSuccessHero = async (req: Request, res: Response) => {
 
     try {
         await prisma.successHero.delete({
-            where: { id },
+            where: { id: id as string },
         });
         res.json({ message: 'Kayıt başarıyla silindi.' });
     } catch (error) {

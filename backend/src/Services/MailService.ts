@@ -1,32 +1,34 @@
 import nodemailer from "nodemailer";
 // Önceki adımda oluşturduğumuz settings helper'ını import ediyoruz
-import { getEmailSettings } from "../utils/settings"; 
-import { MailOptions, ContactMailData, ApplicationMailData } from "../types/mail.types";
-import path from 'path';
-import { fileToBase64 } from '../utils/fileToBase64';
+import { getEmailSettings } from "../utils/settings";
+import {
+  MailOptions,
+  ContactMailData,
+  ApplicationMailData,
+} from "../types/mail.types";
+import path from "path";
+import { fileToBase64 } from "../utils/fileToBase64";
 
 export class MailService {
-  
   // Transporter'ı artık dinamik olarak oluşturuyoruz
   // Çünkü veritabanındaki şifre her an değişebilir.
   private static createTransporter(config: any) {
     return nodemailer.createTransport({
-      host: config.email_host || "smtp.gmail.com", // Veritabanından gelen host
-      port: parseInt(config.email_port || "587"),  // Veritabanından gelen port
-      secure: config.email_port === "465",         // 465 ise SSL, değilse TLS
+      host: config.email_host || process.env.EMAIL_HOST || "smtp.gmail.com",
+      port: parseInt(config.email_port || process.env.EMAIL_PORT || "587"),
+      secure: (config.email_port || process.env.EMAIL_PORT) === "465",
       auth: {
-        user: config.email_user,
-        pass: config.email_pass,
+        user: config.email_user || process.env.EMAIL_USER,
+        pass: config.email_pass || process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
       },
-      // performans ayarlari  
-      pool: true, 
-      maxConnections: 5, 
-      maxMessages: 10, 
-      rateDelta: 1000, 
-      rateLimit: 5 
+      pool: true,
+      maxConnections: 5,
+      maxMessages: 10,
+      rateDelta: 1000,
+      rateLimit: 5,
     });
   }
 
@@ -37,25 +39,30 @@ export class MailService {
       const config = await getEmailSettings();
 
       // 2. Master Switch Kontrolü (Sistem panelden kapatılmışsa gönderme)
-      if (config.email_enable !== 'true') {
-        console.warn("🛑 Mail servisi veritabanından pasife alınmış.");
-        return;
-      }
+      // if (config.email_enable !== 'true') {
+      //   console.warn("🛑 Mail servisi veritabanından pasife alınmış.");
+      //   return;
+      // }
 
       // 3. Transporter'ı o anki ayarlarla oluştur
       const transporter = this.createTransporter(config);
 
+      const fromUser = config.email_user || process.env.EMAIL_USER;
+
       // 4. Maili Gönder (Timeout koruması ile)
       const sendPromise = transporter.sendMail({
-        from: `"${config.email_user}" <${config.email_user}>`, // Gönderen
+        from: `"${fromUser}" <${fromUser}>`,
         to: options.to,
         subject: options.subject,
         text: options.text,
         html: options.html,
       });
 
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Mail gönderimi zaman aşımına uğradı')), 10000)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Mail gönderimi zaman aşımına uğradı")),
+          10000,
+        ),
       );
 
       await Promise.race([sendPromise, timeoutPromise]);
@@ -63,9 +70,11 @@ export class MailService {
 
       // Transporter'ı işi bitince kapatmıyoruz (pool kullandığın için açık kalabilir)
       // Ancak çok sık config değişiyorsa transporter.close() düşünülebilir.
-      
     } catch (error) {
-      console.error("❌ Mail gönderilemedi:", error instanceof Error ? error.message : error);
+      console.error(
+        "❌ Mail gönderilemedi:",
+        error instanceof Error ? error.message : error,
+      );
       throw error;
     }
   }
@@ -98,26 +107,28 @@ export class MailService {
 
     // Target email zorunlu olduğu için ! koyuyoruz veya kontrol ekleyebilirsin
     if (targetEmail) {
-        await this.sendMail({
-            to: targetEmail,
-            subject: `[İletişim Formu] ${data.subject}`,
-            html: htmlContent,
-        });
+      await this.sendMail({
+        to: targetEmail,
+        subject: `[İletişim Formu] ${data.subject}`,
+        html: htmlContent,
+      });
     }
   }
 
   // Başvuru bildirimi için mail gönder
-  static async sendApplicationNotification(data: ApplicationMailData): Promise<void> {
+  static async sendApplicationNotification(
+    data: ApplicationMailData,
+  ): Promise<void> {
     const config = await getEmailSettings();
     const targetEmail = config.application_email || config.email_user;
 
     // Görsel path'i /uploads ile başlıyorsa dosyadan base64 oku
     function imgHtml(label: string, url?: string) {
-      if (!url) return '';
+      if (!url) return "";
       let src = url;
-      if (url.startsWith('/uploads')) {
+      if (url.startsWith("/uploads")) {
         // Sunucu kökünden dosya yolu oluştur
-        const absPath = path.join(process.cwd(), 'src', url);
+        const absPath = path.join(process.cwd(), "src", url);
         const base64 = fileToBase64(absPath);
         if (base64) src = base64;
       }
@@ -159,9 +170,9 @@ export class MailService {
         <hr style="border: 1px solid #eee; margin-top: 20px;">
         <h3 style="color: #555;">Yüklenen Fotoğraflar</h3>
         <div style="display: flex; gap: 16px; margin-bottom: 16px;">
-          ${imgHtml('Selfie', data.selfieUrl)}
-          ${imgHtml('Profil', data.profilePhoto)}
-          ${imgHtml('Vücut', data.fullBodyPhoto)}
+          ${imgHtml("Selfie", data.selfieUrl)}
+          ${imgHtml("Profil", data.profilePhoto)}
+          ${imgHtml("Vücut", data.fullBodyPhoto)}
         </div>
         <hr style="border: 1px solid #eee; margin-top: 20px;">
         <p style="color: #999; font-size: 12px;">Başvuru detaylarını admin panelinden inceleyebilirsiniz.</p>
@@ -169,11 +180,76 @@ export class MailService {
     `;
 
     if (targetEmail) {
-        await this.sendMail({
-            to: targetEmail,
-            subject: `[Yeni Başvuru] ${data.fullName}`,
-            html: htmlContent,
-        });
+      await this.sendMail({
+        to: targetEmail,
+        subject: `[Yeni Başvuru] ${data.fullName}`,
+        html: htmlContent,
+      });
+    }
+  }
+
+  static async sendVerificationEmail(email: string, verificationCode: number) {
+    const targetEmail = email;
+
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; color: #333;">
+        <h2 style="color: #007bff; text-align: center;">E-posta Doğrulama</h2>
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p>Başvurunuz da kullandığınız e-posta adresini doğrulamak için aşağıdaki 6 haneli kodu kullanın:</p>
+        
+        <div style="background: #f8f9fa; border: 1px dashed #007bff; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 10px; color: #007bff;">${verificationCode}</span>
+        </div>
+
+        <p style="font-size: 14px; color: #666;">Bu kod kısa bir süre için geçerlidir. Eğer bu isteği siz yapmadıysanız, lütfen bu e-postayı dikkate almayın.</p>
+        
+        <hr style="border: 1px solid #eee; margin-top: 30px;">
+        <p style="color: #999; font-size: 12px; text-align: center;">Bu e-posta otomatik olarak oluşturulmuştur.</p>
+      </div>
+    `;
+
+    if (targetEmail) {
+      await this.sendMail({
+        to: targetEmail,
+        subject: "E-posta Doğrulama",
+        html: htmlContent,
+      });
+    }
+  }
+  static async sendConfirmApplicationEmail(
+    email: string,
+    aplicationCode: string,
+    fullName: string,
+    phone: string,
+  ) {
+    const targetEmail = email;
+
+    const htmlContent = `
+   <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; color: #333;">
+        <h2 style="color: #28a745; text-align: center;">Başvurunuz Alındı!</h2>
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p>Merhaba ${fullName},</p>
+        <p>Elite Model Türkiye'ye yaptığınız başvuru başarıyla alındı. Başvurunuzun detayları aşağıdaki gibidir:</p>
+         <h3 style="color: orange; text-align: center;">Başvuru kodunuz : ${aplicationCode}</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>Ad Soyad:</strong> ${fullName}</li>
+          <li><strong>E-posta:</strong> ${targetEmail}</li>
+          <li><strong>Telefon:</strong> ${phone}</li>
+       
+        </ul>
+        <p>Başvurunuzun değerlendirme süreci başlayacak ve en kısa sürede sizinle iletişime geçilecektir.</p>
+        <p style="font-size: 14px; color: #666;">Bu e-posta otomatik olarak oluşturulmuştur. Lütfen bu e-postaya yanıt vermeyin.</p>
+        <hr style="border: 1px solid #eee; margin-top: 30px;">
+        <p style="color: #999; font-size: 12px; text-align: center;">Elite Model Türkiye - Tüm Hakları Saklıdır.</p>
+      </div>
+    `;
+
+    if (targetEmail) {
+      await this.sendMail({
+        to: targetEmail,
+        subject: "Başvurunuz Alındı - Elite Model Türkiye",
+        html: htmlContent,
+      });
     }
   }
 }

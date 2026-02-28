@@ -24,7 +24,7 @@ export const getFAQById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const faq = await prisma.fAQ.findUnique({
-            where: { id },
+            where: { id: id as string },
         });
         if (!faq) return res.status(404).json({ error: 'Kayıt bulunamadı.' });
         res.json(faq);
@@ -75,7 +75,7 @@ export const updateFAQ = async (req: Request, res: Response) => {
 
     try {
         const updatedFAQ = await prisma.fAQ.update({
-            where: { id },
+            where: { id: id as string },
             data: data,
         });
         res.json(updatedFAQ);
@@ -92,7 +92,7 @@ export const deleteFAQ = async (req: Request, res: Response) => {
 
     try {
         await prisma.fAQ.delete({
-            where: { id },
+            where: { id: id as string },
         });
         res.json({ message: 'Soru başarıyla silindi.' });
     } catch (error) {
