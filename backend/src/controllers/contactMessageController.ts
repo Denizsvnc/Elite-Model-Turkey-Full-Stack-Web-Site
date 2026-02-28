@@ -68,7 +68,7 @@ export const getMessageById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const message = await prisma.contactMessage.findUnique({
-            where: { id },
+            where: { id: id as string },
         });
 
         if (!message) {
@@ -89,7 +89,7 @@ export const markMessageAsRead = async (req: Request, res: Response) => {
 
     try {
         const updatedMessage = await prisma.contactMessage.update({
-            where: { id },
+            where: { id: id as string },
             data: {
                 isRead: isRead,
             },
@@ -108,7 +108,7 @@ export const deleteContactMessage = async (req: Request, res: Response) => {
 
     try {
         await prisma.contactMessage.delete({
-            where: { id },
+            where: { id: id as string },
         });
         res.json({ message: 'Mesaj başarıyla silindi.' });
     } catch (error) {

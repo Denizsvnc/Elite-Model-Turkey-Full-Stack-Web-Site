@@ -25,6 +25,7 @@ import feeRoutes from './routes/feeRoutes';
 import systemSettingRoutes from './routes/systemSettingRoutes';
 import notificationRuleRoutes from './routes/notificationRuleRoutes';
 import socialMediaRoutes from './routes/socialMediaRoutes';
+import paymentRoutes from './routes/paymentRoutes';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ const PORT = process.env.PORT || 3005;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Serve static uploads
 const uploadsDir = path.resolve(process.cwd(), 'src/uploads');
@@ -56,6 +58,7 @@ app.use('/api/fee', feeRoutes);
 app.use('/api/admin/settings', systemSettingRoutes);
 app.use('/api/admin/rules', notificationRuleRoutes);
 app.use('/api/socials', socialMediaRoutes);
+app.use('/api/payments', paymentRoutes);
 
 
 // Health check api

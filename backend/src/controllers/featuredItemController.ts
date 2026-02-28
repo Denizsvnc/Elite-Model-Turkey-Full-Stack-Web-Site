@@ -26,7 +26,7 @@ export const getFeaturedItemById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const item = await prisma.featuredItem.findUnique({
-            where: { id },
+            where: { id: id as string },
         });
 
         if (!item) {
@@ -83,7 +83,7 @@ export const updateFeaturedItem = async (req: Request, res: Response) => {
     try {
         // Eğer imageUrl değişiyorsa, eski dosyayı sil
         if (data.imageUrl) {
-            const existingItem = await prisma.featuredItem.findUnique({ where: { id } });
+            const existingItem = await prisma.featuredItem.findUnique({ where: { id: id as string } });
             if (existingItem?.imageUrl && existingItem.imageUrl.startsWith('/uploads/')) {
                 const oldFilePath = path.join(process.cwd(), 'src', existingItem.imageUrl);
                 if (fs.existsSync(oldFilePath)) {
@@ -93,7 +93,7 @@ export const updateFeaturedItem = async (req: Request, res: Response) => {
         }
 
         const updatedItem = await prisma.featuredItem.update({
-            where: { id },
+            where: { id: id as string },
             data: data,
         });
         res.json(updatedItem);
@@ -110,7 +110,7 @@ export const deleteFeaturedItem = async (req: Request, res: Response) => {
 
     try {
         await prisma.featuredItem.delete({
-            where: { id },
+            where: { id: id as string },
         });
         res.json({ message: 'Kayıt silindi.' });
     } catch (error) {

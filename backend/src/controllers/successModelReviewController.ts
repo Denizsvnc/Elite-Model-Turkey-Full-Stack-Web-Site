@@ -26,7 +26,7 @@ export const getSuccessModelReviewById = async (req: Request, res: Response) => 
     const { id } = req.params;
     try {
         const review = await prisma.successModelReview.findUnique({
-            where: { id }
+            where: { id: id as string }
         });
 
         if (!review) {
@@ -83,7 +83,7 @@ export const updateSuccessModelReview = async (req: Request, res: Response) => {
     try {
         // Eğer imageUrl güncelleniyorsa, eski dosyayı sil
         if (data.imageUrl) {
-            const existing = await prisma.successModelReview.findUnique({ where: { id } });
+            const existing = await prisma.successModelReview.findUnique({ where: { id: id as string } });
             if (existing && existing.imageUrl && existing.imageUrl.startsWith('/uploads/')) {
                 const oldFilePath = path.join(process.cwd(), existing.imageUrl);
                 if (fs.existsSync(oldFilePath)) {
@@ -93,7 +93,7 @@ export const updateSuccessModelReview = async (req: Request, res: Response) => {
         }
 
         const updatedReview = await prisma.successModelReview.update({
-            where: { id },
+            where: { id: id as string },
             data
         });
 
@@ -112,7 +112,7 @@ export const deleteSuccessModelReview = async (req: Request, res: Response) => {
 
     try {
         await prisma.successModelReview.delete({
-            where: { id }
+            where: { id: id as string }
         });
 
         res.json({ message: 'Model yorumu başarıyla silindi.' });

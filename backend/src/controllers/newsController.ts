@@ -26,7 +26,7 @@ export const getNewsById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const newsItem = await prisma.news.findUnique({
-            where: { id },
+            where: { id: id as string },
         });
 
         if (!newsItem) {
@@ -104,7 +104,7 @@ export const updateNews = async (req: Request, res: Response) => {
     try {
         // Eğer imageUrl güncelleniyorsa, eski dosyayı sil
         if (data.imageUrl) {
-            const existing = await prisma.news.findUnique({ where: { id } });
+            const existing = await prisma.news.findUnique({ where: { id: id as string } });
             if (existing && existing.imageUrl && existing.imageUrl.startsWith('/uploads/')) {
                 const oldFilePath = path.join(process.cwd(), 'src', existing.imageUrl);
                 if (fs.existsSync(oldFilePath)) {
@@ -129,7 +129,7 @@ export const updateNews = async (req: Request, res: Response) => {
         });
 
         const updatedNews = await prisma.news.update({
-            where: { id },
+            where: { id: id as string },
             data: normalized,
         });
         res.json(updatedNews);
@@ -145,7 +145,7 @@ export const deleteNews = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
-        const existing = await prisma.news.findUnique({ where: { id } });
+        const existing = await prisma.news.findUnique({ where: { id: id as string } });
         if (existing) {
             // Ana görseli sil
             if (existing.imageUrl && existing.imageUrl.startsWith('/uploads/')) {
@@ -168,7 +168,7 @@ export const deleteNews = async (req: Request, res: Response) => {
             }
         }
 
-        await prisma.news.delete({ where: { id } });
+        await prisma.news.delete({ where: { id: id as string } });
         res.json({ message: 'Haber başarıyla silindi.' });
     } catch (error) {
         res.status(500).json({ error: 'Silme işlemi başarısız.' });
