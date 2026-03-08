@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.4.1
- * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+ * Prisma Client JS version: 7.2.0
+ * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
  */
 Prisma.prismaVersion = {
-  client: "7.4.1",
-  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
+  client: "7.2.0",
+  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -320,7 +320,6 @@ exports.Prisma.FAQScalarFieldEnum = {
 exports.Prisma.ApplicationScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
-  applicationCode: 'applicationCode',
   birthDate: 'birthDate',
   gender: 'gender',
   nationality: 'nationality',
@@ -342,7 +341,8 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   paymentAmount: 'paymentAmount',
-  primaryPaymentId: 'primaryPaymentId'
+  primaryPaymentId: 'primaryPaymentId',
+  applicationCode: 'applicationCode'
 };
 
 exports.Prisma.ContactMessageScalarFieldEnum = {
@@ -414,6 +414,22 @@ exports.Prisma.VerificationCodeScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ApplicationNotificationRequestScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  phone: 'phone',
+  email: 'email',
+  isNotified: 'isNotified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApplicationPage_StatusScalarFieldEnum = {
+  id: 'id',
+  isActive: 'isActive',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -449,10 +465,10 @@ exports.Gender = exports.$Enums.Gender = {
 
 exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
   NEW: 'NEW',
-  PENDING_PAYMENT: 'PENDING_PAYMENT',
   REVIEW: 'REVIEW',
   REJECTED: 'REJECTED',
-  ACCEPTED: 'ACCEPTED'
+  ACCEPTED: 'ACCEPTED',
+  PENDING_PAYMENT: 'PENDING_PAYMENT'
 };
 
 exports.PaymentStatus = exports.$Enums.PaymentStatus = {
@@ -480,7 +496,9 @@ exports.Prisma.ModelName = {
   NotificationRule: 'NotificationRule',
   SocialMedia: 'SocialMedia',
   Payment: 'Payment',
-  VerificationCode: 'VerificationCode'
+  VerificationCode: 'VerificationCode',
+  ApplicationNotificationRequest: 'ApplicationNotificationRequest',
+  ApplicationPage_Status: 'ApplicationPage_Status'
 };
 
 /**

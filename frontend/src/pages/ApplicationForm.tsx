@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
@@ -69,6 +70,11 @@ const ApplicationForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [price, setPrice] = useState<number | null>(null);
+  const [isApplicationActive, setIsApplicationActive] = useState(true);
+  const [notificationForm, setNotificationForm] = useState({ fullName: "", phone: "", email: "" });
+  const [notificationSubmitting, setNotificationSubmitting] = useState(false);
+  const [notificationError, setNotificationError] = useState("");
+  const [notificationSuccess, setNotificationSuccess] = useState(false);
   const [photoPreviews, setPhotoPreviews] = useState<{ [key: string]: string }>(
     {},
   );
@@ -99,6 +105,29 @@ const ApplicationForm: React.FC = () => {
     if (reason === "clickaway") return;
     setNotification((prev) => ({ ...prev, open: false }));
   };
+
+  // Başvuru durumu ve ücreti çek
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const [statusRes, feeRes] = await Promise.all([
+          api.get("/api/application-page/status"),
+          api.get("/api/fee"),
+        ]);
+        if (statusRes.data?.data) {
+          setIsApplicationActive(statusRes.data.data.isActive);
+        }
+        if (feeRes.data?.amount != null) {
+          setPrice(Number(feeRes.data.amount));
+        } else if (feeRes.data?.data?.amount != null) {
+          setPrice(Number(feeRes.data.data.amount));
+        }
+      } catch (err) {
+        console.error("Başvuru durumu/ücret alınamadı:", err);
+      }
+    };
+    fetchStatus();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     fullName: Yup.string()
@@ -231,6 +260,10 @@ const ApplicationForm: React.FC = () => {
     }
   }, [checkoutFormHtml, isPaymentModalOpen]);
 
+  const handleFieldBlur = (fieldName: string) => {
+    formik.setFieldTouched(fieldName, true);
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -333,8 +366,8 @@ const ApplicationForm: React.FC = () => {
 
   // Calculate form completion progress
   const calculateProgress = () => {
-    const totalFields = Object.keys(formData).length;
-    const filledFields = Object.values(formData).filter(
+    const totalFields = Object.keys(formik.values).length;
+    const filledFields = Object.values(formik.values).filter(
       (val) => val && val !== "",
     ).length;
     return Math.round((filledFields / totalFields) * 100);

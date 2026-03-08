@@ -43,7 +43,34 @@ import {
 const app = express();
 const PORT = process.env.PORT || 3005;
 
-app.use(cors());
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:5173",
+].filter((v, i, a) => v && a.indexOf(v) === i) as string[];
+
+
+app.use("/api/payments", paymentRoutes);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (origin && allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else if (!origin && process.env.NODE_ENV === "development") {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS politikası tarafından engellendi"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 86400,
+  }),
+);
+
 app.use(express.json());
 
 const uploadsDir = path.resolve(process.cwd(), "src/uploads");
@@ -85,24 +112,6 @@ app.use(
             preload: true,
           }
         : false,
-  }),
-);
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (origin && allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else if (!origin && process.env.NODE_ENV === "development") {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS politikası tarafından engellendi"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    maxAge: 86400,
   }),
 );
 

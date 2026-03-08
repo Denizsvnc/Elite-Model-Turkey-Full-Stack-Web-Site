@@ -108,6 +108,16 @@ export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
  * 
  */
 export type VerificationCode = $Result.DefaultSelection<Prisma.$VerificationCodePayload>
+/**
+ * Model ApplicationNotificationRequest
+ * 
+ */
+export type ApplicationNotificationRequest = $Result.DefaultSelection<Prisma.$ApplicationNotificationRequestPayload>
+/**
+ * Model ApplicationPage_Status
+ * 
+ */
+export type ApplicationPage_Status = $Result.DefaultSelection<Prisma.$ApplicationPage_StatusPayload>
 
 /**
  * Enums
@@ -143,10 +153,10 @@ export type Gender = (typeof Gender)[keyof typeof Gender]
 
 export const ApplicationStatus: {
   NEW: 'NEW',
-  PENDING_PAYMENT: 'PENDING_PAYMENT',
   REVIEW: 'REVIEW',
   REJECTED: 'REJECTED',
-  ACCEPTED: 'ACCEPTED'
+  ACCEPTED: 'ACCEPTED',
+  PENDING_PAYMENT: 'PENDING_PAYMENT'
 };
 
 export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
@@ -289,7 +299,7 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
@@ -488,6 +498,26 @@ export class PrismaClient<
     * ```
     */
   get verificationCode(): Prisma.VerificationCodeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.applicationNotificationRequest`: Exposes CRUD operations for the **ApplicationNotificationRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApplicationNotificationRequests
+    * const applicationNotificationRequests = await prisma.applicationNotificationRequest.findMany()
+    * ```
+    */
+  get applicationNotificationRequest(): Prisma.ApplicationNotificationRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.applicationPage_Status`: Exposes CRUD operations for the **ApplicationPage_Status** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApplicationPage_Statuses
+    * const applicationPage_Statuses = await prisma.applicationPage_Status.findMany()
+    * ```
+    */
+  get applicationPage_Status(): Prisma.ApplicationPage_StatusDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -538,8 +568,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.4.1
-   * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+   * Prisma Client JS version: 7.2.0
+   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
    */
   export type PrismaVersion = {
     client: string
@@ -940,7 +970,9 @@ export namespace Prisma {
     NotificationRule: 'NotificationRule',
     SocialMedia: 'SocialMedia',
     Payment: 'Payment',
-    VerificationCode: 'VerificationCode'
+    VerificationCode: 'VerificationCode',
+    ApplicationNotificationRequest: 'ApplicationNotificationRequest',
+    ApplicationPage_Status: 'ApplicationPage_Status'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -956,7 +988,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "adminUser" | "homeSlider" | "homeSliderItem" | "coverImage" | "successHero" | "successModelReview" | "featuredItem" | "news" | "aboutPage" | "contactInfo" | "fAQ" | "application" | "contactMessage" | "applicationFee" | "systemSetting" | "notificationRule" | "socialMedia" | "payment" | "verificationCode"
+      modelProps: "adminUser" | "homeSlider" | "homeSliderItem" | "coverImage" | "successHero" | "successModelReview" | "featuredItem" | "news" | "aboutPage" | "contactInfo" | "fAQ" | "application" | "contactMessage" | "applicationFee" | "systemSetting" | "notificationRule" | "socialMedia" | "payment" | "verificationCode" | "applicationNotificationRequest" | "applicationPage_Status"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2366,6 +2398,154 @@ export namespace Prisma {
           }
         }
       }
+      ApplicationNotificationRequest: {
+        payload: Prisma.$ApplicationNotificationRequestPayload<ExtArgs>
+        fields: Prisma.ApplicationNotificationRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApplicationNotificationRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApplicationNotificationRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.ApplicationNotificationRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApplicationNotificationRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          findMany: {
+            args: Prisma.ApplicationNotificationRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>[]
+          }
+          create: {
+            args: Prisma.ApplicationNotificationRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          createMany: {
+            args: Prisma.ApplicationNotificationRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApplicationNotificationRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.ApplicationNotificationRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          update: {
+            args: Prisma.ApplicationNotificationRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApplicationNotificationRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApplicationNotificationRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApplicationNotificationRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApplicationNotificationRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationNotificationRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.ApplicationNotificationRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApplicationNotificationRequest>
+          }
+          groupBy: {
+            args: Prisma.ApplicationNotificationRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationNotificationRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApplicationNotificationRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationNotificationRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      ApplicationPage_Status: {
+        payload: Prisma.$ApplicationPage_StatusPayload<ExtArgs>
+        fields: Prisma.ApplicationPage_StatusFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApplicationPage_StatusFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApplicationPage_StatusFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          findFirst: {
+            args: Prisma.ApplicationPage_StatusFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApplicationPage_StatusFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          findMany: {
+            args: Prisma.ApplicationPage_StatusFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>[]
+          }
+          create: {
+            args: Prisma.ApplicationPage_StatusCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          createMany: {
+            args: Prisma.ApplicationPage_StatusCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApplicationPage_StatusCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>[]
+          }
+          delete: {
+            args: Prisma.ApplicationPage_StatusDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          update: {
+            args: Prisma.ApplicationPage_StatusUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApplicationPage_StatusDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApplicationPage_StatusUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApplicationPage_StatusUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApplicationPage_StatusUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPage_StatusPayload>
+          }
+          aggregate: {
+            args: Prisma.ApplicationPage_StatusAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApplicationPage_Status>
+          }
+          groupBy: {
+            args: Prisma.ApplicationPage_StatusGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationPage_StatusGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApplicationPage_StatusCountArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationPage_StatusCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2493,6 +2673,8 @@ export namespace Prisma {
     socialMedia?: SocialMediaOmit
     payment?: PaymentOmit
     verificationCode?: VerificationCodeOmit
+    applicationNotificationRequest?: ApplicationNotificationRequestOmit
+    applicationPage_Status?: ApplicationPage_StatusOmit
   }
 
   /* Types for Logging */
@@ -15341,7 +15523,6 @@ export namespace Prisma {
   export type ApplicationMinAggregateOutputType = {
     id: string | null
     fullName: string | null
-    applicationCode: string | null
     birthDate: Date | null
     gender: $Enums.Gender | null
     nationality: string | null
@@ -15364,12 +15545,12 @@ export namespace Prisma {
     updatedAt: Date | null
     paymentAmount: Decimal | null
     primaryPaymentId: string | null
+    applicationCode: string | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
     id: string | null
     fullName: string | null
-    applicationCode: string | null
     birthDate: Date | null
     gender: $Enums.Gender | null
     nationality: string | null
@@ -15392,12 +15573,12 @@ export namespace Prisma {
     updatedAt: Date | null
     paymentAmount: Decimal | null
     primaryPaymentId: string | null
+    applicationCode: string | null
   }
 
   export type ApplicationCountAggregateOutputType = {
     id: number
     fullName: number
-    applicationCode: number
     birthDate: number
     gender: number
     nationality: number
@@ -15420,6 +15601,7 @@ export namespace Prisma {
     updatedAt: number
     paymentAmount: number
     primaryPaymentId: number
+    applicationCode: number
     _all: number
   }
 
@@ -15445,7 +15627,6 @@ export namespace Prisma {
   export type ApplicationMinAggregateInputType = {
     id?: true
     fullName?: true
-    applicationCode?: true
     birthDate?: true
     gender?: true
     nationality?: true
@@ -15468,12 +15649,12 @@ export namespace Prisma {
     updatedAt?: true
     paymentAmount?: true
     primaryPaymentId?: true
+    applicationCode?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
     id?: true
     fullName?: true
-    applicationCode?: true
     birthDate?: true
     gender?: true
     nationality?: true
@@ -15496,12 +15677,12 @@ export namespace Prisma {
     updatedAt?: true
     paymentAmount?: true
     primaryPaymentId?: true
+    applicationCode?: true
   }
 
   export type ApplicationCountAggregateInputType = {
     id?: true
     fullName?: true
-    applicationCode?: true
     birthDate?: true
     gender?: true
     nationality?: true
@@ -15524,6 +15705,7 @@ export namespace Prisma {
     updatedAt?: true
     paymentAmount?: true
     primaryPaymentId?: true
+    applicationCode?: true
     _all?: true
   }
 
@@ -15616,7 +15798,6 @@ export namespace Prisma {
   export type ApplicationGroupByOutputType = {
     id: string
     fullName: string
-    applicationCode: string | null
     birthDate: Date
     gender: $Enums.Gender
     nationality: string
@@ -15639,6 +15820,7 @@ export namespace Prisma {
     updatedAt: Date
     paymentAmount: Decimal | null
     primaryPaymentId: string | null
+    applicationCode: string | null
     _count: ApplicationCountAggregateOutputType | null
     _avg: ApplicationAvgAggregateOutputType | null
     _sum: ApplicationSumAggregateOutputType | null
@@ -15663,7 +15845,6 @@ export namespace Prisma {
   export type ApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fullName?: boolean
-    applicationCode?: boolean
     birthDate?: boolean
     gender?: boolean
     nationality?: boolean
@@ -15686,15 +15867,15 @@ export namespace Prisma {
     updatedAt?: boolean
     paymentAmount?: boolean
     primaryPaymentId?: boolean
-    payments?: boolean | Application$paymentsArgs<ExtArgs>
+    applicationCode?: boolean
     primaryPayment?: boolean | Application$primaryPaymentArgs<ExtArgs>
+    payments?: boolean | Application$paymentsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fullName?: boolean
-    applicationCode?: boolean
     birthDate?: boolean
     gender?: boolean
     nationality?: boolean
@@ -15717,13 +15898,13 @@ export namespace Prisma {
     updatedAt?: boolean
     paymentAmount?: boolean
     primaryPaymentId?: boolean
+    applicationCode?: boolean
     primaryPayment?: boolean | Application$primaryPaymentArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fullName?: boolean
-    applicationCode?: boolean
     birthDate?: boolean
     gender?: boolean
     nationality?: boolean
@@ -15746,13 +15927,13 @@ export namespace Prisma {
     updatedAt?: boolean
     paymentAmount?: boolean
     primaryPaymentId?: boolean
+    applicationCode?: boolean
     primaryPayment?: boolean | Application$primaryPaymentArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectScalar = {
     id?: boolean
     fullName?: boolean
-    applicationCode?: boolean
     birthDate?: boolean
     gender?: boolean
     nationality?: boolean
@@ -15775,12 +15956,13 @@ export namespace Prisma {
     updatedAt?: boolean
     paymentAmount?: boolean
     primaryPaymentId?: boolean
+    applicationCode?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "applicationCode" | "birthDate" | "gender" | "nationality" | "email" | "phone" | "city" | "heightCm" | "chestCm" | "hipsCm" | "footCm" | "waistCm" | "eyeColor" | "selfieUrl" | "profilePhoto" | "fullBodyPhoto" | "status" | "adminNotes" | "submittedAt" | "createdAt" | "updatedAt" | "paymentAmount" | "primaryPaymentId", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "birthDate" | "gender" | "nationality" | "email" | "phone" | "city" | "heightCm" | "chestCm" | "hipsCm" | "footCm" | "waistCm" | "eyeColor" | "selfieUrl" | "profilePhoto" | "fullBodyPhoto" | "status" | "adminNotes" | "submittedAt" | "createdAt" | "updatedAt" | "paymentAmount" | "primaryPaymentId" | "applicationCode", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    payments?: boolean | Application$paymentsArgs<ExtArgs>
     primaryPayment?: boolean | Application$primaryPaymentArgs<ExtArgs>
+    payments?: boolean | Application$paymentsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15793,13 +15975,12 @@ export namespace Prisma {
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Application"
     objects: {
-      payments: Prisma.$PaymentPayload<ExtArgs>[]
       primaryPayment: Prisma.$PaymentPayload<ExtArgs> | null
+      payments: Prisma.$PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       fullName: string
-      applicationCode: string | null
       birthDate: Date
       gender: $Enums.Gender
       nationality: string
@@ -15822,6 +16003,7 @@ export namespace Prisma {
       updatedAt: Date
       paymentAmount: Prisma.Decimal | null
       primaryPaymentId: string | null
+      applicationCode: string | null
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -16216,8 +16398,8 @@ export namespace Prisma {
    */
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    payments<T extends Application$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     primaryPayment<T extends Application$primaryPaymentArgs<ExtArgs> = {}>(args?: Subset<T, Application$primaryPaymentArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    payments<T extends Application$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16249,7 +16431,6 @@ export namespace Prisma {
   interface ApplicationFieldRefs {
     readonly id: FieldRef<"Application", 'String'>
     readonly fullName: FieldRef<"Application", 'String'>
-    readonly applicationCode: FieldRef<"Application", 'String'>
     readonly birthDate: FieldRef<"Application", 'DateTime'>
     readonly gender: FieldRef<"Application", 'Gender'>
     readonly nationality: FieldRef<"Application", 'String'>
@@ -16272,6 +16453,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Application", 'DateTime'>
     readonly paymentAmount: FieldRef<"Application", 'Decimal'>
     readonly primaryPaymentId: FieldRef<"Application", 'String'>
+    readonly applicationCode: FieldRef<"Application", 'String'>
   }
     
 
@@ -16668,6 +16850,25 @@ export namespace Prisma {
   }
 
   /**
+   * Application.primaryPayment
+   */
+  export type Application$primaryPaymentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    where?: PaymentWhereInput
+  }
+
+  /**
    * Application.payments
    */
   export type Application$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16689,25 +16890,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
-  }
-
-  /**
-   * Application.primaryPayment
-   */
-  export type Application$primaryPaymentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Payment
-     */
-    select?: PaymentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Payment
-     */
-    omit?: PaymentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PaymentInclude<ExtArgs> | null
-    where?: PaymentWhereInput
   }
 
   /**
@@ -22195,8 +22377,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    application?: boolean | ApplicationDefaultArgs<ExtArgs>
     primaryFor?: boolean | Payment$primaryForArgs<ExtArgs>
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
   export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -22239,8 +22421,8 @@ export namespace Prisma {
 
   export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "iyzicoToken" | "paymentId" | "amount" | "currency" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    application?: boolean | ApplicationDefaultArgs<ExtArgs>
     primaryFor?: boolean | Payment$primaryForArgs<ExtArgs>
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
   }
   export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
@@ -22252,8 +22434,8 @@ export namespace Prisma {
   export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Payment"
     objects: {
-      application: Prisma.$ApplicationPayload<ExtArgs>
       primaryFor: Prisma.$ApplicationPayload<ExtArgs> | null
+      application: Prisma.$ApplicationPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22659,8 +22841,8 @@ export namespace Prisma {
    */
   export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     primaryFor<T extends Payment$primaryForArgs<ExtArgs> = {}>(args?: Subset<T, Payment$primaryForArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24162,6 +24344,2030 @@ export namespace Prisma {
 
 
   /**
+   * Model ApplicationNotificationRequest
+   */
+
+  export type AggregateApplicationNotificationRequest = {
+    _count: ApplicationNotificationRequestCountAggregateOutputType | null
+    _min: ApplicationNotificationRequestMinAggregateOutputType | null
+    _max: ApplicationNotificationRequestMaxAggregateOutputType | null
+  }
+
+  export type ApplicationNotificationRequestMinAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    phone: string | null
+    email: string | null
+    isNotified: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationNotificationRequestMaxAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    phone: string | null
+    email: string | null
+    isNotified: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationNotificationRequestCountAggregateOutputType = {
+    id: number
+    fullName: number
+    phone: number
+    email: number
+    isNotified: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ApplicationNotificationRequestMinAggregateInputType = {
+    id?: true
+    fullName?: true
+    phone?: true
+    email?: true
+    isNotified?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationNotificationRequestMaxAggregateInputType = {
+    id?: true
+    fullName?: true
+    phone?: true
+    email?: true
+    isNotified?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationNotificationRequestCountAggregateInputType = {
+    id?: true
+    fullName?: true
+    phone?: true
+    email?: true
+    isNotified?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ApplicationNotificationRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationNotificationRequest to aggregate.
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationNotificationRequests to fetch.
+     */
+    orderBy?: ApplicationNotificationRequestOrderByWithRelationInput | ApplicationNotificationRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApplicationNotificationRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationNotificationRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationNotificationRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApplicationNotificationRequests
+    **/
+    _count?: true | ApplicationNotificationRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApplicationNotificationRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApplicationNotificationRequestMaxAggregateInputType
+  }
+
+  export type GetApplicationNotificationRequestAggregateType<T extends ApplicationNotificationRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateApplicationNotificationRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApplicationNotificationRequest[P]>
+      : GetScalarType<T[P], AggregateApplicationNotificationRequest[P]>
+  }
+
+
+
+
+  export type ApplicationNotificationRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationNotificationRequestWhereInput
+    orderBy?: ApplicationNotificationRequestOrderByWithAggregationInput | ApplicationNotificationRequestOrderByWithAggregationInput[]
+    by: ApplicationNotificationRequestScalarFieldEnum[] | ApplicationNotificationRequestScalarFieldEnum
+    having?: ApplicationNotificationRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApplicationNotificationRequestCountAggregateInputType | true
+    _min?: ApplicationNotificationRequestMinAggregateInputType
+    _max?: ApplicationNotificationRequestMaxAggregateInputType
+  }
+
+  export type ApplicationNotificationRequestGroupByOutputType = {
+    id: string
+    fullName: string
+    phone: string
+    email: string
+    isNotified: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ApplicationNotificationRequestCountAggregateOutputType | null
+    _min: ApplicationNotificationRequestMinAggregateOutputType | null
+    _max: ApplicationNotificationRequestMaxAggregateOutputType | null
+  }
+
+  type GetApplicationNotificationRequestGroupByPayload<T extends ApplicationNotificationRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApplicationNotificationRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApplicationNotificationRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApplicationNotificationRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], ApplicationNotificationRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApplicationNotificationRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    phone?: boolean
+    email?: boolean
+    isNotified?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationNotificationRequest"]>
+
+  export type ApplicationNotificationRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    phone?: boolean
+    email?: boolean
+    isNotified?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationNotificationRequest"]>
+
+  export type ApplicationNotificationRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    phone?: boolean
+    email?: boolean
+    isNotified?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationNotificationRequest"]>
+
+  export type ApplicationNotificationRequestSelectScalar = {
+    id?: boolean
+    fullName?: boolean
+    phone?: boolean
+    email?: boolean
+    isNotified?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ApplicationNotificationRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "phone" | "email" | "isNotified" | "createdAt" | "updatedAt", ExtArgs["result"]["applicationNotificationRequest"]>
+
+  export type $ApplicationNotificationRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApplicationNotificationRequest"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fullName: string
+      phone: string
+      email: string
+      isNotified: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["applicationNotificationRequest"]>
+    composites: {}
+  }
+
+  type ApplicationNotificationRequestGetPayload<S extends boolean | null | undefined | ApplicationNotificationRequestDefaultArgs> = $Result.GetResult<Prisma.$ApplicationNotificationRequestPayload, S>
+
+  type ApplicationNotificationRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApplicationNotificationRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApplicationNotificationRequestCountAggregateInputType | true
+    }
+
+  export interface ApplicationNotificationRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApplicationNotificationRequest'], meta: { name: 'ApplicationNotificationRequest' } }
+    /**
+     * Find zero or one ApplicationNotificationRequest that matches the filter.
+     * @param {ApplicationNotificationRequestFindUniqueArgs} args - Arguments to find a ApplicationNotificationRequest
+     * @example
+     * // Get one ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApplicationNotificationRequestFindUniqueArgs>(args: SelectSubset<T, ApplicationNotificationRequestFindUniqueArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApplicationNotificationRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApplicationNotificationRequestFindUniqueOrThrowArgs} args - Arguments to find a ApplicationNotificationRequest
+     * @example
+     * // Get one ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApplicationNotificationRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, ApplicationNotificationRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationNotificationRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestFindFirstArgs} args - Arguments to find a ApplicationNotificationRequest
+     * @example
+     * // Get one ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApplicationNotificationRequestFindFirstArgs>(args?: SelectSubset<T, ApplicationNotificationRequestFindFirstArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationNotificationRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestFindFirstOrThrowArgs} args - Arguments to find a ApplicationNotificationRequest
+     * @example
+     * // Get one ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApplicationNotificationRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, ApplicationNotificationRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApplicationNotificationRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApplicationNotificationRequests
+     * const applicationNotificationRequests = await prisma.applicationNotificationRequest.findMany()
+     * 
+     * // Get first 10 ApplicationNotificationRequests
+     * const applicationNotificationRequests = await prisma.applicationNotificationRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const applicationNotificationRequestWithIdOnly = await prisma.applicationNotificationRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApplicationNotificationRequestFindManyArgs>(args?: SelectSubset<T, ApplicationNotificationRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApplicationNotificationRequest.
+     * @param {ApplicationNotificationRequestCreateArgs} args - Arguments to create a ApplicationNotificationRequest.
+     * @example
+     * // Create one ApplicationNotificationRequest
+     * const ApplicationNotificationRequest = await prisma.applicationNotificationRequest.create({
+     *   data: {
+     *     // ... data to create a ApplicationNotificationRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApplicationNotificationRequestCreateArgs>(args: SelectSubset<T, ApplicationNotificationRequestCreateArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApplicationNotificationRequests.
+     * @param {ApplicationNotificationRequestCreateManyArgs} args - Arguments to create many ApplicationNotificationRequests.
+     * @example
+     * // Create many ApplicationNotificationRequests
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApplicationNotificationRequestCreateManyArgs>(args?: SelectSubset<T, ApplicationNotificationRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApplicationNotificationRequests and returns the data saved in the database.
+     * @param {ApplicationNotificationRequestCreateManyAndReturnArgs} args - Arguments to create many ApplicationNotificationRequests.
+     * @example
+     * // Create many ApplicationNotificationRequests
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApplicationNotificationRequests and only return the `id`
+     * const applicationNotificationRequestWithIdOnly = await prisma.applicationNotificationRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApplicationNotificationRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, ApplicationNotificationRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApplicationNotificationRequest.
+     * @param {ApplicationNotificationRequestDeleteArgs} args - Arguments to delete one ApplicationNotificationRequest.
+     * @example
+     * // Delete one ApplicationNotificationRequest
+     * const ApplicationNotificationRequest = await prisma.applicationNotificationRequest.delete({
+     *   where: {
+     *     // ... filter to delete one ApplicationNotificationRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApplicationNotificationRequestDeleteArgs>(args: SelectSubset<T, ApplicationNotificationRequestDeleteArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApplicationNotificationRequest.
+     * @param {ApplicationNotificationRequestUpdateArgs} args - Arguments to update one ApplicationNotificationRequest.
+     * @example
+     * // Update one ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApplicationNotificationRequestUpdateArgs>(args: SelectSubset<T, ApplicationNotificationRequestUpdateArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApplicationNotificationRequests.
+     * @param {ApplicationNotificationRequestDeleteManyArgs} args - Arguments to filter ApplicationNotificationRequests to delete.
+     * @example
+     * // Delete a few ApplicationNotificationRequests
+     * const { count } = await prisma.applicationNotificationRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApplicationNotificationRequestDeleteManyArgs>(args?: SelectSubset<T, ApplicationNotificationRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationNotificationRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApplicationNotificationRequests
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApplicationNotificationRequestUpdateManyArgs>(args: SelectSubset<T, ApplicationNotificationRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationNotificationRequests and returns the data updated in the database.
+     * @param {ApplicationNotificationRequestUpdateManyAndReturnArgs} args - Arguments to update many ApplicationNotificationRequests.
+     * @example
+     * // Update many ApplicationNotificationRequests
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApplicationNotificationRequests and only return the `id`
+     * const applicationNotificationRequestWithIdOnly = await prisma.applicationNotificationRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApplicationNotificationRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, ApplicationNotificationRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApplicationNotificationRequest.
+     * @param {ApplicationNotificationRequestUpsertArgs} args - Arguments to update or create a ApplicationNotificationRequest.
+     * @example
+     * // Update or create a ApplicationNotificationRequest
+     * const applicationNotificationRequest = await prisma.applicationNotificationRequest.upsert({
+     *   create: {
+     *     // ... data to create a ApplicationNotificationRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApplicationNotificationRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApplicationNotificationRequestUpsertArgs>(args: SelectSubset<T, ApplicationNotificationRequestUpsertArgs<ExtArgs>>): Prisma__ApplicationNotificationRequestClient<$Result.GetResult<Prisma.$ApplicationNotificationRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApplicationNotificationRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestCountArgs} args - Arguments to filter ApplicationNotificationRequests to count.
+     * @example
+     * // Count the number of ApplicationNotificationRequests
+     * const count = await prisma.applicationNotificationRequest.count({
+     *   where: {
+     *     // ... the filter for the ApplicationNotificationRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApplicationNotificationRequestCountArgs>(
+      args?: Subset<T, ApplicationNotificationRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApplicationNotificationRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApplicationNotificationRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApplicationNotificationRequestAggregateArgs>(args: Subset<T, ApplicationNotificationRequestAggregateArgs>): Prisma.PrismaPromise<GetApplicationNotificationRequestAggregateType<T>>
+
+    /**
+     * Group by ApplicationNotificationRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationNotificationRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApplicationNotificationRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApplicationNotificationRequestGroupByArgs['orderBy'] }
+        : { orderBy?: ApplicationNotificationRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApplicationNotificationRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApplicationNotificationRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApplicationNotificationRequest model
+   */
+  readonly fields: ApplicationNotificationRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApplicationNotificationRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApplicationNotificationRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApplicationNotificationRequest model
+   */
+  interface ApplicationNotificationRequestFieldRefs {
+    readonly id: FieldRef<"ApplicationNotificationRequest", 'String'>
+    readonly fullName: FieldRef<"ApplicationNotificationRequest", 'String'>
+    readonly phone: FieldRef<"ApplicationNotificationRequest", 'String'>
+    readonly email: FieldRef<"ApplicationNotificationRequest", 'String'>
+    readonly isNotified: FieldRef<"ApplicationNotificationRequest", 'Boolean'>
+    readonly createdAt: FieldRef<"ApplicationNotificationRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"ApplicationNotificationRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApplicationNotificationRequest findUnique
+   */
+  export type ApplicationNotificationRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationNotificationRequest to fetch.
+     */
+    where: ApplicationNotificationRequestWhereUniqueInput
+  }
+
+  /**
+   * ApplicationNotificationRequest findUniqueOrThrow
+   */
+  export type ApplicationNotificationRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationNotificationRequest to fetch.
+     */
+    where: ApplicationNotificationRequestWhereUniqueInput
+  }
+
+  /**
+   * ApplicationNotificationRequest findFirst
+   */
+  export type ApplicationNotificationRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationNotificationRequest to fetch.
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationNotificationRequests to fetch.
+     */
+    orderBy?: ApplicationNotificationRequestOrderByWithRelationInput | ApplicationNotificationRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationNotificationRequests.
+     */
+    cursor?: ApplicationNotificationRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationNotificationRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationNotificationRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationNotificationRequests.
+     */
+    distinct?: ApplicationNotificationRequestScalarFieldEnum | ApplicationNotificationRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationNotificationRequest findFirstOrThrow
+   */
+  export type ApplicationNotificationRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationNotificationRequest to fetch.
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationNotificationRequests to fetch.
+     */
+    orderBy?: ApplicationNotificationRequestOrderByWithRelationInput | ApplicationNotificationRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationNotificationRequests.
+     */
+    cursor?: ApplicationNotificationRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationNotificationRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationNotificationRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationNotificationRequests.
+     */
+    distinct?: ApplicationNotificationRequestScalarFieldEnum | ApplicationNotificationRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationNotificationRequest findMany
+   */
+  export type ApplicationNotificationRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationNotificationRequests to fetch.
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationNotificationRequests to fetch.
+     */
+    orderBy?: ApplicationNotificationRequestOrderByWithRelationInput | ApplicationNotificationRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApplicationNotificationRequests.
+     */
+    cursor?: ApplicationNotificationRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationNotificationRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationNotificationRequests.
+     */
+    skip?: number
+    distinct?: ApplicationNotificationRequestScalarFieldEnum | ApplicationNotificationRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationNotificationRequest create
+   */
+  export type ApplicationNotificationRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ApplicationNotificationRequest.
+     */
+    data: XOR<ApplicationNotificationRequestCreateInput, ApplicationNotificationRequestUncheckedCreateInput>
+  }
+
+  /**
+   * ApplicationNotificationRequest createMany
+   */
+  export type ApplicationNotificationRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApplicationNotificationRequests.
+     */
+    data: ApplicationNotificationRequestCreateManyInput | ApplicationNotificationRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationNotificationRequest createManyAndReturn
+   */
+  export type ApplicationNotificationRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApplicationNotificationRequests.
+     */
+    data: ApplicationNotificationRequestCreateManyInput | ApplicationNotificationRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationNotificationRequest update
+   */
+  export type ApplicationNotificationRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ApplicationNotificationRequest.
+     */
+    data: XOR<ApplicationNotificationRequestUpdateInput, ApplicationNotificationRequestUncheckedUpdateInput>
+    /**
+     * Choose, which ApplicationNotificationRequest to update.
+     */
+    where: ApplicationNotificationRequestWhereUniqueInput
+  }
+
+  /**
+   * ApplicationNotificationRequest updateMany
+   */
+  export type ApplicationNotificationRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApplicationNotificationRequests.
+     */
+    data: XOR<ApplicationNotificationRequestUpdateManyMutationInput, ApplicationNotificationRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationNotificationRequests to update
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * Limit how many ApplicationNotificationRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationNotificationRequest updateManyAndReturn
+   */
+  export type ApplicationNotificationRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update ApplicationNotificationRequests.
+     */
+    data: XOR<ApplicationNotificationRequestUpdateManyMutationInput, ApplicationNotificationRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationNotificationRequests to update
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * Limit how many ApplicationNotificationRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationNotificationRequest upsert
+   */
+  export type ApplicationNotificationRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ApplicationNotificationRequest to update in case it exists.
+     */
+    where: ApplicationNotificationRequestWhereUniqueInput
+    /**
+     * In case the ApplicationNotificationRequest found by the `where` argument doesn't exist, create a new ApplicationNotificationRequest with this data.
+     */
+    create: XOR<ApplicationNotificationRequestCreateInput, ApplicationNotificationRequestUncheckedCreateInput>
+    /**
+     * In case the ApplicationNotificationRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApplicationNotificationRequestUpdateInput, ApplicationNotificationRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * ApplicationNotificationRequest delete
+   */
+  export type ApplicationNotificationRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+    /**
+     * Filter which ApplicationNotificationRequest to delete.
+     */
+    where: ApplicationNotificationRequestWhereUniqueInput
+  }
+
+  /**
+   * ApplicationNotificationRequest deleteMany
+   */
+  export type ApplicationNotificationRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationNotificationRequests to delete
+     */
+    where?: ApplicationNotificationRequestWhereInput
+    /**
+     * Limit how many ApplicationNotificationRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationNotificationRequest without action
+   */
+  export type ApplicationNotificationRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationNotificationRequest
+     */
+    select?: ApplicationNotificationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationNotificationRequest
+     */
+    omit?: ApplicationNotificationRequestOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ApplicationPage_Status
+   */
+
+  export type AggregateApplicationPage_Status = {
+    _count: ApplicationPage_StatusCountAggregateOutputType | null
+    _avg: ApplicationPage_StatusAvgAggregateOutputType | null
+    _sum: ApplicationPage_StatusSumAggregateOutputType | null
+    _min: ApplicationPage_StatusMinAggregateOutputType | null
+    _max: ApplicationPage_StatusMaxAggregateOutputType | null
+  }
+
+  export type ApplicationPage_StatusAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ApplicationPage_StatusSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ApplicationPage_StatusMinAggregateOutputType = {
+    id: number | null
+    isActive: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationPage_StatusMaxAggregateOutputType = {
+    id: number | null
+    isActive: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationPage_StatusCountAggregateOutputType = {
+    id: number
+    isActive: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ApplicationPage_StatusAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ApplicationPage_StatusSumAggregateInputType = {
+    id?: true
+  }
+
+  export type ApplicationPage_StatusMinAggregateInputType = {
+    id?: true
+    isActive?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationPage_StatusMaxAggregateInputType = {
+    id?: true
+    isActive?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationPage_StatusCountAggregateInputType = {
+    id?: true
+    isActive?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ApplicationPage_StatusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationPage_Status to aggregate.
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationPage_Statuses to fetch.
+     */
+    orderBy?: ApplicationPage_StatusOrderByWithRelationInput | ApplicationPage_StatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApplicationPage_StatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationPage_Statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationPage_Statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApplicationPage_Statuses
+    **/
+    _count?: true | ApplicationPage_StatusCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ApplicationPage_StatusAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ApplicationPage_StatusSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApplicationPage_StatusMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApplicationPage_StatusMaxAggregateInputType
+  }
+
+  export type GetApplicationPage_StatusAggregateType<T extends ApplicationPage_StatusAggregateArgs> = {
+        [P in keyof T & keyof AggregateApplicationPage_Status]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApplicationPage_Status[P]>
+      : GetScalarType<T[P], AggregateApplicationPage_Status[P]>
+  }
+
+
+
+
+  export type ApplicationPage_StatusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationPage_StatusWhereInput
+    orderBy?: ApplicationPage_StatusOrderByWithAggregationInput | ApplicationPage_StatusOrderByWithAggregationInput[]
+    by: ApplicationPage_StatusScalarFieldEnum[] | ApplicationPage_StatusScalarFieldEnum
+    having?: ApplicationPage_StatusScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApplicationPage_StatusCountAggregateInputType | true
+    _avg?: ApplicationPage_StatusAvgAggregateInputType
+    _sum?: ApplicationPage_StatusSumAggregateInputType
+    _min?: ApplicationPage_StatusMinAggregateInputType
+    _max?: ApplicationPage_StatusMaxAggregateInputType
+  }
+
+  export type ApplicationPage_StatusGroupByOutputType = {
+    id: number
+    isActive: boolean
+    updatedAt: Date
+    _count: ApplicationPage_StatusCountAggregateOutputType | null
+    _avg: ApplicationPage_StatusAvgAggregateOutputType | null
+    _sum: ApplicationPage_StatusSumAggregateOutputType | null
+    _min: ApplicationPage_StatusMinAggregateOutputType | null
+    _max: ApplicationPage_StatusMaxAggregateOutputType | null
+  }
+
+  type GetApplicationPage_StatusGroupByPayload<T extends ApplicationPage_StatusGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApplicationPage_StatusGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApplicationPage_StatusGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApplicationPage_StatusGroupByOutputType[P]>
+            : GetScalarType<T[P], ApplicationPage_StatusGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApplicationPage_StatusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationPage_Status"]>
+
+  export type ApplicationPage_StatusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationPage_Status"]>
+
+  export type ApplicationPage_StatusSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["applicationPage_Status"]>
+
+  export type ApplicationPage_StatusSelectScalar = {
+    id?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ApplicationPage_StatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "isActive" | "updatedAt", ExtArgs["result"]["applicationPage_Status"]>
+
+  export type $ApplicationPage_StatusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApplicationPage_Status"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      isActive: boolean
+      updatedAt: Date
+    }, ExtArgs["result"]["applicationPage_Status"]>
+    composites: {}
+  }
+
+  type ApplicationPage_StatusGetPayload<S extends boolean | null | undefined | ApplicationPage_StatusDefaultArgs> = $Result.GetResult<Prisma.$ApplicationPage_StatusPayload, S>
+
+  type ApplicationPage_StatusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApplicationPage_StatusFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApplicationPage_StatusCountAggregateInputType | true
+    }
+
+  export interface ApplicationPage_StatusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApplicationPage_Status'], meta: { name: 'ApplicationPage_Status' } }
+    /**
+     * Find zero or one ApplicationPage_Status that matches the filter.
+     * @param {ApplicationPage_StatusFindUniqueArgs} args - Arguments to find a ApplicationPage_Status
+     * @example
+     * // Get one ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApplicationPage_StatusFindUniqueArgs>(args: SelectSubset<T, ApplicationPage_StatusFindUniqueArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApplicationPage_Status that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApplicationPage_StatusFindUniqueOrThrowArgs} args - Arguments to find a ApplicationPage_Status
+     * @example
+     * // Get one ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApplicationPage_StatusFindUniqueOrThrowArgs>(args: SelectSubset<T, ApplicationPage_StatusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationPage_Status that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusFindFirstArgs} args - Arguments to find a ApplicationPage_Status
+     * @example
+     * // Get one ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApplicationPage_StatusFindFirstArgs>(args?: SelectSubset<T, ApplicationPage_StatusFindFirstArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationPage_Status that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusFindFirstOrThrowArgs} args - Arguments to find a ApplicationPage_Status
+     * @example
+     * // Get one ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApplicationPage_StatusFindFirstOrThrowArgs>(args?: SelectSubset<T, ApplicationPage_StatusFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApplicationPage_Statuses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApplicationPage_Statuses
+     * const applicationPage_Statuses = await prisma.applicationPage_Status.findMany()
+     * 
+     * // Get first 10 ApplicationPage_Statuses
+     * const applicationPage_Statuses = await prisma.applicationPage_Status.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const applicationPage_StatusWithIdOnly = await prisma.applicationPage_Status.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApplicationPage_StatusFindManyArgs>(args?: SelectSubset<T, ApplicationPage_StatusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApplicationPage_Status.
+     * @param {ApplicationPage_StatusCreateArgs} args - Arguments to create a ApplicationPage_Status.
+     * @example
+     * // Create one ApplicationPage_Status
+     * const ApplicationPage_Status = await prisma.applicationPage_Status.create({
+     *   data: {
+     *     // ... data to create a ApplicationPage_Status
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApplicationPage_StatusCreateArgs>(args: SelectSubset<T, ApplicationPage_StatusCreateArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApplicationPage_Statuses.
+     * @param {ApplicationPage_StatusCreateManyArgs} args - Arguments to create many ApplicationPage_Statuses.
+     * @example
+     * // Create many ApplicationPage_Statuses
+     * const applicationPage_Status = await prisma.applicationPage_Status.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApplicationPage_StatusCreateManyArgs>(args?: SelectSubset<T, ApplicationPage_StatusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApplicationPage_Statuses and returns the data saved in the database.
+     * @param {ApplicationPage_StatusCreateManyAndReturnArgs} args - Arguments to create many ApplicationPage_Statuses.
+     * @example
+     * // Create many ApplicationPage_Statuses
+     * const applicationPage_Status = await prisma.applicationPage_Status.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApplicationPage_Statuses and only return the `id`
+     * const applicationPage_StatusWithIdOnly = await prisma.applicationPage_Status.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApplicationPage_StatusCreateManyAndReturnArgs>(args?: SelectSubset<T, ApplicationPage_StatusCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApplicationPage_Status.
+     * @param {ApplicationPage_StatusDeleteArgs} args - Arguments to delete one ApplicationPage_Status.
+     * @example
+     * // Delete one ApplicationPage_Status
+     * const ApplicationPage_Status = await prisma.applicationPage_Status.delete({
+     *   where: {
+     *     // ... filter to delete one ApplicationPage_Status
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApplicationPage_StatusDeleteArgs>(args: SelectSubset<T, ApplicationPage_StatusDeleteArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApplicationPage_Status.
+     * @param {ApplicationPage_StatusUpdateArgs} args - Arguments to update one ApplicationPage_Status.
+     * @example
+     * // Update one ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApplicationPage_StatusUpdateArgs>(args: SelectSubset<T, ApplicationPage_StatusUpdateArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApplicationPage_Statuses.
+     * @param {ApplicationPage_StatusDeleteManyArgs} args - Arguments to filter ApplicationPage_Statuses to delete.
+     * @example
+     * // Delete a few ApplicationPage_Statuses
+     * const { count } = await prisma.applicationPage_Status.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApplicationPage_StatusDeleteManyArgs>(args?: SelectSubset<T, ApplicationPage_StatusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationPage_Statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApplicationPage_Statuses
+     * const applicationPage_Status = await prisma.applicationPage_Status.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApplicationPage_StatusUpdateManyArgs>(args: SelectSubset<T, ApplicationPage_StatusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationPage_Statuses and returns the data updated in the database.
+     * @param {ApplicationPage_StatusUpdateManyAndReturnArgs} args - Arguments to update many ApplicationPage_Statuses.
+     * @example
+     * // Update many ApplicationPage_Statuses
+     * const applicationPage_Status = await prisma.applicationPage_Status.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApplicationPage_Statuses and only return the `id`
+     * const applicationPage_StatusWithIdOnly = await prisma.applicationPage_Status.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApplicationPage_StatusUpdateManyAndReturnArgs>(args: SelectSubset<T, ApplicationPage_StatusUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApplicationPage_Status.
+     * @param {ApplicationPage_StatusUpsertArgs} args - Arguments to update or create a ApplicationPage_Status.
+     * @example
+     * // Update or create a ApplicationPage_Status
+     * const applicationPage_Status = await prisma.applicationPage_Status.upsert({
+     *   create: {
+     *     // ... data to create a ApplicationPage_Status
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApplicationPage_Status we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApplicationPage_StatusUpsertArgs>(args: SelectSubset<T, ApplicationPage_StatusUpsertArgs<ExtArgs>>): Prisma__ApplicationPage_StatusClient<$Result.GetResult<Prisma.$ApplicationPage_StatusPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApplicationPage_Statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusCountArgs} args - Arguments to filter ApplicationPage_Statuses to count.
+     * @example
+     * // Count the number of ApplicationPage_Statuses
+     * const count = await prisma.applicationPage_Status.count({
+     *   where: {
+     *     // ... the filter for the ApplicationPage_Statuses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApplicationPage_StatusCountArgs>(
+      args?: Subset<T, ApplicationPage_StatusCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApplicationPage_StatusCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApplicationPage_Status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApplicationPage_StatusAggregateArgs>(args: Subset<T, ApplicationPage_StatusAggregateArgs>): Prisma.PrismaPromise<GetApplicationPage_StatusAggregateType<T>>
+
+    /**
+     * Group by ApplicationPage_Status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationPage_StatusGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApplicationPage_StatusGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApplicationPage_StatusGroupByArgs['orderBy'] }
+        : { orderBy?: ApplicationPage_StatusGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApplicationPage_StatusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApplicationPage_StatusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApplicationPage_Status model
+   */
+  readonly fields: ApplicationPage_StatusFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApplicationPage_Status.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApplicationPage_StatusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApplicationPage_Status model
+   */
+  interface ApplicationPage_StatusFieldRefs {
+    readonly id: FieldRef<"ApplicationPage_Status", 'Int'>
+    readonly isActive: FieldRef<"ApplicationPage_Status", 'Boolean'>
+    readonly updatedAt: FieldRef<"ApplicationPage_Status", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApplicationPage_Status findUnique
+   */
+  export type ApplicationPage_StatusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationPage_Status to fetch.
+     */
+    where: ApplicationPage_StatusWhereUniqueInput
+  }
+
+  /**
+   * ApplicationPage_Status findUniqueOrThrow
+   */
+  export type ApplicationPage_StatusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationPage_Status to fetch.
+     */
+    where: ApplicationPage_StatusWhereUniqueInput
+  }
+
+  /**
+   * ApplicationPage_Status findFirst
+   */
+  export type ApplicationPage_StatusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationPage_Status to fetch.
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationPage_Statuses to fetch.
+     */
+    orderBy?: ApplicationPage_StatusOrderByWithRelationInput | ApplicationPage_StatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationPage_Statuses.
+     */
+    cursor?: ApplicationPage_StatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationPage_Statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationPage_Statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationPage_Statuses.
+     */
+    distinct?: ApplicationPage_StatusScalarFieldEnum | ApplicationPage_StatusScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationPage_Status findFirstOrThrow
+   */
+  export type ApplicationPage_StatusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationPage_Status to fetch.
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationPage_Statuses to fetch.
+     */
+    orderBy?: ApplicationPage_StatusOrderByWithRelationInput | ApplicationPage_StatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationPage_Statuses.
+     */
+    cursor?: ApplicationPage_StatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationPage_Statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationPage_Statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationPage_Statuses.
+     */
+    distinct?: ApplicationPage_StatusScalarFieldEnum | ApplicationPage_StatusScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationPage_Status findMany
+   */
+  export type ApplicationPage_StatusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationPage_Statuses to fetch.
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationPage_Statuses to fetch.
+     */
+    orderBy?: ApplicationPage_StatusOrderByWithRelationInput | ApplicationPage_StatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApplicationPage_Statuses.
+     */
+    cursor?: ApplicationPage_StatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationPage_Statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationPage_Statuses.
+     */
+    skip?: number
+    distinct?: ApplicationPage_StatusScalarFieldEnum | ApplicationPage_StatusScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationPage_Status create
+   */
+  export type ApplicationPage_StatusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ApplicationPage_Status.
+     */
+    data: XOR<ApplicationPage_StatusCreateInput, ApplicationPage_StatusUncheckedCreateInput>
+  }
+
+  /**
+   * ApplicationPage_Status createMany
+   */
+  export type ApplicationPage_StatusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApplicationPage_Statuses.
+     */
+    data: ApplicationPage_StatusCreateManyInput | ApplicationPage_StatusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationPage_Status createManyAndReturn
+   */
+  export type ApplicationPage_StatusCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApplicationPage_Statuses.
+     */
+    data: ApplicationPage_StatusCreateManyInput | ApplicationPage_StatusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationPage_Status update
+   */
+  export type ApplicationPage_StatusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ApplicationPage_Status.
+     */
+    data: XOR<ApplicationPage_StatusUpdateInput, ApplicationPage_StatusUncheckedUpdateInput>
+    /**
+     * Choose, which ApplicationPage_Status to update.
+     */
+    where: ApplicationPage_StatusWhereUniqueInput
+  }
+
+  /**
+   * ApplicationPage_Status updateMany
+   */
+  export type ApplicationPage_StatusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApplicationPage_Statuses.
+     */
+    data: XOR<ApplicationPage_StatusUpdateManyMutationInput, ApplicationPage_StatusUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationPage_Statuses to update
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * Limit how many ApplicationPage_Statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationPage_Status updateManyAndReturn
+   */
+  export type ApplicationPage_StatusUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * The data used to update ApplicationPage_Statuses.
+     */
+    data: XOR<ApplicationPage_StatusUpdateManyMutationInput, ApplicationPage_StatusUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationPage_Statuses to update
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * Limit how many ApplicationPage_Statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationPage_Status upsert
+   */
+  export type ApplicationPage_StatusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ApplicationPage_Status to update in case it exists.
+     */
+    where: ApplicationPage_StatusWhereUniqueInput
+    /**
+     * In case the ApplicationPage_Status found by the `where` argument doesn't exist, create a new ApplicationPage_Status with this data.
+     */
+    create: XOR<ApplicationPage_StatusCreateInput, ApplicationPage_StatusUncheckedCreateInput>
+    /**
+     * In case the ApplicationPage_Status was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApplicationPage_StatusUpdateInput, ApplicationPage_StatusUncheckedUpdateInput>
+  }
+
+  /**
+   * ApplicationPage_Status delete
+   */
+  export type ApplicationPage_StatusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+    /**
+     * Filter which ApplicationPage_Status to delete.
+     */
+    where: ApplicationPage_StatusWhereUniqueInput
+  }
+
+  /**
+   * ApplicationPage_Status deleteMany
+   */
+  export type ApplicationPage_StatusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationPage_Statuses to delete
+     */
+    where?: ApplicationPage_StatusWhereInput
+    /**
+     * Limit how many ApplicationPage_Statuses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationPage_Status without action
+   */
+  export type ApplicationPage_StatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationPage_Status
+     */
+    select?: ApplicationPage_StatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationPage_Status
+     */
+    omit?: ApplicationPage_StatusOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24408,7 +26614,6 @@ export namespace Prisma {
   export const ApplicationScalarFieldEnum: {
     id: 'id',
     fullName: 'fullName',
-    applicationCode: 'applicationCode',
     birthDate: 'birthDate',
     gender: 'gender',
     nationality: 'nationality',
@@ -24430,7 +26635,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     paymentAmount: 'paymentAmount',
-    primaryPaymentId: 'primaryPaymentId'
+    primaryPaymentId: 'primaryPaymentId',
+    applicationCode: 'applicationCode'
   };
 
   export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -24524,6 +26730,28 @@ export namespace Prisma {
   };
 
   export type VerificationCodeScalarFieldEnum = (typeof VerificationCodeScalarFieldEnum)[keyof typeof VerificationCodeScalarFieldEnum]
+
+
+  export const ApplicationNotificationRequestScalarFieldEnum: {
+    id: 'id',
+    fullName: 'fullName',
+    phone: 'phone',
+    email: 'email',
+    isNotified: 'isNotified',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ApplicationNotificationRequestScalarFieldEnum = (typeof ApplicationNotificationRequestScalarFieldEnum)[keyof typeof ApplicationNotificationRequestScalarFieldEnum]
+
+
+  export const ApplicationPage_StatusScalarFieldEnum: {
+    id: 'id',
+    isActive: 'isActive',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ApplicationPage_StatusScalarFieldEnum = (typeof ApplicationPage_StatusScalarFieldEnum)[keyof typeof ApplicationPage_StatusScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -25845,7 +28073,6 @@ export namespace Prisma {
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     id?: StringFilter<"Application"> | string
     fullName?: StringFilter<"Application"> | string
-    applicationCode?: StringNullableFilter<"Application"> | string | null
     birthDate?: DateTimeFilter<"Application"> | Date | string
     gender?: EnumGenderFilter<"Application"> | $Enums.Gender
     nationality?: StringFilter<"Application"> | string
@@ -25868,14 +28095,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     paymentAmount?: DecimalNullableFilter<"Application"> | Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: StringNullableFilter<"Application"> | string | null
-    payments?: PaymentListRelationFilter
+    applicationCode?: StringNullableFilter<"Application"> | string | null
     primaryPayment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
+    payments?: PaymentListRelationFilter
   }
 
   export type ApplicationOrderByWithRelationInput = {
     id?: SortOrder
     fullName?: SortOrder
-    applicationCode?: SortOrderInput | SortOrder
     birthDate?: SortOrder
     gender?: SortOrder
     nationality?: SortOrder
@@ -25898,14 +28125,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paymentAmount?: SortOrderInput | SortOrder
     primaryPaymentId?: SortOrderInput | SortOrder
-    payments?: PaymentOrderByRelationAggregateInput
+    applicationCode?: SortOrderInput | SortOrder
     primaryPayment?: PaymentOrderByWithRelationInput
+    payments?: PaymentOrderByRelationAggregateInput
   }
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    applicationCode?: string
     primaryPaymentId?: string
+    applicationCode?: string
     AND?: ApplicationWhereInput | ApplicationWhereInput[]
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
@@ -25931,14 +28159,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     paymentAmount?: DecimalNullableFilter<"Application"> | Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentListRelationFilter
     primaryPayment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
-  }, "id" | "applicationCode" | "primaryPaymentId">
+    payments?: PaymentListRelationFilter
+  }, "id" | "primaryPaymentId" | "applicationCode">
 
   export type ApplicationOrderByWithAggregationInput = {
     id?: SortOrder
     fullName?: SortOrder
-    applicationCode?: SortOrderInput | SortOrder
     birthDate?: SortOrder
     gender?: SortOrder
     nationality?: SortOrder
@@ -25961,6 +28188,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paymentAmount?: SortOrderInput | SortOrder
     primaryPaymentId?: SortOrderInput | SortOrder
+    applicationCode?: SortOrderInput | SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _avg?: ApplicationAvgOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
@@ -25974,7 +28202,6 @@ export namespace Prisma {
     NOT?: ApplicationScalarWhereWithAggregatesInput | ApplicationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Application"> | string
     fullName?: StringWithAggregatesFilter<"Application"> | string
-    applicationCode?: StringNullableWithAggregatesFilter<"Application"> | string | null
     birthDate?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     gender?: EnumGenderWithAggregatesFilter<"Application"> | $Enums.Gender
     nationality?: StringWithAggregatesFilter<"Application"> | string
@@ -25997,6 +28224,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     paymentAmount?: DecimalNullableWithAggregatesFilter<"Application"> | Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    applicationCode?: StringNullableWithAggregatesFilter<"Application"> | string | null
   }
 
   export type ContactMessageWhereInput = {
@@ -26325,8 +28553,8 @@ export namespace Prisma {
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
     primaryFor?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
   }
 
   export type PaymentOrderByWithRelationInput = {
@@ -26339,8 +28567,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    application?: ApplicationOrderByWithRelationInput
     primaryFor?: ApplicationOrderByWithRelationInput
+    application?: ApplicationOrderByWithRelationInput
   }
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -26356,8 +28584,8 @@ export namespace Prisma {
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
     primaryFor?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
   }, "id" | "iyzicoToken" | "paymentId">
 
   export type PaymentOrderByWithAggregationInput = {
@@ -26444,6 +28672,112 @@ export namespace Prisma {
     code?: StringWithAggregatesFilter<"VerificationCode"> | string
     expiresAt?: DateTimeWithAggregatesFilter<"VerificationCode"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"VerificationCode"> | Date | string
+  }
+
+  export type ApplicationNotificationRequestWhereInput = {
+    AND?: ApplicationNotificationRequestWhereInput | ApplicationNotificationRequestWhereInput[]
+    OR?: ApplicationNotificationRequestWhereInput[]
+    NOT?: ApplicationNotificationRequestWhereInput | ApplicationNotificationRequestWhereInput[]
+    id?: StringFilter<"ApplicationNotificationRequest"> | string
+    fullName?: StringFilter<"ApplicationNotificationRequest"> | string
+    phone?: StringFilter<"ApplicationNotificationRequest"> | string
+    email?: StringFilter<"ApplicationNotificationRequest"> | string
+    isNotified?: BoolFilter<"ApplicationNotificationRequest"> | boolean
+    createdAt?: DateTimeFilter<"ApplicationNotificationRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ApplicationNotificationRequest"> | Date | string
+  }
+
+  export type ApplicationNotificationRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    isNotified?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationNotificationRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email?: string
+    AND?: ApplicationNotificationRequestWhereInput | ApplicationNotificationRequestWhereInput[]
+    OR?: ApplicationNotificationRequestWhereInput[]
+    NOT?: ApplicationNotificationRequestWhereInput | ApplicationNotificationRequestWhereInput[]
+    fullName?: StringFilter<"ApplicationNotificationRequest"> | string
+    phone?: StringFilter<"ApplicationNotificationRequest"> | string
+    isNotified?: BoolFilter<"ApplicationNotificationRequest"> | boolean
+    createdAt?: DateTimeFilter<"ApplicationNotificationRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ApplicationNotificationRequest"> | Date | string
+  }, "id" | "email">
+
+  export type ApplicationNotificationRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    isNotified?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ApplicationNotificationRequestCountOrderByAggregateInput
+    _max?: ApplicationNotificationRequestMaxOrderByAggregateInput
+    _min?: ApplicationNotificationRequestMinOrderByAggregateInput
+  }
+
+  export type ApplicationNotificationRequestScalarWhereWithAggregatesInput = {
+    AND?: ApplicationNotificationRequestScalarWhereWithAggregatesInput | ApplicationNotificationRequestScalarWhereWithAggregatesInput[]
+    OR?: ApplicationNotificationRequestScalarWhereWithAggregatesInput[]
+    NOT?: ApplicationNotificationRequestScalarWhereWithAggregatesInput | ApplicationNotificationRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApplicationNotificationRequest"> | string
+    fullName?: StringWithAggregatesFilter<"ApplicationNotificationRequest"> | string
+    phone?: StringWithAggregatesFilter<"ApplicationNotificationRequest"> | string
+    email?: StringWithAggregatesFilter<"ApplicationNotificationRequest"> | string
+    isNotified?: BoolWithAggregatesFilter<"ApplicationNotificationRequest"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ApplicationNotificationRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ApplicationNotificationRequest"> | Date | string
+  }
+
+  export type ApplicationPage_StatusWhereInput = {
+    AND?: ApplicationPage_StatusWhereInput | ApplicationPage_StatusWhereInput[]
+    OR?: ApplicationPage_StatusWhereInput[]
+    NOT?: ApplicationPage_StatusWhereInput | ApplicationPage_StatusWhereInput[]
+    id?: IntFilter<"ApplicationPage_Status"> | number
+    isActive?: BoolFilter<"ApplicationPage_Status"> | boolean
+    updatedAt?: DateTimeFilter<"ApplicationPage_Status"> | Date | string
+  }
+
+  export type ApplicationPage_StatusOrderByWithRelationInput = {
+    id?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationPage_StatusWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ApplicationPage_StatusWhereInput | ApplicationPage_StatusWhereInput[]
+    OR?: ApplicationPage_StatusWhereInput[]
+    NOT?: ApplicationPage_StatusWhereInput | ApplicationPage_StatusWhereInput[]
+    isActive?: BoolFilter<"ApplicationPage_Status"> | boolean
+    updatedAt?: DateTimeFilter<"ApplicationPage_Status"> | Date | string
+  }, "id">
+
+  export type ApplicationPage_StatusOrderByWithAggregationInput = {
+    id?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ApplicationPage_StatusCountOrderByAggregateInput
+    _avg?: ApplicationPage_StatusAvgOrderByAggregateInput
+    _max?: ApplicationPage_StatusMaxOrderByAggregateInput
+    _min?: ApplicationPage_StatusMinOrderByAggregateInput
+    _sum?: ApplicationPage_StatusSumOrderByAggregateInput
+  }
+
+  export type ApplicationPage_StatusScalarWhereWithAggregatesInput = {
+    AND?: ApplicationPage_StatusScalarWhereWithAggregatesInput | ApplicationPage_StatusScalarWhereWithAggregatesInput[]
+    OR?: ApplicationPage_StatusScalarWhereWithAggregatesInput[]
+    NOT?: ApplicationPage_StatusScalarWhereWithAggregatesInput | ApplicationPage_StatusScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ApplicationPage_Status"> | number
+    isActive?: BoolWithAggregatesFilter<"ApplicationPage_Status"> | boolean
+    updatedAt?: DateTimeWithAggregatesFilter<"ApplicationPage_Status"> | Date | string
   }
 
   export type AdminUserCreateInput = {
@@ -27825,7 +30159,6 @@ export namespace Prisma {
   export type ApplicationCreateInput = {
     id?: string
     fullName: string
-    applicationCode?: string | null
     birthDate: Date | string
     gender: $Enums.Gender
     nationality: string
@@ -27847,14 +30180,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     paymentAmount?: Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentCreateNestedManyWithoutApplicationInput
+    applicationCode?: string | null
     primaryPayment?: PaymentCreateNestedOneWithoutPrimaryForInput
+    payments?: PaymentCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateInput = {
     id?: string
     fullName: string
-    applicationCode?: string | null
     birthDate: Date | string
     gender: $Enums.Gender
     nationality: string
@@ -27877,13 +30210,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     paymentAmount?: Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: string | null
+    applicationCode?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -27905,14 +30238,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentUpdateManyWithoutApplicationNestedInput
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     primaryPayment?: PaymentUpdateOneWithoutPrimaryForNestedInput
+    payments?: PaymentUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -27935,13 +30268,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateManyInput = {
     id?: string
     fullName: string
-    applicationCode?: string | null
     birthDate: Date | string
     gender: $Enums.Gender
     nationality: string
@@ -27964,12 +30297,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     paymentAmount?: Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: string | null
+    applicationCode?: string | null
   }
 
   export type ApplicationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -27991,12 +30324,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -28019,6 +30352,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactMessageCreateInput = {
@@ -28361,8 +30695,8 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutPaymentsInput
     primaryFor?: ApplicationCreateNestedOneWithoutPrimaryPaymentInput
+    application: ApplicationCreateNestedOneWithoutPaymentsInput
   }
 
   export type PaymentUncheckedCreateInput = {
@@ -28387,8 +30721,8 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutPaymentsNestedInput
     primaryFor?: ApplicationUpdateOneWithoutPrimaryPaymentNestedInput
+    application?: ApplicationUpdateOneRequiredWithoutPaymentsNestedInput
   }
 
   export type PaymentUncheckedUpdateInput = {
@@ -28490,6 +30824,118 @@ export namespace Prisma {
     code?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationNotificationRequestCreateInput = {
+    id?: string
+    fullName: string
+    phone: string
+    email: string
+    isNotified?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationNotificationRequestUncheckedCreateInput = {
+    id?: string
+    fullName: string
+    phone: string
+    email: string
+    isNotified?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationNotificationRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isNotified?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationNotificationRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isNotified?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationNotificationRequestCreateManyInput = {
+    id?: string
+    fullName: string
+    phone: string
+    email: string
+    isNotified?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationNotificationRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isNotified?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationNotificationRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isNotified?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationPage_StatusCreateInput = {
+    id?: number
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationPage_StatusUncheckedCreateInput = {
+    id?: number
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationPage_StatusUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationPage_StatusUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationPage_StatusCreateManyInput = {
+    id?: number
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationPage_StatusUpdateManyMutationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationPage_StatusUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -29373,15 +31819,15 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type PaymentNullableScalarRelationFilter = {
+    is?: PaymentWhereInput | null
+    isNot?: PaymentWhereInput | null
+  }
+
   export type PaymentListRelationFilter = {
     every?: PaymentWhereInput
     some?: PaymentWhereInput
     none?: PaymentWhereInput
-  }
-
-  export type PaymentNullableScalarRelationFilter = {
-    is?: PaymentWhereInput | null
-    isNot?: PaymentWhereInput | null
   }
 
   export type PaymentOrderByRelationAggregateInput = {
@@ -29391,7 +31837,6 @@ export namespace Prisma {
   export type ApplicationCountOrderByAggregateInput = {
     id?: SortOrder
     fullName?: SortOrder
-    applicationCode?: SortOrder
     birthDate?: SortOrder
     gender?: SortOrder
     nationality?: SortOrder
@@ -29414,6 +31859,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paymentAmount?: SortOrder
     primaryPaymentId?: SortOrder
+    applicationCode?: SortOrder
   }
 
   export type ApplicationAvgOrderByAggregateInput = {
@@ -29428,7 +31874,6 @@ export namespace Prisma {
   export type ApplicationMaxOrderByAggregateInput = {
     id?: SortOrder
     fullName?: SortOrder
-    applicationCode?: SortOrder
     birthDate?: SortOrder
     gender?: SortOrder
     nationality?: SortOrder
@@ -29451,12 +31896,12 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paymentAmount?: SortOrder
     primaryPaymentId?: SortOrder
+    applicationCode?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
     id?: SortOrder
     fullName?: SortOrder
-    applicationCode?: SortOrder
     birthDate?: SortOrder
     gender?: SortOrder
     nationality?: SortOrder
@@ -29479,6 +31924,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paymentAmount?: SortOrder
     primaryPaymentId?: SortOrder
+    applicationCode?: SortOrder
   }
 
   export type ApplicationSumOrderByAggregateInput = {
@@ -29743,14 +32189,14 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
-  export type ApplicationScalarRelationFilter = {
-    is?: ApplicationWhereInput
-    isNot?: ApplicationWhereInput
-  }
-
   export type ApplicationNullableScalarRelationFilter = {
     is?: ApplicationWhereInput | null
     isNot?: ApplicationWhereInput | null
+  }
+
+  export type ApplicationScalarRelationFilter = {
+    is?: ApplicationWhereInput
+    isNot?: ApplicationWhereInput
   }
 
   export type PaymentCountOrderByAggregateInput = {
@@ -29836,6 +32282,62 @@ export namespace Prisma {
   }
 
   export type VerificationCodeSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ApplicationNotificationRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    isNotified?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationNotificationRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    isNotified?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationNotificationRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    isNotified?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationPage_StatusCountOrderByAggregateInput = {
+    id?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationPage_StatusAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ApplicationPage_StatusMaxOrderByAggregateInput = {
+    id?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationPage_StatusMinOrderByAggregateInput = {
+    id?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationPage_StatusSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -29940,17 +32442,17 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type PaymentCreateNestedOneWithoutPrimaryForInput = {
+    create?: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
+    connectOrCreate?: PaymentCreateOrConnectWithoutPrimaryForInput
+    connect?: PaymentWhereUniqueInput
+  }
+
   export type PaymentCreateNestedManyWithoutApplicationInput = {
     create?: XOR<PaymentCreateWithoutApplicationInput, PaymentUncheckedCreateWithoutApplicationInput> | PaymentCreateWithoutApplicationInput[] | PaymentUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutApplicationInput | PaymentCreateOrConnectWithoutApplicationInput[]
     createMany?: PaymentCreateManyApplicationInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-  }
-
-  export type PaymentCreateNestedOneWithoutPrimaryForInput = {
-    create?: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
-    connectOrCreate?: PaymentCreateOrConnectWithoutPrimaryForInput
-    connect?: PaymentWhereUniqueInput
   }
 
   export type PaymentUncheckedCreateNestedManyWithoutApplicationInput = {
@@ -29976,6 +32478,16 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type PaymentUpdateOneWithoutPrimaryForNestedInput = {
+    create?: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
+    connectOrCreate?: PaymentCreateOrConnectWithoutPrimaryForInput
+    upsert?: PaymentUpsertWithoutPrimaryForInput
+    disconnect?: PaymentWhereInput | boolean
+    delete?: PaymentWhereInput | boolean
+    connect?: PaymentWhereUniqueInput
+    update?: XOR<XOR<PaymentUpdateToOneWithWhereWithoutPrimaryForInput, PaymentUpdateWithoutPrimaryForInput>, PaymentUncheckedUpdateWithoutPrimaryForInput>
+  }
+
   export type PaymentUpdateManyWithoutApplicationNestedInput = {
     create?: XOR<PaymentCreateWithoutApplicationInput, PaymentUncheckedCreateWithoutApplicationInput> | PaymentCreateWithoutApplicationInput[] | PaymentUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutApplicationInput | PaymentCreateOrConnectWithoutApplicationInput[]
@@ -29988,16 +32500,6 @@ export namespace Prisma {
     update?: PaymentUpdateWithWhereUniqueWithoutApplicationInput | PaymentUpdateWithWhereUniqueWithoutApplicationInput[]
     updateMany?: PaymentUpdateManyWithWhereWithoutApplicationInput | PaymentUpdateManyWithWhereWithoutApplicationInput[]
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-  }
-
-  export type PaymentUpdateOneWithoutPrimaryForNestedInput = {
-    create?: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
-    connectOrCreate?: PaymentCreateOrConnectWithoutPrimaryForInput
-    upsert?: PaymentUpsertWithoutPrimaryForInput
-    disconnect?: PaymentWhereInput | boolean
-    delete?: PaymentWhereInput | boolean
-    connect?: PaymentWhereUniqueInput
-    update?: XOR<XOR<PaymentUpdateToOneWithWhereWithoutPrimaryForInput, PaymentUpdateWithoutPrimaryForInput>, PaymentUncheckedUpdateWithoutPrimaryForInput>
   }
 
   export type PaymentUncheckedUpdateManyWithoutApplicationNestedInput = {
@@ -30022,15 +32524,15 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
-  export type ApplicationCreateNestedOneWithoutPaymentsInput = {
-    create?: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
-    connectOrCreate?: ApplicationCreateOrConnectWithoutPaymentsInput
-    connect?: ApplicationWhereUniqueInput
-  }
-
   export type ApplicationCreateNestedOneWithoutPrimaryPaymentInput = {
     create?: XOR<ApplicationCreateWithoutPrimaryPaymentInput, ApplicationUncheckedCreateWithoutPrimaryPaymentInput>
     connectOrCreate?: ApplicationCreateOrConnectWithoutPrimaryPaymentInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type ApplicationCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutPaymentsInput
     connect?: ApplicationWhereUniqueInput
   }
 
@@ -30044,14 +32546,6 @@ export namespace Prisma {
     set?: $Enums.PaymentStatus
   }
 
-  export type ApplicationUpdateOneRequiredWithoutPaymentsNestedInput = {
-    create?: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
-    connectOrCreate?: ApplicationCreateOrConnectWithoutPaymentsInput
-    upsert?: ApplicationUpsertWithoutPaymentsInput
-    connect?: ApplicationWhereUniqueInput
-    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutPaymentsInput, ApplicationUpdateWithoutPaymentsInput>, ApplicationUncheckedUpdateWithoutPaymentsInput>
-  }
-
   export type ApplicationUpdateOneWithoutPrimaryPaymentNestedInput = {
     create?: XOR<ApplicationCreateWithoutPrimaryPaymentInput, ApplicationUncheckedCreateWithoutPrimaryPaymentInput>
     connectOrCreate?: ApplicationCreateOrConnectWithoutPrimaryPaymentInput
@@ -30060,6 +32554,14 @@ export namespace Prisma {
     delete?: ApplicationWhereInput | boolean
     connect?: ApplicationWhereUniqueInput
     update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutPrimaryPaymentInput, ApplicationUpdateWithoutPrimaryPaymentInput>, ApplicationUncheckedUpdateWithoutPrimaryPaymentInput>
+  }
+
+  export type ApplicationUpdateOneRequiredWithoutPaymentsNestedInput = {
+    create?: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutPaymentsInput
+    upsert?: ApplicationUpsertWithoutPaymentsInput
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutPaymentsInput, ApplicationUpdateWithoutPaymentsInput>, ApplicationUncheckedUpdateWithoutPaymentsInput>
   }
 
   export type ApplicationUncheckedUpdateOneWithoutPrimaryPaymentNestedInput = {
@@ -30524,6 +33026,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PaymentCreateWithoutPrimaryForInput = {
+    id?: string
+    iyzicoToken?: string | null
+    paymentId?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateWithoutPrimaryForInput = {
+    id?: string
+    applicationId: string
+    iyzicoToken?: string | null
+    paymentId?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCreateOrConnectWithoutPrimaryForInput = {
+    where: PaymentWhereUniqueInput
+    create: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
+  }
+
   export type PaymentCreateWithoutApplicationInput = {
     id?: string
     iyzicoToken?: string | null
@@ -30556,66 +33087,6 @@ export namespace Prisma {
   export type PaymentCreateManyApplicationInputEnvelope = {
     data: PaymentCreateManyApplicationInput | PaymentCreateManyApplicationInput[]
     skipDuplicates?: boolean
-  }
-
-  export type PaymentCreateWithoutPrimaryForInput = {
-    id?: string
-    iyzicoToken?: string | null
-    paymentId?: string | null
-    amount: Decimal | DecimalJsLike | number | string
-    currency?: string
-    status?: $Enums.PaymentStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutPaymentsInput
-  }
-
-  export type PaymentUncheckedCreateWithoutPrimaryForInput = {
-    id?: string
-    applicationId: string
-    iyzicoToken?: string | null
-    paymentId?: string | null
-    amount: Decimal | DecimalJsLike | number | string
-    currency?: string
-    status?: $Enums.PaymentStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PaymentCreateOrConnectWithoutPrimaryForInput = {
-    where: PaymentWhereUniqueInput
-    create: XOR<PaymentCreateWithoutPrimaryForInput, PaymentUncheckedCreateWithoutPrimaryForInput>
-  }
-
-  export type PaymentUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: PaymentWhereUniqueInput
-    update: XOR<PaymentUpdateWithoutApplicationInput, PaymentUncheckedUpdateWithoutApplicationInput>
-    create: XOR<PaymentCreateWithoutApplicationInput, PaymentUncheckedCreateWithoutApplicationInput>
-  }
-
-  export type PaymentUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: PaymentWhereUniqueInput
-    data: XOR<PaymentUpdateWithoutApplicationInput, PaymentUncheckedUpdateWithoutApplicationInput>
-  }
-
-  export type PaymentUpdateManyWithWhereWithoutApplicationInput = {
-    where: PaymentScalarWhereInput
-    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutApplicationInput>
-  }
-
-  export type PaymentScalarWhereInput = {
-    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-    OR?: PaymentScalarWhereInput[]
-    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-    id?: StringFilter<"Payment"> | string
-    applicationId?: StringFilter<"Payment"> | string
-    iyzicoToken?: StringNullableFilter<"Payment"> | string | null
-    paymentId?: StringNullableFilter<"Payment"> | string | null
-    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Payment"> | string
-    status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
-    createdAt?: DateTimeFilter<"Payment"> | Date | string
-    updatedAt?: DateTimeFilter<"Payment"> | Date | string
   }
 
   export type PaymentUpsertWithoutPrimaryForInput = {
@@ -30653,10 +33124,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ApplicationCreateWithoutPaymentsInput = {
+  export type PaymentUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: PaymentWhereUniqueInput
+    update: XOR<PaymentUpdateWithoutApplicationInput, PaymentUncheckedUpdateWithoutApplicationInput>
+    create: XOR<PaymentCreateWithoutApplicationInput, PaymentUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type PaymentUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: PaymentWhereUniqueInput
+    data: XOR<PaymentUpdateWithoutApplicationInput, PaymentUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type PaymentUpdateManyWithWhereWithoutApplicationInput = {
+    where: PaymentScalarWhereInput
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type PaymentScalarWhereInput = {
+    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    OR?: PaymentScalarWhereInput[]
+    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    id?: StringFilter<"Payment"> | string
+    applicationId?: StringFilter<"Payment"> | string
+    iyzicoToken?: StringNullableFilter<"Payment"> | string | null
+    paymentId?: StringNullableFilter<"Payment"> | string | null
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Payment"> | string
+    status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+  }
+
+  export type ApplicationCreateWithoutPrimaryPaymentInput = {
     id?: string
     fullName: string
-    applicationCode?: string | null
     birthDate: Date | string
     gender: $Enums.Gender
     nationality: string
@@ -30678,13 +33179,74 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    applicationCode?: string | null
+    payments?: PaymentCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutPrimaryPaymentInput = {
+    id?: string
+    fullName: string
+    birthDate: Date | string
+    gender: $Enums.Gender
+    nationality: string
+    email: string
+    phone: string
+    city: string
+    heightCm: number
+    chestCm: number
+    hipsCm: number
+    footCm: number
+    waistCm: number
+    eyeColor: string
+    selfieUrl: string
+    profilePhoto: string
+    fullBodyPhoto: string
+    status?: $Enums.ApplicationStatus
+    adminNotes?: string | null
+    submittedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    applicationCode?: string | null
+    payments?: PaymentUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutPrimaryPaymentInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutPrimaryPaymentInput, ApplicationUncheckedCreateWithoutPrimaryPaymentInput>
+  }
+
+  export type ApplicationCreateWithoutPaymentsInput = {
+    id?: string
+    fullName: string
+    birthDate: Date | string
+    gender: $Enums.Gender
+    nationality: string
+    email: string
+    phone: string
+    city: string
+    heightCm: number
+    chestCm: number
+    hipsCm: number
+    footCm: number
+    waistCm: number
+    eyeColor: string
+    selfieUrl: string
+    profilePhoto: string
+    fullBodyPhoto: string
+    status?: $Enums.ApplicationStatus
+    adminNotes?: string | null
+    submittedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    applicationCode?: string | null
     primaryPayment?: PaymentCreateNestedOneWithoutPrimaryForInput
   }
 
   export type ApplicationUncheckedCreateWithoutPaymentsInput = {
     id?: string
     fullName: string
-    applicationCode?: string | null
     birthDate: Date | string
     gender: $Enums.Gender
     nationality: string
@@ -30707,6 +33269,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     paymentAmount?: Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: string | null
+    applicationCode?: string | null
   }
 
   export type ApplicationCreateOrConnectWithoutPaymentsInput = {
@@ -30714,82 +33277,20 @@ export namespace Prisma {
     create: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
   }
 
-  export type ApplicationCreateWithoutPrimaryPaymentInput = {
-    id?: string
-    fullName: string
-    applicationCode?: string | null
-    birthDate: Date | string
-    gender: $Enums.Gender
-    nationality: string
-    email: string
-    phone: string
-    city: string
-    heightCm: number
-    chestCm: number
-    hipsCm: number
-    footCm: number
-    waistCm: number
-    eyeColor: string
-    selfieUrl: string
-    profilePhoto: string
-    fullBodyPhoto: string
-    status?: $Enums.ApplicationStatus
-    adminNotes?: string | null
-    submittedAt?: Date | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationUncheckedCreateWithoutPrimaryPaymentInput = {
-    id?: string
-    fullName: string
-    applicationCode?: string | null
-    birthDate: Date | string
-    gender: $Enums.Gender
-    nationality: string
-    email: string
-    phone: string
-    city: string
-    heightCm: number
-    chestCm: number
-    hipsCm: number
-    footCm: number
-    waistCm: number
-    eyeColor: string
-    selfieUrl: string
-    profilePhoto: string
-    fullBodyPhoto: string
-    status?: $Enums.ApplicationStatus
-    adminNotes?: string | null
-    submittedAt?: Date | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentUncheckedCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationCreateOrConnectWithoutPrimaryPaymentInput = {
-    where: ApplicationWhereUniqueInput
+  export type ApplicationUpsertWithoutPrimaryPaymentInput = {
+    update: XOR<ApplicationUpdateWithoutPrimaryPaymentInput, ApplicationUncheckedUpdateWithoutPrimaryPaymentInput>
     create: XOR<ApplicationCreateWithoutPrimaryPaymentInput, ApplicationUncheckedCreateWithoutPrimaryPaymentInput>
-  }
-
-  export type ApplicationUpsertWithoutPaymentsInput = {
-    update: XOR<ApplicationUpdateWithoutPaymentsInput, ApplicationUncheckedUpdateWithoutPaymentsInput>
-    create: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
     where?: ApplicationWhereInput
   }
 
-  export type ApplicationUpdateToOneWithWhereWithoutPaymentsInput = {
+  export type ApplicationUpdateToOneWithWhereWithoutPrimaryPaymentInput = {
     where?: ApplicationWhereInput
-    data: XOR<ApplicationUpdateWithoutPaymentsInput, ApplicationUncheckedUpdateWithoutPaymentsInput>
+    data: XOR<ApplicationUpdateWithoutPrimaryPaymentInput, ApplicationUncheckedUpdateWithoutPrimaryPaymentInput>
   }
 
-  export type ApplicationUpdateWithoutPaymentsInput = {
+  export type ApplicationUpdateWithoutPrimaryPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -30811,13 +33312,80 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: PaymentUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutPrimaryPaymentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+    nationality?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    heightCm?: IntFieldUpdateOperationsInput | number
+    chestCm?: IntFieldUpdateOperationsInput | number
+    hipsCm?: IntFieldUpdateOperationsInput | number
+    footCm?: IntFieldUpdateOperationsInput | number
+    waistCm?: IntFieldUpdateOperationsInput | number
+    eyeColor?: StringFieldUpdateOperationsInput | string
+    selfieUrl?: StringFieldUpdateOperationsInput | string
+    profilePhoto?: StringFieldUpdateOperationsInput | string
+    fullBodyPhoto?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: PaymentUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUpsertWithoutPaymentsInput = {
+    update: XOR<ApplicationUpdateWithoutPaymentsInput, ApplicationUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<ApplicationCreateWithoutPaymentsInput, ApplicationUncheckedCreateWithoutPaymentsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutPaymentsInput, ApplicationUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type ApplicationUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+    nationality?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    heightCm?: IntFieldUpdateOperationsInput | number
+    chestCm?: IntFieldUpdateOperationsInput | number
+    hipsCm?: IntFieldUpdateOperationsInput | number
+    footCm?: IntFieldUpdateOperationsInput | number
+    waistCm?: IntFieldUpdateOperationsInput | number
+    eyeColor?: StringFieldUpdateOperationsInput | string
+    selfieUrl?: StringFieldUpdateOperationsInput | string
+    profilePhoto?: StringFieldUpdateOperationsInput | string
+    fullBodyPhoto?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     primaryPayment?: PaymentUpdateOneWithoutPrimaryForNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
     nationality?: StringFieldUpdateOperationsInput | string
@@ -30840,73 +33408,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     primaryPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ApplicationUpsertWithoutPrimaryPaymentInput = {
-    update: XOR<ApplicationUpdateWithoutPrimaryPaymentInput, ApplicationUncheckedUpdateWithoutPrimaryPaymentInput>
-    create: XOR<ApplicationCreateWithoutPrimaryPaymentInput, ApplicationUncheckedCreateWithoutPrimaryPaymentInput>
-    where?: ApplicationWhereInput
-  }
-
-  export type ApplicationUpdateToOneWithWhereWithoutPrimaryPaymentInput = {
-    where?: ApplicationWhereInput
-    data: XOR<ApplicationUpdateWithoutPrimaryPaymentInput, ApplicationUncheckedUpdateWithoutPrimaryPaymentInput>
-  }
-
-  export type ApplicationUpdateWithoutPrimaryPaymentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
     applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-    nationality?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    heightCm?: IntFieldUpdateOperationsInput | number
-    chestCm?: IntFieldUpdateOperationsInput | number
-    hipsCm?: IntFieldUpdateOperationsInput | number
-    footCm?: IntFieldUpdateOperationsInput | number
-    waistCm?: IntFieldUpdateOperationsInput | number
-    eyeColor?: StringFieldUpdateOperationsInput | string
-    selfieUrl?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: StringFieldUpdateOperationsInput | string
-    fullBodyPhoto?: StringFieldUpdateOperationsInput | string
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentUpdateManyWithoutApplicationNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateWithoutPrimaryPaymentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    applicationCode?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    gender?: EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-    nationality?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    heightCm?: IntFieldUpdateOperationsInput | number
-    chestCm?: IntFieldUpdateOperationsInput | number
-    hipsCm?: IntFieldUpdateOperationsInput | number
-    footCm?: IntFieldUpdateOperationsInput | number
-    waistCm?: IntFieldUpdateOperationsInput | number
-    eyeColor?: StringFieldUpdateOperationsInput | string
-    selfieUrl?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: StringFieldUpdateOperationsInput | string
-    fullBodyPhoto?: StringFieldUpdateOperationsInput | string
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payments?: PaymentUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type HomeSliderItemCreateManyHomeSliderInput = {

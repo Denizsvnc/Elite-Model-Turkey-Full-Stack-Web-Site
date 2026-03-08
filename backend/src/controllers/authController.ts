@@ -3,11 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import { AuthRequest } from "../middleware/auth";
-import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import prisma from "../lib/prisma";
-import { AuthRequest } from "../middleware/auth";
 import { getJWTSecret } from "../config/validateEnv";
 
 const PASSWORD_REGEX =
@@ -62,52 +57,10 @@ export const register = async (req: Request, res: Response) => {
 // Giriş yapma
 export const login = async (req: Request, res: Response) => {
   try {
-    // const { email, password } = req.body;
-
-    // // Kullanıcıyı bul
-    // const adminUser = await prisma.adminUser.findUnique({
-    //   where: { email },
-    // });
-
-    // if (!adminUser) {
-    //   return res.status(401).json({ error: "Email veya şifre hatalı" });
-    // }
-
-    // // Aktif mi kontrol et
-    // if (!adminUser.isActive) {
-    //   return res.status(403).json({ error: "Hesabınız devre dışı bırakılmış" });
-    // }
-
-    // // Şifre kontrolü
-    // const isPasswordValid = await bcrypt.compare(
-    //   password,
-    //   adminUser.passwordHash,
-    // );
-
-    // if (!isPasswordValid) {
-    //   return res.status(401).json({ error: "Email veya şifre hatalı" });
-    // }
-
-    // // JWT token oluştur
-    // const token = jwt.sign(
-    //   {
-    //     id: adminUser.id,
-    //     email: adminUser.email,
-    //     role: adminUser.role,
-    //   },
-    //   process.env.JWT_SECRET!,
-    // );
-
     res.json({
       message: "Giriş başarılı",
       token:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
-      //   adminUser: {
-      //     id: adminUser.id,
-      //     email: adminUser.email,
-      //     name: adminUser.name,
-      //     role: adminUser.role,
-      //   },
       adminUser: {
         id: 1,
         email: "admin@example.com",
