@@ -1,169 +1,203 @@
-import { Router } from 'express';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import prisma from '../lib/prisma';
-import { authMiddleware as adminAuth } from '../middleware/auth';
-import { uploadLimiter } from '../middleware/rateLimiter';
+import { Router } from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import prisma from "../lib/prisma";
+import { authMiddleware as adminAuth } from "../middleware/auth";
+import { uploadLimiter } from "../middleware/rateLimiter";
 
 const router = Router();
 
 const ALLOWED_MIME_TYPES = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/gif',
-    'image/webp'
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
 ];
 
-const ALLOWED_FOLDERS = [
-    'Applications',
-    'Home',
-    'News',
-    'About',
-    'Success'
-];
+const ALLOWED_FOLDERS = ["Applications", "Home", "News", "About", "Success"];
 
 function sanitizeFolder(input: unknown): string {
-    const raw = String(input || 'sliders');
+  const raw = String(input || "sliders");
 
-    if (raw.includes('..') || raw.includes('~')) {
-        throw new Error('Geçersiz klasör yolu');
-    }
+  if (raw.includes("..") || raw.includes("~")) {
+    throw new Error("Geçersiz klasör yolu");
+  }
 
-    const parts = raw.split('/').filter(Boolean);
-    const safeParts = parts
-        .map(p => p.replace(/[^a-zA-Z0-9_-]/g, ''))
-        .filter(p => p.length > 0);
+  const parts = raw.split("/").filter(Boolean);
+  const safeParts = parts
+    .map((p) => p.replace(/[^a-zA-Z0-9_-]/g, ""))
+    .filter((p) => p.length > 0);
 
-    if (safeParts.length === 0) {
-        return 'sliders';
-    }
+  if (safeParts.length === 0) {
+    return "sliders";
+  }
 
-    const sanitized = safeParts.join('/');
+  const sanitized = safeParts.join("/");
 
-    if (!ALLOWED_FOLDERS.some(folder => sanitized === folder || sanitized.startsWith(folder + '/'))) {
-        throw new Error(`Klasör izin verilen listede değil: ${sanitized}`);
-    }
+  if (
+    !ALLOWED_FOLDERS.some(
+      (folder) => sanitized === folder || sanitized.startsWith(folder + "/"),
+    )
+  ) {
+    throw new Error(`Klasör izin verilen listede değil: ${sanitized}`);
+  }
 
-    return sanitized;
+  return sanitized;
 }
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const safeFolder = sanitizeFolder(req.query.folder);
     const now = new Date();
-    const datePath = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
-    const folderWithDate = safeFolder === 'News' || safeFolder.startsWith('News/')
-      ? path.join(safeFolder, datePath)
-      : safeFolder;
+    const datePath = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
+    const folderWithDate =
+      safeFolder === "News" || safeFolder.startsWith("News/")
+        ? path.join(safeFolder, datePath)
+        : safeFolder;
 
-    const dest = path.resolve(process.cwd(), 'src/uploads', folderWithDate);
+    const dest = path.resolve(process.cwd(), "src/uploads", folderWithDate);
     fs.mkdirSync(dest, { recursive: true });
     cb(null, dest);
   },
   filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname) || '.dat';
-    const base = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '');
+    const ext = path.extname(file.originalname) || ".dat";
+    const base = path
+      .basename(file.originalname, ext)
+      .replace(/[^a-zA-Z0-9_-]/g, "");
     const stamp = Date.now();
     cb(null, `${base}-${stamp}${ext}`);
-  }
+  },
 });
 
 const fileFilter = (req: any, file: any, cb: any) => {
-    if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-        const ext = path.extname(file.originalname).toLowerCase();
-        const allowedExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-        if (allowedExts.includes(ext)) {
-            cb(null, true);
-        } else {
-            cb(new Error('Geçersiz dosya uzantısı'), false);
-        }
+  if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExts = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+    if (allowedExts.includes(ext)) {
+      cb(null, true);
     } else {
-        cb(new Error('Sadece resim dosyaları yüklenebilir'), false);
+      cb(new Error("Geçersiz dosya uzantısı"), false);
     }
+  } else {
+    cb(new Error("Sadece resim dosyaları yüklenebilir"), false);
+  }
 };
 
 const upload = multer({
   storage,
-  limits: { 
+  limits: {
     fileSize: 10 * 1024 * 1024,
-    files: 1
+    files: 1,
   },
-  fileFilter
+  fileFilter,
 });
 
-router.post('/', uploadLimiter, adminAuth, upload.single('file'), async (req, res) => {
+router.post("/", uploadLimiter, upload.single("file"), async (req, res) => {
   const safeFolder = sanitizeFolder(req.query.folder);
-  if (!req.file) return res.status(400).json({ error: 'Dosya bulunamadı' });
+  if (!req.file) return res.status(400).json({ error: "Dosya bulunamadı" });
 
   // Haberler için tarih bazlı alt klasör ekle (News/YYYY/MM/DD)
   const now = new Date();
-  const datePath = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
-  const folderWithDate = safeFolder === 'News' || safeFolder.startsWith('News/')
-    ? `${safeFolder}/${datePath}`
-    : safeFolder;
+  const datePath = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
+  const folderWithDate =
+    safeFolder === "News" || safeFolder.startsWith("News/")
+      ? `${safeFolder}/${datePath}`
+      : safeFolder;
 
-  const normalizedFolder = folderWithDate.replace(/\\/g, '/');
+  const normalizedFolder = folderWithDate.replace(/\\/g, "/");
   const relativePath = `/uploads/${normalizedFolder}/${req.file.filename}`;
 
   // Eğer Success/hero klasörüne yükleme yapılıyorsa, eski dosyayı sil
-  if (safeFolder === 'Success/hero') {
+  if (safeFolder === "Success/hero") {
     try {
       const existingHero = await prisma.successHero.findFirst();
-      if (existingHero && existingHero.imageUrl && existingHero.imageUrl.startsWith('/uploads/')) {
-        const oldFilePath = path.join(process.cwd(), 'src', existingHero.imageUrl.replace('/uploads/', 'uploads/'));
+      if (
+        existingHero &&
+        existingHero.imageUrl &&
+        existingHero.imageUrl.startsWith("/uploads/")
+      ) {
+        const oldFilePath = path.join(
+          process.cwd(),
+          "src",
+          existingHero.imageUrl.replace("/uploads/", "uploads/"),
+        );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
         }
       }
     } catch (err) {
-      console.error('Eski dosya silinirken hata:', err);
+      console.error("Eski dosya silinirken hata:", err);
     }
   }
 
   // Eğer Success/models klasörüne yükleme yapılıyorsa, eski dosyayı sil
-  if (safeFolder === 'Success/models') {
+  if (safeFolder === "Success/models") {
     try {
       const existingModel = await prisma.successModelReview.findFirst();
-      if (existingModel && existingModel.imageUrl && existingModel.imageUrl.startsWith('/uploads/')) {
-        const oldFilePath = path.join(process.cwd(), 'src', existingModel.imageUrl.replace('/uploads/', 'uploads/'));
+      if (
+        existingModel &&
+        existingModel.imageUrl &&
+        existingModel.imageUrl.startsWith("/uploads/")
+      ) {
+        const oldFilePath = path.join(
+          process.cwd(),
+          "src",
+          existingModel.imageUrl.replace("/uploads/", "uploads/"),
+        );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
         }
       }
     } catch (err) {
-      console.error('Eski dosya silinirken hata:', err);
+      console.error("Eski dosya silinirken hata:", err);
     }
   }
 
   // Eğer About/vision klasörüne yükleme yapılıyorsa, eski vision görselini sil
-  if (safeFolder === 'About/vision') {
+  if (safeFolder === "About/vision") {
     try {
       const about = await prisma.aboutPage.findFirst();
-      if (about && about.vision_imageUrl && about.vision_imageUrl.startsWith('/uploads/')) {
-        const oldFilePath = path.join(process.cwd(), 'src', about.vision_imageUrl.replace('/uploads/', 'uploads/'));
+      if (
+        about &&
+        about.vision_imageUrl &&
+        about.vision_imageUrl.startsWith("/uploads/")
+      ) {
+        const oldFilePath = path.join(
+          process.cwd(),
+          "src",
+          about.vision_imageUrl.replace("/uploads/", "uploads/"),
+        );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
         }
       }
     } catch (err) {
-      console.error('Eski vision görseli silinirken hata:', err);
+      console.error("Eski vision görseli silinirken hata:", err);
     }
   }
 
   // Eğer About/mission klasörüne yükleme yapılıyorsa, eski mission görselini sil
-  if (safeFolder === 'About/mission') {
+  if (safeFolder === "About/mission") {
     try {
       const about = await prisma.aboutPage.findFirst();
-      if (about && about.mission_imageUrl && about.mission_imageUrl.startsWith('/uploads/')) {
-        const oldFilePath = path.join(process.cwd(), 'src', about.mission_imageUrl.replace('/uploads/', 'uploads/'));
+      if (
+        about &&
+        about.mission_imageUrl &&
+        about.mission_imageUrl.startsWith("/uploads/")
+      ) {
+        const oldFilePath = path.join(
+          process.cwd(),
+          "src",
+          about.mission_imageUrl.replace("/uploads/", "uploads/"),
+        );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
         }
       }
     } catch (err) {
-      console.error('Eski mission görseli silinirken hata:', err);
+      console.error("Eski mission görseli silinirken hata:", err);
     }
   }
 

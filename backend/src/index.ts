@@ -3,14 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import cron from "node-cron";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
-import cookieParser from "cookie-parser";
 import prisma from "./lib/prisma";
 import { validateEnv } from "./config/validateEnv";
-
-dotenv.config();
-validateEnv();
 
 import authRoutes from "./routes/authRoutes";
 import sliderRoutes from "./routes/sliderRoutes";
@@ -30,85 +24,44 @@ import systemSettingRoutes from "./routes/systemSettingRoutes";
 import notificationRuleRoutes from "./routes/notificationRuleRoutes";
 import socialMediaRoutes from "./routes/socialMediaRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
-import statsRoutes from "./routes/statsRoutes";
-import applicationPageRoutes from "./routes/applicationPage.routes";
-import applicationNotificationRoutes from "./routes/applicationNotificationRoutes";
-import {
-  loginLimiter,
-  applicationLimiter,
-  contactLimiter,
-  uploadLimiter,
-} from "./middleware/rateLimiter";
+
+dotenv.config();
+
+// Validate required environment variables (throws if missing/invalid)
+validateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 3005;
 
-app.use(cors());
-app.use(express.json());
+const corsOrigin = process.env.CORS_ORIGIN || "*";
+const corsOptions =
+  corsOrigin === "*"
+    ? { origin: "*" }
+    : { origin: corsOrigin, credentials: true, optionsSuccessStatus: 200 };
 
+app.use(cors(corsOptions));
+// Manual preflight handler to avoid using wildcard route strings
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", corsOrigin);
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    );
+    const reqHeaders = req.header("Access-Control-Request-Headers");
+    if (reqHeaders) res.header("Access-Control-Allow-Headers", reqHeaders);
+    if (corsOptions && (corsOptions as any).credentials)
+      res.header("Access-Control-Allow-Credentials", "true");
+    return res.sendStatus(200);
+  }
+  next();
+});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static uploads
 const uploadsDir = path.resolve(process.cwd(), "src/uploads");
 app.use("/uploads", express.static(uploadsDir));
-
-app.disable("x-powered-by");
-
-app.use(
-  helmet({
-    contentSecurityPolicy:
-      process.env.NODE_ENV === "production"
-        ? {
-            directives: {
-              defaultSrc: ["'self'"],
-              styleSrc: [
-                "'self'",
-                "'unsafe-inline'",
-                "https://fonts.googleapis.com",
-              ],
-              fontSrc: ["'self'", "https://fonts.gstatic.com"],
-              imgSrc: ["'self'", "data:", "https:", "http:", "blob:"],
-              scriptSrc: ["'self'"],
-              connectSrc: ["'self'", ...allowedOrigins],
-              frameSrc: ["'none'"],
-              objectSrc: ["'none'"],
-            },
-          }
-        : false,
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy:
-      process.env.NODE_ENV === "production"
-        ? { policy: "cross-origin" }
-        : false,
-    hsts:
-      process.env.NODE_ENV === "production"
-        ? {
-            maxAge: 31536000,
-            includeSubDomains: true,
-            preload: true,
-          }
-        : false,
-  }),
-);
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (origin && allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else if (!origin && process.env.NODE_ENV === "development") {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS politikası tarafından engellendi"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    maxAge: 86400,
-  }),
-);
-
-app.use(cookieParser());
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -122,16 +75,14 @@ app.use("/api/about", aboutPageRoutes);
 app.use("/api/contact-info", contactInfoRoutes);
 app.use("/api/faqs", faqRoutes);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/application-page", applicationPageRoutes);
-app.use("/api/application-notifications", applicationNotificationRoutes);
 app.use("/api/contact-messages", contactMessageRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/fee", feeRoutes);
 app.use("/api/admin/settings", systemSettingRoutes);
 app.use("/api/admin/rules", notificationRuleRoutes);
 app.use("/api/socials", socialMediaRoutes);
+app.use("/api/payments", paymentRoutes);
 
-// Health check
 app.get("/", (req, res) => {
   res.send("Elite Model Backend API çalışıyor");
 });

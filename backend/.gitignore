@@ -18,15 +18,15 @@ coverage/
 ########################
 
 # Keep environment variables out of version control
-.env
-.env.*
+ 
+ 
 
 ###########
 # Prisma  #
 ###########
 
 # Generated Prisma client & binaries
-/generated/
+ 
 
 # Local SQLite databases (if used)
 /prisma/*.db

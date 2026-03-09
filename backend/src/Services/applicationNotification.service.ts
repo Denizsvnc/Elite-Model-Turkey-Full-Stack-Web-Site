@@ -1,55 +1,59 @@
-import prisma from '../lib/prisma';
+import prisma from "../lib/prisma";
 
 export class ApplicationNotificationService {
-    /**
-     * Başvuru açılınca bildirim almak isteyen kullanıcı kaydeder
-     */
-    async createNotificationRequest(fullName: string, phone: string, email: string) {
-        // Daha önce kayıt var mı kontrol et
-        const existing = await prisma.applicationNotificationRequest.findUnique({
-            where: { email }
-        });
+  /**
+   * Başvuru açılınca bildirim almak isteyen kullanıcı kaydeder
+   */
+  async createNotificationRequest(
+    fullName: string,
+    phone: string,
+    email: string,
+  ) {
+    // Daha önce kayıt var mı kontrol et
+    const existing = await prisma.applicationNotificationRequest.findUnique({
+      where: { email },
+    });
 
-        if (existing) {
-            throw new Error('Bu e-posta adresi zaten kayıtlı.');
-        }
-
-        return await prisma.applicationNotificationRequest.create({
-            data: {
-                fullName,
-                phone,
-                email,
-                isNotified: false
-            }
-        });
+    if (existing) {
+      throw new Error("Bu e-posta adresi zaten kayıtlı.");
     }
 
-    /**
-     * Bildirilmemiş tüm kullanıcıları getir
-     */
-    async getUnnotifiedRequests() {
-        return await prisma.applicationNotificationRequest.findMany({
-            where: { isNotified: false }
-        });
-    }
+    return await prisma.applicationNotificationRequest.create({
+      data: {
+        fullName,
+        phone,
+        email,
+        isNotified: false,
+      },
+    });
+  }
 
-    /**
-     * Kullanıcıyı bildirildi olarak işaretle
-     */
-    async markAsNotified(email: string) {
-        return await prisma.applicationNotificationRequest.update({
-            where: { email },
-            data: { isNotified: true }
-        });
-    }
+  /**
+   * Bildirilmemiş tüm kullanıcıları getir
+   */
+  async getUnnotifiedRequests() {
+    return await prisma.applicationNotificationRequest.findMany({
+      where: { isNotified: false },
+    });
+  }
 
-    /**
-     * Tüm bekleyen kayıtları bildirildi olarak işaretle
-     */
-    async markAllAsNotified() {
-        return await prisma.applicationNotificationRequest.updateMany({
-            where: { isNotified: false },
-            data: { isNotified: true }
-        });
-    }
+  /**
+   * Kullanıcıyı bildirildi olarak işaretle
+   */
+  async markAsNotified(email: string) {
+    return await prisma.applicationNotificationRequest.update({
+      where: { email },
+      data: { isNotified: true },
+    });
+  }
+
+  /**
+   * Tüm bekleyen kayıtları bildirildi olarak işaretle
+   */
+  async markAllAsNotified() {
+    return await prisma.applicationNotificationRequest.updateMany({
+      where: { isNotified: false },
+      data: { isNotified: true },
+    });
+  }
 }

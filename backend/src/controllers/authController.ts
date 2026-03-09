@@ -3,15 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import { AuthRequest } from "../middleware/auth";
-import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import prisma from "../lib/prisma";
-import { AuthRequest } from "../middleware/auth";
-import { getJWTSecret } from "../config/validateEnv";
-
-const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Admin kullanıcı kaydı (sadece SUPERADMIN oluşturabilir)
 export const register = async (req: Request, res: Response) => {
@@ -121,16 +112,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const logout = async (req: Request, res: Response) => {
-  try {
-    res.clearCookie("token", { path: "/" });
-    res.json({ message: "Çıkış başarılı" });
-  } catch (error) {
-    console.error("Logout error:", error);
-    res.status(500).json({ error: "Çıkış sırasında bir hata oluştu" });
-  }
-};
-
+// Profil bilgilerini getir
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const adminUser = await prisma.adminUser.findUnique({
