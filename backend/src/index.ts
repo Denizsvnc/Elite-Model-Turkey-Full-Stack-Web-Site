@@ -39,7 +39,6 @@ const corsOptions =
     ? { origin: "*" }
     : { origin: corsOrigin, credentials: true, optionsSuccessStatus: 200 };
 
-app.use(cors(corsOptions));
 // Manual preflight handler to avoid using wildcard route strings
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
