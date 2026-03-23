@@ -397,7 +397,7 @@ exports.Prisma.SocialMediaScalarFieldEnum = {
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   applicationId: 'applicationId',
-  iyzicoToken: 'iyzicoToken',
+  paytrMerchantOid: 'paytrMerchantOid',
   paymentId: 'paymentId',
   amount: 'amount',
   currency: 'currency',

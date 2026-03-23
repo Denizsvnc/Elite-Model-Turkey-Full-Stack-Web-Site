@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { iyzicoCallback } from "../controllers/paymentController";
+import { paytrCallback } from "../controllers/paymentController";
 
 const router = Router();
 
-router.post("/callback", iyzicoCallback);
+router.post("/callback", paytrCallback);
 
 export default router;

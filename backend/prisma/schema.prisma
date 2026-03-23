@@ -323,7 +323,7 @@ model Payment {
   applicationId String
   application   Application   @relation(fields: [applicationId], references: [id])
   primaryFor    Application?  @relation("ApplicationPrimaryPayment")
-  iyzicoToken   String?       @unique
+  paytrMerchantOid String?    @unique
   paymentId     String?       @unique
   amount        Decimal       @db.Decimal(10, 2)
   currency      String        @default("TRY")

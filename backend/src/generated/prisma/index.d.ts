@@ -22170,7 +22170,7 @@ export namespace Prisma {
   export type PaymentMinAggregateOutputType = {
     id: string | null
     applicationId: string | null
-    iyzicoToken: string | null
+    paytrMerchantOid: string | null
     paymentId: string | null
     amount: Decimal | null
     currency: string | null
@@ -22182,7 +22182,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateOutputType = {
     id: string | null
     applicationId: string | null
-    iyzicoToken: string | null
+    paytrMerchantOid: string | null
     paymentId: string | null
     amount: Decimal | null
     currency: string | null
@@ -22194,7 +22194,7 @@ export namespace Prisma {
   export type PaymentCountAggregateOutputType = {
     id: number
     applicationId: number
-    iyzicoToken: number
+    paytrMerchantOid: number
     paymentId: number
     amount: number
     currency: number
@@ -22216,7 +22216,7 @@ export namespace Prisma {
   export type PaymentMinAggregateInputType = {
     id?: true
     applicationId?: true
-    iyzicoToken?: true
+    paytrMerchantOid?: true
     paymentId?: true
     amount?: true
     currency?: true
@@ -22228,7 +22228,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateInputType = {
     id?: true
     applicationId?: true
-    iyzicoToken?: true
+    paytrMerchantOid?: true
     paymentId?: true
     amount?: true
     currency?: true
@@ -22240,7 +22240,7 @@ export namespace Prisma {
   export type PaymentCountAggregateInputType = {
     id?: true
     applicationId?: true
-    iyzicoToken?: true
+    paytrMerchantOid?: true
     paymentId?: true
     amount?: true
     currency?: true
@@ -22339,7 +22339,7 @@ export namespace Prisma {
   export type PaymentGroupByOutputType = {
     id: string
     applicationId: string
-    iyzicoToken: string | null
+    paytrMerchantOid: string | null
     paymentId: string | null
     amount: Decimal
     currency: string
@@ -22370,7 +22370,7 @@ export namespace Prisma {
   export type PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     applicationId?: boolean
-    iyzicoToken?: boolean
+    paytrMerchantOid?: boolean
     paymentId?: boolean
     amount?: boolean
     currency?: boolean
@@ -22384,7 +22384,7 @@ export namespace Prisma {
   export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     applicationId?: boolean
-    iyzicoToken?: boolean
+    paytrMerchantOid?: boolean
     paymentId?: boolean
     amount?: boolean
     currency?: boolean
@@ -22397,7 +22397,7 @@ export namespace Prisma {
   export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     applicationId?: boolean
-    iyzicoToken?: boolean
+    paytrMerchantOid?: boolean
     paymentId?: boolean
     amount?: boolean
     currency?: boolean
@@ -22410,7 +22410,7 @@ export namespace Prisma {
   export type PaymentSelectScalar = {
     id?: boolean
     applicationId?: boolean
-    iyzicoToken?: boolean
+    paytrMerchantOid?: boolean
     paymentId?: boolean
     amount?: boolean
     currency?: boolean
@@ -22419,7 +22419,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "iyzicoToken" | "paymentId" | "amount" | "currency" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "paytrMerchantOid" | "paymentId" | "amount" | "currency" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
     primaryFor?: boolean | Payment$primaryForArgs<ExtArgs>
@@ -22440,7 +22440,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       applicationId: string
-      iyzicoToken: string | null
+      paytrMerchantOid: string | null
       paymentId: string | null
       amount: Prisma.Decimal
       currency: string
@@ -22874,7 +22874,7 @@ export namespace Prisma {
   interface PaymentFieldRefs {
     readonly id: FieldRef<"Payment", 'String'>
     readonly applicationId: FieldRef<"Payment", 'String'>
-    readonly iyzicoToken: FieldRef<"Payment", 'String'>
+    readonly paytrMerchantOid: FieldRef<"Payment", 'String'>
     readonly paymentId: FieldRef<"Payment", 'String'>
     readonly amount: FieldRef<"Payment", 'Decimal'>
     readonly currency: FieldRef<"Payment", 'String'>
@@ -26709,7 +26709,7 @@ export namespace Prisma {
   export const PaymentScalarFieldEnum: {
     id: 'id',
     applicationId: 'applicationId',
-    iyzicoToken: 'iyzicoToken',
+    paytrMerchantOid: 'paytrMerchantOid',
     paymentId: 'paymentId',
     amount: 'amount',
     currency: 'currency',
@@ -28546,7 +28546,7 @@ export namespace Prisma {
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     id?: StringFilter<"Payment"> | string
     applicationId?: StringFilter<"Payment"> | string
-    iyzicoToken?: StringNullableFilter<"Payment"> | string | null
+    paytrMerchantOid?: StringNullableFilter<"Payment"> | string | null
     paymentId?: StringNullableFilter<"Payment"> | string | null
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
@@ -28560,7 +28560,7 @@ export namespace Prisma {
   export type PaymentOrderByWithRelationInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    iyzicoToken?: SortOrderInput | SortOrder
+    paytrMerchantOid?: SortOrderInput | SortOrder
     paymentId?: SortOrderInput | SortOrder
     amount?: SortOrder
     currency?: SortOrder
@@ -28573,7 +28573,7 @@ export namespace Prisma {
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    iyzicoToken?: string
+    paytrMerchantOid?: string
     paymentId?: string
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
@@ -28586,12 +28586,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
     primaryFor?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
-  }, "id" | "iyzicoToken" | "paymentId">
+  }, "id" | "paytrMerchantOid" | "paymentId">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    iyzicoToken?: SortOrderInput | SortOrder
+    paytrMerchantOid?: SortOrderInput | SortOrder
     paymentId?: SortOrderInput | SortOrder
     amount?: SortOrder
     currency?: SortOrder
@@ -28611,7 +28611,7 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Payment"> | string
     applicationId?: StringWithAggregatesFilter<"Payment"> | string
-    iyzicoToken?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    paytrMerchantOid?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     paymentId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringWithAggregatesFilter<"Payment"> | string
@@ -30688,7 +30688,7 @@ export namespace Prisma {
 
   export type PaymentCreateInput = {
     id?: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -30702,7 +30702,7 @@ export namespace Prisma {
   export type PaymentUncheckedCreateInput = {
     id?: string
     applicationId: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -30714,7 +30714,7 @@ export namespace Prisma {
 
   export type PaymentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -30728,7 +30728,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -30741,7 +30741,7 @@ export namespace Prisma {
   export type PaymentCreateManyInput = {
     id?: string
     applicationId: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -30752,7 +30752,7 @@ export namespace Prisma {
 
   export type PaymentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -30764,7 +30764,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -32202,7 +32202,7 @@ export namespace Prisma {
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    iyzicoToken?: SortOrder
+    paytrMerchantOid?: SortOrder
     paymentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
@@ -32218,7 +32218,7 @@ export namespace Prisma {
   export type PaymentMaxOrderByAggregateInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    iyzicoToken?: SortOrder
+    paytrMerchantOid?: SortOrder
     paymentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
@@ -32230,7 +32230,7 @@ export namespace Prisma {
   export type PaymentMinOrderByAggregateInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    iyzicoToken?: SortOrder
+    paytrMerchantOid?: SortOrder
     paymentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
@@ -33028,7 +33028,7 @@ export namespace Prisma {
 
   export type PaymentCreateWithoutApplicationInput = {
     id?: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -33040,7 +33040,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedCreateWithoutApplicationInput = {
     id?: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -33062,7 +33062,7 @@ export namespace Prisma {
 
   export type PaymentCreateWithoutPrimaryForInput = {
     id?: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -33075,7 +33075,7 @@ export namespace Prisma {
   export type PaymentUncheckedCreateWithoutPrimaryForInput = {
     id?: string
     applicationId: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -33111,7 +33111,7 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
     id?: StringFilter<"Payment"> | string
     applicationId?: StringFilter<"Payment"> | string
-    iyzicoToken?: StringNullableFilter<"Payment"> | string | null
+    paytrMerchantOid?: StringNullableFilter<"Payment"> | string | null
     paymentId?: StringNullableFilter<"Payment"> | string | null
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
@@ -33133,7 +33133,7 @@ export namespace Prisma {
 
   export type PaymentUpdateWithoutPrimaryForInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -33146,7 +33146,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateWithoutPrimaryForInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -33492,7 +33492,7 @@ export namespace Prisma {
 
   export type PaymentCreateManyApplicationInput = {
     id?: string
-    iyzicoToken?: string | null
+    paytrMerchantOid?: string | null
     paymentId?: string | null
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -33503,7 +33503,7 @@ export namespace Prisma {
 
   export type PaymentUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -33515,7 +33515,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -33527,7 +33527,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedUpdateManyWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    iyzicoToken?: NullableStringFieldUpdateOperationsInput | string | null
+    paytrMerchantOid?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string

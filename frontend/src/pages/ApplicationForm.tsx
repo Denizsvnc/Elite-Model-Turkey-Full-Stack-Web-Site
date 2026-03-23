@@ -15,10 +15,6 @@ import {
   Snackbar,
   Alert,
   AlertColor,
-  Dialog,
-  DialogContent,
-  Slide,
-  Link,
 } from "@mui/material";
 import ReactSelect from "react-select";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
@@ -183,11 +179,8 @@ const ApplicationForm: React.FC = () => {
           waistCm: Number(values.waistCm),
         });
 
-        if (response.data.paymentPageUrl) {
-          window.location.assign(response.data.paymentPageUrl);
-        } else if (response.data.checkoutFormContent) {
-          setCheckoutFormHtml(response.data.checkoutFormContent);
-          setIsPaymentModalOpen(true);
+        if (response.data.paymentLink) {
+           window.location.replace(response.data.paymentLink);
         } else {
           setSubmitted(true);
           resetForm();
@@ -207,34 +200,13 @@ const ApplicationForm: React.FC = () => {
     },
   });
 
-  const [checkoutFormHtml, setCheckoutFormHtml] = useState<string>("");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   useEffect(() => {
     api.get("/api/fee").then((res) => {
       if (res.data?.amount) setPrice(res.data.amount);
     }).catch(() => {});
   }, []);
-  useEffect(() => {
-    if (checkoutFormHtml && isPaymentModalOpen) {
-      const scriptContainer = document.getElementById(
-        "iyzico-payment-form-container",
-      );
-      if (scriptContainer) {
-        scriptContainer.innerHTML = checkoutFormHtml;
-        const scripts = scriptContainer.getElementsByTagName("script");
-        for (let i = 0; i < scripts.length; i++) {
-          const newScript = document.createElement("script");
-          newScript.type = "text/javascript";
-          if (scripts[i].src) {
-            newScript.src = scripts[i].src;
-          } else {
-            newScript.innerHTML = scripts[i].innerHTML;
-          }
-          document.body.appendChild(newScript);
-        }
-      }
-    }
-  }, [checkoutFormHtml, isPaymentModalOpen]);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -1151,36 +1123,7 @@ const ApplicationForm: React.FC = () => {
         </Alert>
       </Snackbar>
 
-      <Dialog
-        open={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Slide}
-        TransitionProps={{ direction: "up" } as any}
-      >
-        <DialogContent sx={{ p: 0 }}>
-          <div className="bg-white p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-slate-800">
-                Ödemeyi Tamamla
-              </h2>
-              <button
-                onClick={() => setIsPaymentModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </button>
-            </div>
 
-            <div
-              id="iyzico-payment-form-container"
-              className="min-h-[400px]"
-            ></div>
-            <div id="iyzipay-checkout-form" className="responsive"></div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import prisma from "../lib/prisma";
 import { NotificationService } from "../Services/NotificationService";
 import { MailService } from "../Services/MailService";
-import IyzicoService from "../Services/IyzicoService";
+import PayTRService from "../Services/PayTRService";
 import { ApplicationStatus, Gender, PaymentStatus } from "../generated/prisma";
 import dotenv from "dotenv";
 dotenv.config();
@@ -138,67 +138,20 @@ export const createApplication = async (req: Request, res: Response) => {
     const feeRecord = await prisma.applicationFee.findFirst({
       orderBy: { createdAt: "desc" },
     });
-    const amount = feeRecord
+    const amountStr = feeRecord
       ? feeRecord.amount.toString()
       : process.env.DEFAULT_PRICE || "0";
 
-    const checkoutData = {
-      conversationId: `app_${newApplication.id}_${Date.now()}`,
-      price: amount,
-      paidPrice: amount,
-      basketId: `B_${newApplication.id}`,
-      paymentGroup: "PRODUCT",
-      callbackUrl: `${process.env.BACKEND_URL || "http://localhost:3005"}/api/payments/callback`,
-      buyer: {
-        id: newApplication.id,
-        name: fullName.split(" ")[0] || "Unknown",
-        surname: fullName.split(" ").slice(1).join(" ") || "Unknown",
-        gsmNumber: phone,
-        email: email,
-        identityNumber: "11111111111",
-        registrationAddress: city,
-        ip: req.ip || "127.0.0.1",
-        city: city,
-        country: "Turkey",
-      },
-      shippingAddress: {
-        contactName: fullName,
-        city: city,
-        country: "Turkey",
-        address: city,
-      },
-      billingAddress: {
-        contactName: fullName,
-        city: city,
-        country: "Turkey",
-        address: city,
-      },
-      basketItems: [
-        {
-          id: "FEE_01",
-          name: "Model Başvuru Ücreti",
-          category1: "Başvuru",
-          itemType: "VIRTUAL",
-          price: amount,
-        },
-      ],
-    };
+     const amountKurus = Math.round(parseFloat(amountStr) * 100);
 
-    const iyzicoResult =
-      await IyzicoService.initializeCheckoutForm(checkoutData);
-
-    if (iyzicoResult.status !== "success") {
-      throw new Error(
-        iyzicoResult.errorMessage || "Iyzico initialization failed",
-      );
-    }
-
-    const payment = await prisma.payment.create({
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:3005";
+ 
+     const payment = await prisma.payment.create({
       data: {
         applicationId: newApplication.id,
-        iyzicoToken: iyzicoResult.token,
+        paytrMerchantOid: `EM_${newApplication.id}_${Date.now()}`,
         status: "PENDING",
-        amount: amount,
+        amount: amountStr,
         currency: "TRY",
       },
     });
@@ -208,21 +161,27 @@ export const createApplication = async (req: Request, res: Response) => {
       data: { primaryPaymentId: payment.id },
     });
 
+     const paymentLink = await PayTRService.createPaymentLink({
+      name: "Model Başvuru Ücreti",
+      price: amountKurus,
+      callbackUrl: `${backendUrl}/api/payments/callback`,
+      callbackId: payment.id, 
+    });
+
     return res.status(201).json({
       message: "Başvuru oluşturuldu, ödemeye yönlendiriliyor.",
       applicationId: newApplication.id,
       applicationCode: newApplication.applicationCode,
-      checkoutFormContent: iyzicoResult.checkoutFormContent,
-      paymentPageUrl: iyzicoResult.paymentPageUrl,
-      token: iyzicoResult.token,
+      paymentLink,
     });
   } catch (error) {
-    console.error("Başvuru oluşturma hatası:", error);
+    console.error("Başvuru hatası:", error);
     res
       .status(500)
       .json({ error: "Başvuru alınamadı. Lütfen bilgileri kontrol edin." });
   }
 };
+
 
 // ==========================================
 // 2. Başvuruları Listele (Admin - Filtreleme Destekli)

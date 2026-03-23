@@ -319,17 +319,17 @@ enum ApplicationStatus {
 }
 
 model Payment {
-  id            String        @id @default(cuid())
-  applicationId String
-  application   Application   @relation(fields: [applicationId], references: [id])
-  primaryFor    Application?  @relation("ApplicationPrimaryPayment")
-  iyzicoToken   String?       @unique
-  paymentId     String?       @unique
-  amount        Decimal       @db.Decimal(10, 2)
-  currency      String        @default("TRY")
-  status        PaymentStatus @default(PENDING)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  applicationId    String
+  application      Application   @relation(fields: [applicationId], references: [id])
+  primaryFor       Application?  @relation("ApplicationPrimaryPayment")
+  paytrMerchantOid String?       @unique
+  paymentId        String?       @unique
+  amount           Decimal       @db.Decimal(10, 2)
+  currency         String        @default("TRY")
+  status           PaymentStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 enum PaymentStatus {
